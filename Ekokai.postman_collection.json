@@ -1,0 +1,484 @@
+{
+	"info": {
+		"_postman_id": "19402c25-93de-464c-97fa-d5da01cde14d",
+		"name": "Ekokai",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33810680"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "LoginAdmin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"admin@correo.com\",\n  \"contrasena\": \"admin123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CrearEncargado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNlMmMyZDcwYjJjZDVhMDUzYzVhZCIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3NTEzNzY4ODgsImV4cCI6MTc1MTQwNTY4OH0.xc1JSqxw2YpYerDem3rdnkj3wDH6Myz3LJQPN49xxWI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Carlos\",\n  \"apellido\": \"Encargado\",\n  \"correo\": \"encargado1@correo.com\",\n  \"contrasena\": \"clave123\",\n  \"dni\": \"11111111-1\",\n  \"telefono\": \"+56911111111\",\n  \"pais\": \"Chile\",\n  \"zona\": \"Centro\",\n  \"direccion\": \"Calle Encargado\",\n  \"rol\": \"encargado\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/usuarios/registrar-encargado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"registrar-encargado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListarEncargados",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "ListarEncargadoID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNlMmMyZDcwYjJjZDVhMDUzYzVhZCIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3NTEzNzY4ODgsImV4cCI6MTc1MTQwNTY4OH0.xc1JSqxw2YpYerDem3rdnkj3wDH6Myz3LJQPN49xxWI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/usuarios/6863e545833d451f3e961ce1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"6863e545833d451f3e961ce1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CrearEcopunto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNlMmMyZDcwYjJjZDVhMDUzYzVhZCIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3NTEzNzc1ODEsImV4cCI6MTc1MTQwNjM4MX0.kuTqKU4YFrQ-aGtrbheH6Xs-tFeIT2gjhBGS0Oz0Fn0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Ecopunto Central\",\n  \"direccion\": \"Av. Recoleta 123\",\n  \"zona\": \"Norte\",\n  \"encargado\": \"6863e545833d451f3e961ce1\" \n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/ecopuntos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"ecopuntos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EnrolarEncargadoEcopunto",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "VerEcopuntos/sus encargados y vecinos",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Encargado",
+			"item": [
+				{
+					"name": "LoginEncargado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"encargado1@correo.com\",\n  \"contrasena\": \"clave123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CrearVecino",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "VecinoEspecifico",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "CrearResiduo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNmMDgzZDM1MGQ5ODZiMTNmNzI4NiIsInJvbCI6ImVuY2FyZ2FkbyIsImlhdCI6MTc1MTM4MDU5MywiZXhwIjoxNzUxNDA5MzkzfQ.VWCQJtnvqY02yie--xdGg-d38bRytGj7kfBbzWZb-fs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"nombre\": \"Plástico\",\n  \"descripcion\": \"Residuos plásticos reciclables\",\n  \"tokensPorKg\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tipos-residuo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tipos-residuo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "vecinoentregaresiduo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNmMDgzZDM1MGQ5ODZiMTNmNzI4NiIsInJvbCI6ImVuY2FyZ2FkbyIsImlhdCI6MTc1MTM4MDU5MywiZXhwIjoxNzUxNDA5MzkzfQ.VWCQJtnvqY02yie--xdGg-d38bRytGj7kfBbzWZb-fs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usuarioId\": \"6863f2d5e866f21b4ef98787\",\n  \"ecopuntoId\": \"6863f120521dcfc56a8195ea\",\n  \"tipoResiduoId\": \"6863f85d81e46baf81bb688e\",\n  \"pesoKg\": 2.4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/residuos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"residuos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vecino",
+			"item": [
+				{
+					"name": "LoginVecino",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"correo\": \"vecino@correo.com\",\n  \"contrasena\": \"vecino123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Estadisticas",
+			"item": [
+				{
+					"name": "TotalKilos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNlMmMyZDcwYjJjZDVhMDUzYzVhZCIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3NTE1NjkyMDYsImV4cCI6MTc1MTU5ODAwNn0.z7XLxQ0jg27rV2ekB1yuMBvnfa_uywXCVxuDJnGMJgc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/estadisticas/total-kilos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"estadisticas",
+								"total-kilos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MejorSucursal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NjNlMmMyZDcwYjJjZDVhMDUzYzVhZCIsInJvbCI6ImFkbWluaXN0cmFkb3IiLCJpYXQiOjE3NTE1NjkyMDYsImV4cCI6MTc1MTU5ODAwNn0.z7XLxQ0jg27rV2ekB1yuMBvnfa_uywXCVxuDJnGMJgc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/estadisticas/sucursal-top",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"estadisticas",
+								"sucursal-top"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
