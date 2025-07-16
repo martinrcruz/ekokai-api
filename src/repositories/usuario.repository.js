@@ -40,6 +40,17 @@ const incrementarTokens = async (usuarioId, tokens) => {
       { new: true }
     );
   };
+
+const actualizarUsuario = async (id, datos) => {
+  console.log('✏️ [REPOSITORY] Actualizando usuario', id, 'con:', datos);
+  return await Usuario.findByIdAndUpdate(id, datos, { new: true });
+};
+
+const eliminarUsuario = async (id) => {
+  console.log('🗑️ [REPOSITORY] Eliminando usuario', id);
+  return await Usuario.findByIdAndDelete(id);
+};
+
 module.exports = {
   crearUsuario,
   buscarUsuario,
@@ -47,5 +58,7 @@ module.exports = {
   buscarPorId,
   listarUsuarios,
   incrementarTokens,
-  buscarPorTelefono
+  buscarPorTelefono,
+  actualizarUsuario,
+  eliminarUsuario
 };

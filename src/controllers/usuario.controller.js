@@ -21,20 +21,40 @@ const registrarConRol = async (req, res) => {
   const registrarVecino = async (req, res) => {
     try {
       const datos = req.body;
-      const encargadoId = req.usuario.id;
-  
-      // Buscar ecopunto del encargado
-      const ecopunto = await ecopuntoRepo.buscarPorEncargado(encargadoId);
-      if (!ecopunto) {
-        return res.status(400).json({ error: 'No se encontró ecopunto para este encargado' });
+      const rolUsuario = req.usuario.rol;
+      console.log('🔵 [registrarVecino] Body recibido:', datos);
+      console.log('🔵 [registrarVecino] Rol usuario autenticado:', rolUsuario);
+
+      let ecopuntoId = null;
+      if (rolUsuario === 'encargado') {
+        const encargadoId = req.usuario.id;
+        console.log('🟢 [registrarVecino] Buscando ecopunto para encargado:', encargadoId);
+        const ecopunto = await ecopuntoRepo.buscarPorEncargado(encargadoId);
+        if (ecopunto) {
+          ecopuntoId = ecopunto._id;
+          console.log('🟢 [registrarVecino] Ecopunto encontrado para encargado:', ecopuntoId);
+        } else {
+          console.warn('🟠 [registrarVecino] No se encontró ecopunto para encargado, se creará vecino sin ecopuntoId');
+        }
+      } else if (rolUsuario === 'administrador') {
+        if (datos.ecopuntoId) {
+          ecopuntoId = datos.ecopuntoId;
+          console.log('🟡 [registrarVecino] Admin usará ecopuntoId:', ecopuntoId);
+        } else {
+          console.warn('🟠 [registrarVecino] Admin no envió ecopuntoId, se creará vecino sin ecopuntoId');
+        }
+      } else {
+        console.error('🔴 [registrarVecino] Rol no autorizado:', rolUsuario);
+        return res.status(403).json({ error: 'Solo administradores o encargados pueden crear vecinos' });
       }
-  
-      datos.ecopuntoId = ecopunto._id;
-  
+
+      datos.ecopuntoId = ecopuntoId;
+      console.log('🔵 [registrarVecino] Datos finales para crear vecino:', datos);
       const nuevoVecino = await usuarioService.registrarConRol(datos, 'vecino');
+      console.log('✅ [registrarVecino] Vecino creado:', nuevoVecino);
       res.status(201).json(nuevoVecino);
     } catch (err) {
-      console.error('❌ Error al registrar vecino:', err);
+      console.error('❌ [registrarVecino] Error al registrar vecino:', err);
       res.status(500).json({ error: err.message });
     }
   };
@@ -59,9 +79,38 @@ const obtenerUsuario = async (req, res) => {
   }
 };
 
+const actualizarUsuario = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const datos = req.body;
+    console.log('✏️ [CONTROLLER] Actualizando usuario', id, 'con:', datos);
+    const actualizado = await usuarioService.actualizarUsuario(id, datos);
+    if (!actualizado) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json(actualizado);
+  } catch (err) {
+    console.error('❌ [actualizarUsuario] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const eliminarUsuario = async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log('🗑️ [CONTROLLER] Eliminando usuario', id);
+    const eliminado = await usuarioService.eliminarUsuario(id);
+    if (!eliminado) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json({ mensaje: 'Usuario eliminado' });
+  } catch (err) {
+    console.error('❌ [eliminarUsuario] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   registrarVecino,
   listarUsuarios,
   obtenerUsuario,
-  registrarConRol
+  registrarConRol,
+  actualizarUsuario,
+  eliminarUsuario
 };

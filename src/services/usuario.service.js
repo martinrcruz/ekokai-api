@@ -54,9 +54,19 @@ const obtenerPorId = async (id) => {
   return await usuarioRepo.buscarPorId(id);
 };
 
+const actualizarUsuario = async (id, datos) => {
+  return await usuarioRepo.actualizarUsuario(id, datos);
+};
+
+const eliminarUsuario = async (id) => {
+  return await usuarioRepo.eliminarUsuario(id);
+};
+
 module.exports = {
   registrarVecino,
   obtenerTodos,
   obtenerPorId,
-  registrarConRol
+  registrarConRol,
+  actualizarUsuario,
+  eliminarUsuario
 };
