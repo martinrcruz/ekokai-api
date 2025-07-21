@@ -5,7 +5,7 @@ const fs = require('fs');
 
 async function getAccessToken() {
   try {
-    const keyPath = path.join(__dirname, '..', 'keys', 'service-account.json');
+    const keyPath = path.join(__dirname, '..', 'google-credentials.json');
     console.log('📁 Verificando existencia de archivo JSON en:', keyPath);
 
     if (!fs.existsSync(keyPath)) {
