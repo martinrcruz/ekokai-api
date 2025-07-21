@@ -6,12 +6,28 @@ const usuarioRepo = require('../repositories/usuario.repository');
 const entregaRepo = require('../repositories/entregaresiduio.repository');
 const { responderWhatsApp } = require('../utils/twilio.helper');
 
-// 🔑 Carga del archivo de credenciales
-const keyPath = path.join(__dirname, '../../keys/service-account.json');
-const projectId = JSON.parse(fs.readFileSync(keyPath)).project_id;
+// 🔑 Carga de credenciales desde variables de entorno
+const serviceAccount = {
+  type: process.env.GC_TYPE,
+  project_id: process.env.GC_PROJECT_ID,
+  private_key_id: process.env.GC_PRIVATE_KEY_ID,
+  private_key: process.env.GC_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  client_email: process.env.GC_CLIENT_EMAIL,
+  client_id: process.env.GC_CLIENT_ID,
+  auth_uri: process.env.GC_AUTH_URI,
+  token_uri: process.env.GC_TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.GC_AUTH_PROVIDER_X509_CERT_URL,
+  client_x509_cert_url: process.env.GC_CLIENT_X509_CERT_URL,
+  universe_domain: process.env.GC_UNIVERSE_DOMAIN
+};
+
+const projectId = serviceAccount.project_id;
 
 const sessionClient = new dialogflow.SessionsClient({
-  keyFilename: keyPath
+  credentials: {
+    private_key: serviceAccount.private_key,
+    client_email: serviceAccount.client_email
+  }
 });
 
 const dialogflowWebhook = async (req, res) => {
@@ -50,6 +66,7 @@ const dialogflowWebhook = async (req, res) => {
     };
 
     console.log('🧠 Enviando mensaje a Dialogflow...');
+    
     const responses = await sessionClient.detectIntent(request);
     const result = responses[0].queryResult;
 
