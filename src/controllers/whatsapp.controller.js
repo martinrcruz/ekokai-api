@@ -24,7 +24,7 @@ const serviceAccount = {
 const projectId = serviceAccount.project_id;
 
 const privateKey = process.env.GC_PRIVATE_KEY.replace(/\\n/g, '\n');
-const client = new dialogflow.SessionsClient({
+const sessionClient = new dialogflow.SessionsClient({
   credentials: {
     private_key: privateKey,
     client_email: process.env.GC_CLIENT_EMAIL
