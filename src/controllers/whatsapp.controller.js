@@ -43,12 +43,18 @@ if (privateKey) {
   privateKey = privateKey.replace(/\\n/g, '\n');
   console.log('[LOG] Private key length:', privateKey.length);
   console.log('[LOG] Private key starts with:', privateKey.substring(0, 50) + '...');
+  
+  // Verificar que la clave tenga el formato correcto
+  if (!privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
+    console.error('[ERROR] La clave privada no tiene el formato correcto');
+  }
 } else {
   console.error('[ERROR] GC_PRIVATE_KEY no está configurada');
 }
 
 let sessionClient;
 try {
+  // Intentar con configuración simplificada
   sessionClient = new dialogflow.SessionsClient({
     credentials: {
       private_key: privateKey,
@@ -59,6 +65,22 @@ try {
   console.log('[LOG] Dialogflow SessionsClient creado exitosamente');
 } catch (error) {
   console.error('[ERROR] Error al crear SessionsClient:', error);
+  
+  // Intentar con configuración alternativa
+  try {
+    console.log('[LOG] Intentando configuración alternativa...');
+    sessionClient = new dialogflow.SessionsClient({
+      keyFilename: undefined, // No usar archivo de credenciales
+      credentials: {
+        private_key: privateKey,
+        client_email: process.env.GC_CLIENT_EMAIL
+      },
+      projectId: projectId
+    });
+    console.log('[LOG] Dialogflow SessionsClient creado con configuración alternativa');
+  } catch (altError) {
+    console.error('[ERROR] Error con configuración alternativa:', altError);
+  }
 }
 
 const dialogflowWebhook = async (req, res) => {
