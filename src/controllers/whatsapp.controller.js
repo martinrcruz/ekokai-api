@@ -23,16 +23,56 @@ const serviceAccount = {
 
 const projectId = serviceAccount.project_id;
 
-const privateKey = process.env.GC_PRIVATE_KEY.replace(/\\n/g, '\n');
-const sessionClient = new dialogflow.SessionsClient({
-  credentials: {
-    private_key: privateKey,
-    client_email: process.env.GC_CLIENT_EMAIL
-  }
-});
+// 🔧 Configuración mejorada de Dialogflow
+console.log('[LOG] Inicializando Dialogflow...');
+console.log('[LOG] Project ID:', projectId);
+console.log('[LOG] Client Email:', process.env.GC_CLIENT_EMAIL);
+
+// Verificar que tenemos las credenciales necesarias
+if (!process.env.GC_PRIVATE_KEY || !process.env.GC_CLIENT_EMAIL || !projectId) {
+  console.error('[ERROR] Faltan credenciales de Google Cloud:');
+  console.error('  - GC_PRIVATE_KEY:', process.env.GC_PRIVATE_KEY ? 'Configurado' : 'FALTA');
+  console.error('  - GC_CLIENT_EMAIL:', process.env.GC_CLIENT_EMAIL ? 'Configurado' : 'FALTA');
+  console.error('  - GC_PROJECT_ID:', projectId ? 'Configurado' : 'FALTA');
+}
+
+// Formatear la clave privada correctamente
+let privateKey = process.env.GC_PRIVATE_KEY;
+if (privateKey) {
+  // Reemplazar \n literales con saltos de línea reales
+  privateKey = privateKey.replace(/\\n/g, '\n');
+  console.log('[LOG] Private key length:', privateKey.length);
+  console.log('[LOG] Private key starts with:', privateKey.substring(0, 50) + '...');
+} else {
+  console.error('[ERROR] GC_PRIVATE_KEY no está configurada');
+}
+
+let sessionClient;
+try {
+  sessionClient = new dialogflow.SessionsClient({
+    credentials: {
+      private_key: privateKey,
+      client_email: process.env.GC_CLIENT_EMAIL
+    },
+    projectId: projectId
+  });
+  console.log('[LOG] Dialogflow SessionsClient creado exitosamente');
+} catch (error) {
+  console.error('[ERROR] Error al crear SessionsClient:', error);
+}
 
 const dialogflowWebhook = async (req, res) => {
   console.log('🔔 Webhook alcanzado en /webhook/whatsapp');
+
+  // Verificar que el cliente de Dialogflow esté disponible
+  if (!sessionClient) {
+    console.error('[ERROR] SessionsClient no está disponible');
+    await responderWhatsApp(
+      req.body.From?.replace('whatsapp:', ''),
+      'Error de configuración del servicio. Contacta al administrador.'
+    );
+    return res.sendStatus(500);
+  }
 
   try {
     const telefono = req.body.From?.replace('whatsapp:', '');
@@ -79,6 +119,11 @@ const dialogflowWebhook = async (req, res) => {
       responses = await sessionClient.detectIntent(request);
     } catch (err) {
       console.error('[ERROR] Error al consultar Dialogflow:', err);
+      console.error('[ERROR] Detalles del error:', {
+        message: err.message,
+        code: err.code,
+        details: err.details
+      });
       await responderWhatsApp(telefono, 'Ocurrió un error al procesar tu mensaje. Intenta más tarde.');
       return res.sendStatus(500);
     }
