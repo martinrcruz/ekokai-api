@@ -1,32 +1,28 @@
 const jwt = require('jsonwebtoken');
-const { getDB1 } = require('../config/database');
-const getUsuarioModel = require('../models/usuario.model');
+const Usuario = require('../models/usuario.model');
 
 const authMiddleware = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  console.log('[AUTH] Authorization header:', authHeader);
-  const token = authHeader?.split(' ')[1];
+  console.log('[authMiddleware] Headers recibidos:', req.headers);
+  const token = req.headers.authorization?.split(' ')[1];
+  console.log('[authMiddleware] Token extraído:', token);
   if (!token) {
-    console.log('[AUTH] Token no proporcionado');
+    console.log('[authMiddleware] Token no proporcionado');
     return res.status(401).json({ error: 'Token no proporcionado' });
   }
 
   try {
-    console.log('[AUTH] Verificando token con JWT_SECRET:', process.env.JWT_SECRET);
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('[AUTH] Payload decodificado:', payload);
-    const db = getDB1();
-    const Usuario = getUsuarioModel(db);
+    console.log('[authMiddleware] Payload JWT:', payload);
     const usuario = await Usuario.findById(payload.id);
     if (!usuario) {
-      console.log('[AUTH] Usuario no válido para ID:', payload.id);
+      console.log('[authMiddleware] Usuario no válido para id:', payload.id);
       return res.status(401).json({ error: 'Usuario no válido' });
     }
+
     req.usuario = usuario;
-    console.log('[AUTH] Usuario autenticado:', usuario.email, usuario.rol);
     next();
   } catch (err) {
-    console.log('[AUTH] Error al verificar token:', err.message);
+    console.log('[authMiddleware] Error al verificar token:', err);
     return res.status(401).json({ error: 'Token inválido o expirado' });
   }
 };

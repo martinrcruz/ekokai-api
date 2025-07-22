@@ -5,9 +5,25 @@ const morgan = require('morgan');
 
 const app = express();
 
-// Configurar CORS
+// Configurar CORS - Permitir múltiples orígenes
+const allowedOrigins = [
+  'http://localhost:8100',
+  'https://ekokai-web-jcmad.ondigitalocean.app',
+  'https://ekokai-web.ondigitalocean.app'
+];
+
 app.use(cors({
-  origin: 'http://localhost:8100',
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como apps móviles, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('🚫 CORS bloqueado para origen:', origin);
+      callback(new Error('No permitido por CORS'));
+    }
+  },
   credentials: true
 }));
 
