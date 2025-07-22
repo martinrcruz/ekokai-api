@@ -62,8 +62,6 @@ try {
     },
     projectId: projectId
   });
-  console.log('[LOG] SessionsClient:', sessionClient);
-  console.log('[LOG] SessionsClient.projectId:', sessionClient.projectId);
   console.log('[LOG] Dialogflow SessionsClient creado exitosamente');
 } catch (error) {
   console.error('[ERROR] Error al crear SessionsClient:', error);

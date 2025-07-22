@@ -4,7 +4,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify": "node scripts/verify-deployment.js",
+    "test-credentials": "node scripts/test-credentials.js",
+    "docker:build": "docker build -t ekokai-api .",
+    "docker:run": "docker run -p 8080:8080 ekokai-api",
+    "docker:compose": "docker-compose up --build"
   },
   "keywords": [],
   "author": "",
