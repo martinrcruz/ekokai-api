@@ -17,31 +17,16 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // ======================
-// LOGS PARA DEBUGGEAR
+// Rutas
 // ======================
-function checkRoute(path, modulePath) {
-  try {
-    console.log(`🔎 [DEBUG] Cargando rutas desde: ${modulePath}`);
-    const r = require(modulePath);
-    console.log(`✅ [DEBUG] Ruta ${path} cargada correctamente. Tipo: ${typeof r}`);
-    return r;
-  } catch (err) {
-    console.error(`❌ [DEBUG] Error al cargar ${modulePath}:`, err);
-    throw err;
-  }
-}
-
-// ======================
-// Rutas con logs
-// ======================
-app.use('/auth', checkRoute('/auth', './routes/auth.routes'));
-app.use('/usuarios', checkRoute('/usuarios', './routes/usuario.routes'));
-app.use('/ecopuntos', checkRoute('/ecopuntos', './routes/ecopunto.routes'));
-app.use('/residuos', checkRoute('/residuos', './routes/entregaresiduo.routes'));
-app.use('/tipos-residuo', checkRoute('/tipos-residuo', './routes/tiporesiduo.routes'));
-app.use('/estadisticas', checkRoute('/estadisticas', './routes/estadisticas.routes'));
-app.use('/webhook', checkRoute('/webhook', './routes/whatsapp.routes'));
-app.use('/admin', checkRoute('/admin', './routes/admin.routes'));
+app.use('/auth', require('./routes/auth.routes'));
+app.use('/usuarios', require('./routes/usuario.routes'));
+app.use('/ecopuntos', require('./routes/ecopunto.routes'));
+app.use('/residuos', require('./routes/entregaresiduo.routes'));
+app.use('/tipos-residuo', require('./routes/tiporesiduo.routes'));
+app.use('/estadisticas', require('./routes/estadisticas.routes'));
+app.use('/webhook', require('./routes/whatsapp.routes'));
+app.use('/admin', require('./routes/admin.routes'));
 
 // Health check endpoint para Digital Ocean
 app.get('/health', (req, res) => {
