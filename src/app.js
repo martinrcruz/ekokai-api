@@ -43,4 +43,14 @@ app.use('/estadisticas', checkRoute('/estadisticas', './routes/estadisticas.rout
 app.use('/webhook', checkRoute('/webhook', './routes/whatsapp.routes'));
 app.use('/admin', checkRoute('/admin', './routes/admin.routes'));
 
+// Health check endpoint para Digital Ocean
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 module.exports = app;
