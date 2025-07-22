@@ -9,4 +9,6 @@ const EntregaResiduoSchema = new mongoose.Schema({
   fecha: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.models.EntregaResiduo || mongoose.model('EntregaResiduo', EntregaResiduoSchema, 'entregas');
+module.exports = (connection) => {
+  return connection.models.EntregaResiduo || connection.model('EntregaResiduo', EntregaResiduoSchema, 'entregas');
+};

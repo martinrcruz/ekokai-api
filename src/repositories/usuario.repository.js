@@ -1,64 +1,45 @@
-const Usuario = require('../models/usuario.model');
+const { getDB1 } = require('../config/database');
+const getUsuarioModel = require('../models/usuario.model');
 
-const crearUsuario = async (datos) => {
-  console.log('🛠️ [REPOSITORY] Guardando nuevo usuario con:', datos);
-  return await Usuario.create(datos);
-};
-
-const buscarUsuario = async ({ email, dni }) => {
-  console.log('🔎 [REPOSITORY] Buscando usuario con email o dni:', email, dni);
-  return await Usuario.findOne({
-    $or: [{ email }, { dni }]
-  });
-};
-
-
-
-const buscarPorCorreo = async (email) => {
-  return await Usuario.findOne({ email });
-};
-
-const buscarPorId = async (id) => {
-  return await Usuario.findById(id);
-};
-
-const listarUsuarios = async (filtro = {}) => {
-  return await Usuario.find(filtro).sort({ fechaCreacion: -1 });
-};
-
-const buscarPorTelefono = async (telefono) => {
-  return await Usuario.findOne({ telefono });
-};
-
-
-// NUEVO: actualizar tokens acumulados
-const incrementarTokens = async (usuarioId, tokens) => {
-    console.log(`🔁 [REPO] Sumando ${tokens} tokens al usuario ${usuarioId}`);
-    return await Usuario.findByIdAndUpdate(
-      usuarioId,
-      { $inc: { tokensAcumulados: tokens } },
-      { new: true }
-    );
-  };
-
-const actualizarUsuario = async (id, datos) => {
-  console.log('✏️ [REPOSITORY] Actualizando usuario', id, 'con:', datos);
-  return await Usuario.findByIdAndUpdate(id, datos, { new: true });
-};
-
-const eliminarUsuario = async (id) => {
-  console.log('🗑️ [REPOSITORY] Eliminando usuario', id);
-  return await Usuario.findByIdAndDelete(id);
-};
+function getUsuario() {
+  const db = getDB1();
+  if (!db) throw new Error('DB1 no inicializada');
+  return getUsuarioModel(db);
+}
 
 module.exports = {
-  crearUsuario,
-  buscarUsuario,
-  buscarPorCorreo,
-  buscarPorId,
-  listarUsuarios,
-  incrementarTokens,
-  buscarPorTelefono,
-  actualizarUsuario,
-  eliminarUsuario
+  async buscarUsuario(query) {
+    return getUsuario().findOne(query);
+  },
+  async crearUsuario(data) {
+    const usuario = new (getUsuario())(data);
+    return usuario.save();
+  },
+  async listarUsuarios() {
+    return getUsuario().find();
+  },
+  async buscarPorCorreo(email) {
+    return getUsuario().findOne({ email });
+  },
+  async buscarPorId(id) {
+    return getUsuario().findById(id);
+  },
+  async actualizarUsuario(id, data) {
+    return getUsuario().findByIdAndUpdate(id, data, { new: true });
+  },
+  async eliminarUsuario(id) {
+    return getUsuario().findByIdAndDelete(id);
+  },
+  async buscarPorTelefono(telefono) {
+    return getUsuario().findOne({ telefono });
+  },
+  async incrementarTokens(id, tokens) {
+    return getUsuario().findByIdAndUpdate(id, { $inc: { tokensAcumulados: tokens } }, { new: true });
+  },
+  async listarAdministradores() {
+    return getUsuario().find({ rol: 'administrador' });
+  },
+  async buscarAdministradorPorId(id) {
+    return getUsuario().findOne({ _id: id, rol: 'administrador' });
+  }
 };

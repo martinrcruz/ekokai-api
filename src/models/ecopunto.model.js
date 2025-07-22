@@ -18,5 +18,6 @@ EcopuntoSchema.virtual('vecinos', {
   EcopuntoSchema.set('toObject', { virtuals: true });
   EcopuntoSchema.set('toJSON', { virtuals: true });
 
-  
-module.exports = mongoose.models.Ecopunto || mongoose.model('Ecopunto', EcopuntoSchema, 'ecopuntos');
+module.exports = (connection) => {
+  return connection.models.Ecopunto || connection.model('Ecopunto', EcopuntoSchema, 'ecopuntos');
+};

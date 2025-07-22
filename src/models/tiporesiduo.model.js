@@ -6,5 +6,6 @@ const TipoResiduoSchema = new mongoose.Schema({
   tokensPorKg: { type: Number, required: true, min: 0 }
 }, { timestamps: true });
 
-// ⚠️ IMPORTANTE: usar getDB1().model para evitar usar la conexión global
-module.exports = mongoose.models.TipoResiduo || mongoose.model('TipoResiduo', TipoResiduoSchema, 'tiporesiduos');
+module.exports = (connection) => {
+  return connection.models.TipoResiduo || connection.model('TipoResiduo', TipoResiduoSchema, 'tiporesiduos');
+};

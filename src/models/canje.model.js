@@ -1,3 +1,4 @@
+const { getDB1 } = require('../config/database');
 const mongoose = require('mongoose');
 
 const CanjeSchema = new mongoose.Schema({
@@ -8,4 +9,4 @@ const CanjeSchema = new mongoose.Schema({
   estado: { type: String, enum: ['Pendiente', 'Entregado'], default: 'Pendiente' }
 });
 
-module.exports = mongoose.models.Canje || mongoose.model('Canje', CanjeSchema, 'canjes'); 
+module.exports = getDB1().model('Canje', CanjeSchema);

@@ -6,7 +6,7 @@ async function connectDB1() {
   if (!DB1) {
     DB1 = await mongoose.createConnection(process.env.MONGO_URI_DB1, {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     });
     console.log(`✅ Conectado a DB1 correctamente`);
   }
