@@ -39,6 +39,5 @@ UsuarioSchema.methods.compararContrasena = async function (contrasenaPlano) {
   return await bcrypt.compare(contrasenaPlano, this.password);
 };
 
-const db = getDB1();
-const Usuario = db.models.Usuario || db.model('Usuario', UsuarioSchema, 'usuarios');
+const Usuario = mongoose.models.Usuario || mongoose.model('Usuario', UsuarioSchema, 'usuarios');
 module.exports = Usuario;

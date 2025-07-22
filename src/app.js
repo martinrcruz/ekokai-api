@@ -7,7 +7,7 @@ const app = express();
 
 // Configurar CORS
 app.use(cors({
-  origin: 'http://localhost:8100',
+  origin: '*',
   credentials: true
 }));
 
@@ -27,6 +27,9 @@ app.use('/tipos-residuo', require('./routes/tiporesiduo.routes'));
 app.use('/estadisticas', require('./routes/estadisticas.routes'));
 app.use('/webhook', require('./routes/whatsapp.routes'));
 app.use('/admin', require('./routes/admin.routes'));
+app.use('/cupones', require('./routes/cupon.routes'));
+const canjeRoutes = require('./routes/canje.routes');
+app.use('/api/canjes', canjeRoutes);
 
 // Health check endpoint para Digital Ocean
 app.get('/health', (req, res) => {

@@ -1,4 +1,3 @@
-const { getDB1 } = require('../config/database');
 const mongoose = require('mongoose');
 
 const CuponSchema = new mongoose.Schema({
@@ -9,5 +8,5 @@ const CuponSchema = new mongoose.Schema({
     activo: { type: Boolean, default: true },
     fechaCreacion: { type: Date, default: Date.now }
   });
-  module.exports = getDB1().model('Cupon', CuponSchema);
+  module.exports = mongoose.models.Cupon || mongoose.model('Cupon', CuponSchema, 'cupones');
   

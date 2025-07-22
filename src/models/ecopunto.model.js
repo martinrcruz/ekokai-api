@@ -1,4 +1,3 @@
-const { getDB1 } = require('../config/database');
 const mongoose = require('mongoose');
 
 const EcopuntoSchema = new mongoose.Schema({
@@ -19,4 +18,5 @@ EcopuntoSchema.virtual('vecinos', {
   EcopuntoSchema.set('toObject', { virtuals: true });
   EcopuntoSchema.set('toJSON', { virtuals: true });
 
-module.exports = getDB1().model('Ecopunto', EcopuntoSchema);
+  
+module.exports = mongoose.models.Ecopunto || mongoose.model('Ecopunto', EcopuntoSchema, 'ecopuntos');

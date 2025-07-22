@@ -22,11 +22,16 @@ const buscarPorNombre = async (nombre) => {
 const buscarPorId = async (id) => {
     return await TipoResiduo.findById(id);
   };
+
+const actualizar = async (id, data) => {
+  return await TipoResiduo.findByIdAndUpdate(id, data, { new: true });
+};
   
 module.exports = {
   crear,
   listar,
   eliminar,
   buscarPorNombre,
-  buscarPorId
+  buscarPorId,
+  actualizar
 };

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const usuarioCtrl = require('../controllers/usuario.controller');
 const { authMiddleware, permitirRoles } = require('../middleware/auth.middleware');
+const { verificarToken } = require('../middleware/auth.middleware');
 
 // Aplica JWT a todas las rutas
 router.use(authMiddleware);
@@ -22,4 +23,7 @@ router.delete('/:id', permitirRoles('administrador'), usuarioCtrl.eliminarUsuari
 
 // Requiere autenticación y rol ADMIN
 router.post('/registrar-encargado', authMiddleware, permitirRoles('administrador'), usuarioCtrl.registrarConRol);
+
+router.get('/:usuarioId/historial', verificarToken, permitirRoles('administrador', 'encargado'), usuarioCtrl.historialInteracciones);
+
 module.exports = router;

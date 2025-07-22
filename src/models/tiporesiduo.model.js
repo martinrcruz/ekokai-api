@@ -1,4 +1,3 @@
-const { getDB1 } = require('../config/database');
 const mongoose = require('mongoose');
 
 const TipoResiduoSchema = new mongoose.Schema({
@@ -8,4 +7,4 @@ const TipoResiduoSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // ⚠️ IMPORTANTE: usar getDB1().model para evitar usar la conexión global
-module.exports = getDB1().model('TipoResiduo', TipoResiduoSchema, 'tiporesiduos');
+module.exports = mongoose.models.TipoResiduo || mongoose.model('TipoResiduo', TipoResiduoSchema, 'tiporesiduos');
