@@ -9,4 +9,6 @@ const CanjeSchema = new mongoose.Schema({
   estado: { type: String, enum: ['Pendiente', 'Entregado'], default: 'Pendiente' }
 });
 
-module.exports = getDB1().model('Canje', CanjeSchema);
+module.exports = (connection) => {
+  return connection.models.Canje || connection.model('Canje', CanjeSchema, 'canjes');
+};
