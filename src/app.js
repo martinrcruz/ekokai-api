@@ -16,12 +16,16 @@ app.use(express.urlencoded({ extended: true })); // 👈 NECESARIO para Twilio
 app.use(express.json());
 app.use(morgan('dev'));
 
+// Servir archivos estáticos
+app.use(express.static('public'));
+
 // ======================
 // Rutas
 // ======================
 app.use('/auth', require('./routes/auth.routes'));
 app.use('/usuarios', require('./routes/usuario.routes'));
 app.use('/ecopuntos', require('./routes/ecopunto.routes'));
+app.use('/api/ecopunto', require('./routes/ecopunto.routes'));
 app.use('/residuos', require('./routes/entregaresiduo.routes'));
 app.use('/tipos-residuo', require('./routes/tiporesiduo.routes'));
 app.use('/estadisticas', require('./routes/estadisticas.routes'));

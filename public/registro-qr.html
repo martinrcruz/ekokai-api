@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EKOKAI - Registro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .logo .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #424242;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>♻️ EKOKAI</h1>
+            <p class="subtitle">Registro por Código QR</p>
+        </div>
+
+        <div class="info-box">
+            <h3>🌱 ¡Bienvenido a EKOKAI!</h3>
+            <p>Completa tus datos para unirte a la comunidad que premia el reciclaje. Recibirás un mensaje de WhatsApp confirmando tu registro.</p>
+        </div>
+
+        <form id="registroForm">
+            <div class="form-group">
+                <label for="nombre">Nombre <span class="required">*</span></label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre">
+            </div>
+
+            <div class="form-group">
+                <label for="apellido">Apellido <span class="required">*</span></label>
+                <input type="text" id="apellido" name="apellido" required placeholder="Tu apellido">
+            </div>
+
+            <div class="form-group">
+                <label for="dni">DNI <span class="required">*</span></label>
+                <input type="text" id="dni" name="dni" required placeholder="12345678" maxlength="8">
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Teléfono (WhatsApp) <span class="required">*</span></label>
+                <input type="tel" id="telefono" name="telefono" required placeholder="+56912345678">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email (opcional)</label>
+                <input type="email" id="email" name="email" placeholder="tu@email.com">
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                📱 Registrarme en EKOKAI
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Registrando usuario...</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <h3>✅ ¡Registro exitoso!</h3>
+            <p>Te hemos enviado un mensaje de WhatsApp confirmando tu registro. ¡Ya puedes empezar a reciclar y ganar tokens!</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <h3>❌ Error en el registro</h3>
+            <p id="errorText">Hubo un problema al registrar tu cuenta. Por favor, intenta nuevamente.</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.location.origin + '/api/ecopunto';
+        
+        document.getElementById('registroForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Obtener datos del formulario
+            const formData = new FormData(this);
+            const datos = {
+                nombre: formData.get('nombre').trim(),
+                apellido: formData.get('apellido').trim(),
+                dni: formData.get('dni').trim(),
+                telefono: formData.get('telefono').trim(),
+                email: formData.get('email').trim() || null
+            };
+            
+            // Validaciones básicas
+            if (!datos.nombre || !datos.apellido || !datos.dni || !datos.telefono) {
+                mostrarError('Por favor, completa todos los campos obligatorios.');
+                return;
+            }
+            
+            if (datos.dni.length !== 8 || !/^\d+$/.test(datos.dni)) {
+                mostrarError('El DNI debe tener 8 dígitos numéricos.');
+                return;
+            }
+            
+            if (!datos.telefono.startsWith('+')) {
+                mostrarError('El teléfono debe incluir el código de país (ej: +56912345678).');
+                return;
+            }
+            
+            // Mostrar loading
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            ocultarMensajes();
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/registrar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datos)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    mostrarExito();
+                    document.getElementById('registroForm').reset();
+                } else {
+                    mostrarError(result.message || 'Error en el registro');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarError('Error de conexión. Verifica tu internet e intenta nuevamente.');
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        function mostrarExito() {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function mostrarError(mensaje) {
+            document.getElementById('errorText').textContent = mensaje;
+            document.getElementById('errorMessage').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        function ocultarMensajes() {
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        // Formatear DNI automáticamente
+        document.getElementById('dni').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').substring(0, 8);
+        });
+        
+        // Formatear teléfono automáticamente
+        document.getElementById('telefono').addEventListener('input', function(e) {
+            let value = this.value.replace(/\D/g, '');
+            if (value && !this.value.startsWith('+')) {
+                this.value = '+' + value;
+            }
+        });
+    </script>
+</body>
+</html> 

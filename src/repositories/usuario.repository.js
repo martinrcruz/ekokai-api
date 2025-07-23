@@ -5,11 +5,21 @@ const crearUsuario = async (datos) => {
   return await Usuario.create(datos);
 };
 
-const buscarUsuario = async ({ email, dni }) => {
-  console.log('🔎 [REPOSITORY] Buscando usuario con email o dni:', email, dni);
-  return await Usuario.findOne({
-    $or: [{ email }, { dni }]
-  });
+const buscarUsuario = async ({ email, dni, telefono }) => {
+  console.log('🔎 [REPOSITORY] Buscando usuario con email, dni o telefono:', { email, dni, telefono });
+  
+  const filtro = { $or: [] };
+  
+  if (email) filtro.$or.push({ email });
+  if (dni) filtro.$or.push({ dni });
+  if (telefono) filtro.$or.push({ telefono });
+  
+  console.log('🔎 [REPOSITORY] Filtro aplicado:', JSON.stringify(filtro));
+  
+  const resultado = await Usuario.findOne(filtro);
+  console.log('🔎 [REPOSITORY] Resultado de búsqueda:', resultado ? 'Usuario encontrado' : 'Usuario no encontrado');
+  
+  return resultado;
 };
 
 

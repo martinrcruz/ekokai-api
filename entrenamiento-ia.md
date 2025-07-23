@@ -1,0 +1,1640 @@
+# 🤖 Entrenamiento Inteligente del Bot
+
+## 📅 Generado automáticamente: 7/22/2025, 9:07:31 PM
+
+## 🎯 Frases de Entrenamiento por Categoría
+
+
+### SALUDOS (14 frases)
+- hola
+- hols
+- holaa
+- olaa
+- ola
+- hey
+- hi
+- hello
+- buenas
+- buenos días
+- saludos
+- saludo
+- buen día
+- buen dia
+
+
+### TOKENS (594 frases)
+- decime mis tokens
+- mis tokens decime
+- dime mis tokens
+- mis tokens dime
+- che mis tokens
+- mis tokens che
+- ke mis tokens
+- mis tokens ke
+- que mis tokens
+- mis tokens que
+- como mis tokens
+- mis tokens como
+- komo mis tokens
+- mis tokens komo
+- decime mi tokens
+- mi tokens decime
+- dime mi tokens
+- mi tokens dime
+- che mi tokens
+- mi tokens che
+- ke mi tokens
+- mi tokens ke
+- que mi tokens
+- mi tokens que
+- como mi tokens
+- mi tokens como
+- komo mi tokens
+- mi tokens komo
+- decime tengo tokens
+- tengo tokens decime
+- dime tengo tokens
+- tengo tokens dime
+- che tengo tokens
+- tengo tokens che
+- ke tengo tokens
+- tengo tokens ke
+- que tengo tokens
+- tengo tokens que
+- como tengo tokens
+- tengo tokens como
+- komo tengo tokens
+- tengo tokens komo
+- decime cuantos tokens
+- cuantos tokens decime
+- dime cuantos tokens
+- cuantos tokens dime
+- che cuantos tokens
+- cuantos tokens che
+- ke cuantos tokens
+- cuantos tokens ke
+- que cuantos tokens
+- cuantos tokens que
+- como cuantos tokens
+- cuantos tokens como
+- komo cuantos tokens
+- cuantos tokens komo
+- decime kantos tokens
+- kantos tokens decime
+- dime kantos tokens
+- kantos tokens dime
+- che kantos tokens
+- kantos tokens che
+- ke kantos tokens
+- kantos tokens ke
+- que kantos tokens
+- kantos tokens que
+- como kantos tokens
+- kantos tokens como
+- komo kantos tokens
+- kantos tokens komo
+- decime ver tokens
+- ver tokens decime
+- dime ver tokens
+- ver tokens dime
+- che ver tokens
+- ver tokens che
+- ke ver tokens
+- ver tokens ke
+- que ver tokens
+- ver tokens que
+- como ver tokens
+- ver tokens como
+- komo ver tokens
+- ver tokens komo
+- decime mostrar tokens
+- mostrar tokens decime
+- dime mostrar tokens
+- mostrar tokens dime
+- che mostrar tokens
+- mostrar tokens che
+- ke mostrar tokens
+- mostrar tokens ke
+- que mostrar tokens
+- mostrar tokens que
+- como mostrar tokens
+- mostrar tokens como
+- komo mostrar tokens
+- mostrar tokens komo
+- decime mis token
+- mis token decime
+- dime mis token
+- mis token dime
+- che mis token
+- mis token che
+- ke mis token
+- mis token ke
+- que mis token
+- mis token que
+- como mis token
+- mis token como
+- komo mis token
+- mis token komo
+- decime mi token
+- mi token decime
+- dime mi token
+- mi token dime
+- che mi token
+- mi token che
+- ke mi token
+- mi token ke
+- que mi token
+- mi token que
+- como mi token
+- mi token como
+- komo mi token
+- mi token komo
+- decime tengo token
+- tengo token decime
+- dime tengo token
+- tengo token dime
+- che tengo token
+- tengo token che
+- ke tengo token
+- tengo token ke
+- que tengo token
+- tengo token que
+- como tengo token
+- tengo token como
+- komo tengo token
+- tengo token komo
+- decime cuantos token
+- cuantos token decime
+- dime cuantos token
+- cuantos token dime
+- che cuantos token
+- cuantos token che
+- ke cuantos token
+- cuantos token ke
+- que cuantos token
+- cuantos token que
+- como cuantos token
+- cuantos token como
+- komo cuantos token
+- cuantos token komo
+- decime kantos token
+- kantos token decime
+- dime kantos token
+- kantos token dime
+- che kantos token
+- kantos token che
+- ke kantos token
+- kantos token ke
+- que kantos token
+- kantos token que
+- como kantos token
+- kantos token como
+- komo kantos token
+- kantos token komo
+- decime ver token
+- ver token decime
+- dime ver token
+- ver token dime
+- che ver token
+- ver token che
+- ke ver token
+- ver token ke
+- que ver token
+- ver token que
+- como ver token
+- ver token como
+- komo ver token
+- ver token komo
+- decime mostrar token
+- mostrar token decime
+- dime mostrar token
+- mostrar token dime
+- che mostrar token
+- mostrar token che
+- ke mostrar token
+- mostrar token ke
+- que mostrar token
+- mostrar token que
+- como mostrar token
+- mostrar token como
+- komo mostrar token
+- mostrar token komo
+- decime mis puntos
+- mis puntos decime
+- dime mis puntos
+- mis puntos dime
+- che mis puntos
+- mis puntos che
+- ke mis puntos
+- mis puntos ke
+- que mis puntos
+- mis puntos que
+- como mis puntos
+- mis puntos como
+- komo mis puntos
+- mis puntos komo
+- decime mi puntos
+- mi puntos decime
+- dime mi puntos
+- mi puntos dime
+- che mi puntos
+- mi puntos che
+- ke mi puntos
+- mi puntos ke
+- que mi puntos
+- mi puntos que
+- como mi puntos
+- mi puntos como
+- komo mi puntos
+- mi puntos komo
+- decime tengo puntos
+- tengo puntos decime
+- dime tengo puntos
+- tengo puntos dime
+- che tengo puntos
+- tengo puntos che
+- ke tengo puntos
+- tengo puntos ke
+- que tengo puntos
+- tengo puntos que
+- como tengo puntos
+- tengo puntos como
+- komo tengo puntos
+- tengo puntos komo
+- decime cuantos puntos
+- cuantos puntos decime
+- dime cuantos puntos
+- cuantos puntos dime
+- che cuantos puntos
+- cuantos puntos che
+- ke cuantos puntos
+- cuantos puntos ke
+- que cuantos puntos
+- cuantos puntos que
+- como cuantos puntos
+- cuantos puntos como
+- komo cuantos puntos
+- cuantos puntos komo
+- decime kantos puntos
+- kantos puntos decime
+- dime kantos puntos
+- kantos puntos dime
+- che kantos puntos
+- kantos puntos che
+- ke kantos puntos
+- kantos puntos ke
+- que kantos puntos
+- kantos puntos que
+- como kantos puntos
+- kantos puntos como
+- komo kantos puntos
+- kantos puntos komo
+- decime ver puntos
+- ver puntos decime
+- dime ver puntos
+- ver puntos dime
+- che ver puntos
+- ver puntos che
+- ke ver puntos
+- ver puntos ke
+- que ver puntos
+- ver puntos que
+- como ver puntos
+- ver puntos como
+- komo ver puntos
+- ver puntos komo
+- decime mostrar puntos
+- mostrar puntos decime
+- dime mostrar puntos
+- mostrar puntos dime
+- che mostrar puntos
+- mostrar puntos che
+- ke mostrar puntos
+- mostrar puntos ke
+- que mostrar puntos
+- mostrar puntos que
+- como mostrar puntos
+- mostrar puntos como
+- komo mostrar puntos
+- mostrar puntos komo
+- decime mis punto
+- mis punto decime
+- dime mis punto
+- mis punto dime
+- che mis punto
+- mis punto che
+- ke mis punto
+- mis punto ke
+- que mis punto
+- mis punto que
+- como mis punto
+- mis punto como
+- komo mis punto
+- mis punto komo
+- decime mi punto
+- mi punto decime
+- dime mi punto
+- mi punto dime
+- che mi punto
+- mi punto che
+- ke mi punto
+- mi punto ke
+- que mi punto
+- mi punto que
+- como mi punto
+- mi punto como
+- komo mi punto
+- mi punto komo
+- decime tengo punto
+- tengo punto decime
+- dime tengo punto
+- tengo punto dime
+- che tengo punto
+- tengo punto che
+- ke tengo punto
+- tengo punto ke
+- que tengo punto
+- tengo punto que
+- como tengo punto
+- tengo punto como
+- komo tengo punto
+- tengo punto komo
+- decime cuantos punto
+- cuantos punto decime
+- dime cuantos punto
+- cuantos punto dime
+- che cuantos punto
+- cuantos punto che
+- ke cuantos punto
+- cuantos punto ke
+- que cuantos punto
+- cuantos punto que
+- como cuantos punto
+- cuantos punto como
+- komo cuantos punto
+- cuantos punto komo
+- decime kantos punto
+- kantos punto decime
+- dime kantos punto
+- kantos punto dime
+- che kantos punto
+- kantos punto che
+- ke kantos punto
+- kantos punto ke
+- que kantos punto
+- kantos punto que
+- como kantos punto
+- kantos punto como
+- komo kantos punto
+- kantos punto komo
+- decime ver punto
+- ver punto decime
+- dime ver punto
+- ver punto dime
+- che ver punto
+- ver punto che
+- ke ver punto
+- ver punto ke
+- que ver punto
+- ver punto que
+- como ver punto
+- ver punto como
+- komo ver punto
+- ver punto komo
+- decime mostrar punto
+- mostrar punto decime
+- dime mostrar punto
+- mostrar punto dime
+- che mostrar punto
+- mostrar punto che
+- ke mostrar punto
+- mostrar punto ke
+- que mostrar punto
+- mostrar punto que
+- como mostrar punto
+- mostrar punto como
+- komo mostrar punto
+- mostrar punto komo
+- decime mis balance
+- mis balance decime
+- dime mis balance
+- mis balance dime
+- che mis balance
+- mis balance che
+- ke mis balance
+- mis balance ke
+- que mis balance
+- mis balance que
+- como mis balance
+- mis balance como
+- komo mis balance
+- mis balance komo
+- decime mi balance
+- mi balance decime
+- dime mi balance
+- mi balance dime
+- che mi balance
+- mi balance che
+- ke mi balance
+- mi balance ke
+- que mi balance
+- mi balance que
+- como mi balance
+- mi balance como
+- komo mi balance
+- mi balance komo
+- decime tengo balance
+- tengo balance decime
+- dime tengo balance
+- tengo balance dime
+- che tengo balance
+- tengo balance che
+- ke tengo balance
+- tengo balance ke
+- que tengo balance
+- tengo balance que
+- como tengo balance
+- tengo balance como
+- komo tengo balance
+- tengo balance komo
+- decime cuantos balance
+- cuantos balance decime
+- dime cuantos balance
+- cuantos balance dime
+- che cuantos balance
+- cuantos balance che
+- ke cuantos balance
+- cuantos balance ke
+- que cuantos balance
+- cuantos balance que
+- como cuantos balance
+- cuantos balance como
+- komo cuantos balance
+- cuantos balance komo
+- decime kantos balance
+- kantos balance decime
+- dime kantos balance
+- kantos balance dime
+- che kantos balance
+- kantos balance che
+- ke kantos balance
+- kantos balance ke
+- que kantos balance
+- kantos balance que
+- como kantos balance
+- kantos balance como
+- komo kantos balance
+- kantos balance komo
+- decime ver balance
+- ver balance decime
+- dime ver balance
+- ver balance dime
+- che ver balance
+- ver balance che
+- ke ver balance
+- ver balance ke
+- que ver balance
+- ver balance que
+- como ver balance
+- ver balance como
+- komo ver balance
+- ver balance komo
+- decime mostrar balance
+- mostrar balance decime
+- dime mostrar balance
+- mostrar balance dime
+- che mostrar balance
+- mostrar balance che
+- ke mostrar balance
+- mostrar balance ke
+- que mostrar balance
+- mostrar balance que
+- como mostrar balance
+- mostrar balance como
+- komo mostrar balance
+- mostrar balance komo
+- decime mis saldo
+- mis saldo decime
+- dime mis saldo
+- mis saldo dime
+- che mis saldo
+- mis saldo che
+- ke mis saldo
+- mis saldo ke
+- que mis saldo
+- mis saldo que
+- como mis saldo
+- mis saldo como
+- komo mis saldo
+- mis saldo komo
+- decime mi saldo
+- mi saldo decime
+- dime mi saldo
+- mi saldo dime
+- che mi saldo
+- mi saldo che
+- ke mi saldo
+- mi saldo ke
+- que mi saldo
+- mi saldo que
+- como mi saldo
+- mi saldo como
+- komo mi saldo
+- mi saldo komo
+- decime tengo saldo
+- tengo saldo decime
+- dime tengo saldo
+- tengo saldo dime
+- che tengo saldo
+- tengo saldo che
+- ke tengo saldo
+- tengo saldo ke
+- que tengo saldo
+- tengo saldo que
+- como tengo saldo
+- tengo saldo como
+- komo tengo saldo
+- tengo saldo komo
+- decime cuantos saldo
+- cuantos saldo decime
+- dime cuantos saldo
+- cuantos saldo dime
+- che cuantos saldo
+- cuantos saldo che
+- ke cuantos saldo
+- cuantos saldo ke
+- que cuantos saldo
+- cuantos saldo que
+- como cuantos saldo
+- cuantos saldo como
+- komo cuantos saldo
+- cuantos saldo komo
+- decime kantos saldo
+- kantos saldo decime
+- dime kantos saldo
+- kantos saldo dime
+- che kantos saldo
+- kantos saldo che
+- ke kantos saldo
+- kantos saldo ke
+- que kantos saldo
+- kantos saldo que
+- como kantos saldo
+- kantos saldo como
+- komo kantos saldo
+- kantos saldo komo
+- decime ver saldo
+- ver saldo decime
+- dime ver saldo
+- ver saldo dime
+- che ver saldo
+- ver saldo che
+- ke ver saldo
+- ver saldo ke
+- que ver saldo
+- ver saldo que
+- como ver saldo
+- ver saldo como
+- komo ver saldo
+- ver saldo komo
+- decime mostrar saldo
+- mostrar saldo decime
+- dime mostrar saldo
+- mostrar saldo dime
+- che mostrar saldo
+- mostrar saldo che
+- ke mostrar saldo
+- mostrar saldo ke
+- que mostrar saldo
+- mostrar saldo que
+- como mostrar saldo
+- mostrar saldo como
+- komo mostrar saldo
+- mostrar saldo komo
+- tokens
+- token
+- puntos
+- punto
+- balance
+- saldo
+
+
+### PREMIOS (367 frases)
+- ver hay premios
+- hay premios ver
+- mostrar hay premios
+- hay premios mostrar
+- que hay hay premios
+- hay premios que hay
+- ke hay hay premios
+- hay premios ke hay
+- que ai hay premios
+- hay premios que ai
+- ke ai hay premios
+- hay premios ke ai
+- ver ai premios
+- ai premios ver
+- mostrar ai premios
+- ai premios mostrar
+- que hay ai premios
+- ai premios que hay
+- ke hay ai premios
+- ai premios ke hay
+- que ai ai premios
+- ai premios que ai
+- ke ai ai premios
+- ai premios ke ai
+- ver disponible premios
+- disponible premios ver
+- mostrar disponible premios
+- disponible premios mostrar
+- que hay disponible premios
+- disponible premios que hay
+- ke hay disponible premios
+- disponible premios ke hay
+- que ai disponible premios
+- disponible premios que ai
+- ke ai disponible premios
+- disponible premios ke ai
+- ver disponibles premios
+- disponibles premios ver
+- mostrar disponibles premios
+- disponibles premios mostrar
+- que hay disponibles premios
+- disponibles premios que hay
+- ke hay disponibles premios
+- disponibles premios ke hay
+- que ai disponibles premios
+- disponibles premios que ai
+- ke ai disponibles premios
+- disponibles premios ke ai
+- ver que premios
+- que premios ver
+- mostrar que premios
+- que premios mostrar
+- que hay que premios
+- que premios que hay
+- ke hay que premios
+- que premios ke hay
+- que ai que premios
+- que premios que ai
+- ke ai que premios
+- que premios ke ai
+- ver ke premios
+- ke premios ver
+- mostrar ke premios
+- ke premios mostrar
+- que hay ke premios
+- ke premios que hay
+- ke hay ke premios
+- ke premios ke hay
+- que ai ke premios
+- ke premios que ai
+- ke ai ke premios
+- ke premios ke ai
+- ver hay cupones
+- hay cupones ver
+- mostrar hay cupones
+- hay cupones mostrar
+- que hay hay cupones
+- hay cupones que hay
+- ke hay hay cupones
+- hay cupones ke hay
+- que ai hay cupones
+- hay cupones que ai
+- ke ai hay cupones
+- hay cupones ke ai
+- ver ai cupones
+- ai cupones ver
+- mostrar ai cupones
+- ai cupones mostrar
+- que hay ai cupones
+- ai cupones que hay
+- ke hay ai cupones
+- ai cupones ke hay
+- que ai ai cupones
+- ai cupones que ai
+- ke ai ai cupones
+- ai cupones ke ai
+- ver disponible cupones
+- disponible cupones ver
+- mostrar disponible cupones
+- disponible cupones mostrar
+- que hay disponible cupones
+- disponible cupones que hay
+- ke hay disponible cupones
+- disponible cupones ke hay
+- que ai disponible cupones
+- disponible cupones que ai
+- ke ai disponible cupones
+- disponible cupones ke ai
+- ver disponibles cupones
+- disponibles cupones ver
+- mostrar disponibles cupones
+- disponibles cupones mostrar
+- que hay disponibles cupones
+- disponibles cupones que hay
+- ke hay disponibles cupones
+- disponibles cupones ke hay
+- que ai disponibles cupones
+- disponibles cupones que ai
+- ke ai disponibles cupones
+- disponibles cupones ke ai
+- ver que cupones
+- que cupones ver
+- mostrar que cupones
+- que cupones mostrar
+- que hay que cupones
+- que cupones que hay
+- ke hay que cupones
+- que cupones ke hay
+- que ai que cupones
+- que cupones que ai
+- ke ai que cupones
+- que cupones ke ai
+- ver ke cupones
+- ke cupones ver
+- mostrar ke cupones
+- ke cupones mostrar
+- que hay ke cupones
+- ke cupones que hay
+- ke hay ke cupones
+- ke cupones ke hay
+- que ai ke cupones
+- ke cupones que ai
+- ke ai ke cupones
+- ke cupones ke ai
+- ver hay catalogo
+- hay catalogo ver
+- mostrar hay catalogo
+- hay catalogo mostrar
+- que hay hay catalogo
+- hay catalogo que hay
+- ke hay hay catalogo
+- hay catalogo ke hay
+- que ai hay catalogo
+- hay catalogo que ai
+- ke ai hay catalogo
+- hay catalogo ke ai
+- ver ai catalogo
+- ai catalogo ver
+- mostrar ai catalogo
+- ai catalogo mostrar
+- que hay ai catalogo
+- ai catalogo que hay
+- ke hay ai catalogo
+- ai catalogo ke hay
+- que ai ai catalogo
+- ai catalogo que ai
+- ke ai ai catalogo
+- ai catalogo ke ai
+- ver disponible catalogo
+- disponible catalogo ver
+- mostrar disponible catalogo
+- disponible catalogo mostrar
+- que hay disponible catalogo
+- disponible catalogo que hay
+- ke hay disponible catalogo
+- disponible catalogo ke hay
+- que ai disponible catalogo
+- disponible catalogo que ai
+- ke ai disponible catalogo
+- disponible catalogo ke ai
+- ver disponibles catalogo
+- disponibles catalogo ver
+- mostrar disponibles catalogo
+- disponibles catalogo mostrar
+- que hay disponibles catalogo
+- disponibles catalogo que hay
+- ke hay disponibles catalogo
+- disponibles catalogo ke hay
+- que ai disponibles catalogo
+- disponibles catalogo que ai
+- ke ai disponibles catalogo
+- disponibles catalogo ke ai
+- ver que catalogo
+- que catalogo ver
+- mostrar que catalogo
+- que catalogo mostrar
+- que hay que catalogo
+- que catalogo que hay
+- ke hay que catalogo
+- que catalogo ke hay
+- que ai que catalogo
+- que catalogo que ai
+- ke ai que catalogo
+- que catalogo ke ai
+- ver ke catalogo
+- ke catalogo ver
+- mostrar ke catalogo
+- ke catalogo mostrar
+- que hay ke catalogo
+- ke catalogo que hay
+- ke hay ke catalogo
+- ke catalogo ke hay
+- que ai ke catalogo
+- ke catalogo que ai
+- ke ai ke catalogo
+- ke catalogo ke ai
+- ver hay catálogo
+- hay catálogo ver
+- mostrar hay catálogo
+- hay catálogo mostrar
+- que hay hay catálogo
+- hay catálogo que hay
+- ke hay hay catálogo
+- hay catálogo ke hay
+- que ai hay catálogo
+- hay catálogo que ai
+- ke ai hay catálogo
+- hay catálogo ke ai
+- ver ai catálogo
+- ai catálogo ver
+- mostrar ai catálogo
+- ai catálogo mostrar
+- que hay ai catálogo
+- ai catálogo que hay
+- ke hay ai catálogo
+- ai catálogo ke hay
+- que ai ai catálogo
+- ai catálogo que ai
+- ke ai ai catálogo
+- ai catálogo ke ai
+- ver disponible catálogo
+- disponible catálogo ver
+- mostrar disponible catálogo
+- disponible catálogo mostrar
+- que hay disponible catálogo
+- disponible catálogo que hay
+- ke hay disponible catálogo
+- disponible catálogo ke hay
+- que ai disponible catálogo
+- disponible catálogo que ai
+- ke ai disponible catálogo
+- disponible catálogo ke ai
+- ver disponibles catálogo
+- disponibles catálogo ver
+- mostrar disponibles catálogo
+- disponibles catálogo mostrar
+- que hay disponibles catálogo
+- disponibles catálogo que hay
+- ke hay disponibles catálogo
+- disponibles catálogo ke hay
+- que ai disponibles catálogo
+- disponibles catálogo que ai
+- ke ai disponibles catálogo
+- disponibles catálogo ke ai
+- ver que catálogo
+- que catálogo ver
+- mostrar que catálogo
+- que catálogo mostrar
+- que hay que catálogo
+- que catálogo que hay
+- ke hay que catálogo
+- que catálogo ke hay
+- que ai que catálogo
+- que catálogo que ai
+- ke ai que catálogo
+- que catálogo ke ai
+- ver ke catálogo
+- ke catálogo ver
+- mostrar ke catálogo
+- ke catálogo mostrar
+- que hay ke catálogo
+- ke catálogo que hay
+- ke hay ke catálogo
+- ke catálogo ke hay
+- que ai ke catálogo
+- ke catálogo que ai
+- ke ai ke catálogo
+- ke catálogo ke ai
+- ver hay beneficios
+- hay beneficios ver
+- mostrar hay beneficios
+- hay beneficios mostrar
+- que hay hay beneficios
+- hay beneficios que hay
+- ke hay hay beneficios
+- hay beneficios ke hay
+- que ai hay beneficios
+- hay beneficios que ai
+- ke ai hay beneficios
+- hay beneficios ke ai
+- ver ai beneficios
+- ai beneficios ver
+- mostrar ai beneficios
+- ai beneficios mostrar
+- que hay ai beneficios
+- ai beneficios que hay
+- ke hay ai beneficios
+- ai beneficios ke hay
+- que ai ai beneficios
+- ai beneficios que ai
+- ke ai ai beneficios
+- ai beneficios ke ai
+- ver disponible beneficios
+- disponible beneficios ver
+- mostrar disponible beneficios
+- disponible beneficios mostrar
+- que hay disponible beneficios
+- disponible beneficios que hay
+- ke hay disponible beneficios
+- disponible beneficios ke hay
+- que ai disponible beneficios
+- disponible beneficios que ai
+- ke ai disponible beneficios
+- disponible beneficios ke ai
+- ver disponibles beneficios
+- disponibles beneficios ver
+- mostrar disponibles beneficios
+- disponibles beneficios mostrar
+- que hay disponibles beneficios
+- disponibles beneficios que hay
+- ke hay disponibles beneficios
+- disponibles beneficios ke hay
+- que ai disponibles beneficios
+- disponibles beneficios que ai
+- ke ai disponibles beneficios
+- disponibles beneficios ke ai
+- ver que beneficios
+- que beneficios ver
+- mostrar que beneficios
+- que beneficios mostrar
+- que hay que beneficios
+- que beneficios que hay
+- ke hay que beneficios
+- que beneficios ke hay
+- que ai que beneficios
+- que beneficios que ai
+- ke ai que beneficios
+- que beneficios ke ai
+- ver ke beneficios
+- ke beneficios ver
+- mostrar ke beneficios
+- ke beneficios mostrar
+- que hay ke beneficios
+- ke beneficios que hay
+- ke hay ke beneficios
+- ke beneficios ke hay
+- que ai ke beneficios
+- ke beneficios que ai
+- ke ai ke beneficios
+- ke beneficios ke ai
+- premios
+- cupones
+- kupones
+- catalogo
+- katalogo
+- catálogo
+- beneficios
+
+
+### ECOPUNTOS (367 frases)
+- decime hay ecopuntos
+- hay ecopuntos decime
+- dime hay ecopuntos
+- hay ecopuntos dime
+- donde hay ecopuntos
+- hay ecopuntos donde
+- como hay ecopuntos
+- hay ecopuntos como
+- komo hay ecopuntos
+- hay ecopuntos komo
+- decime ai ecopuntos
+- ai ecopuntos decime
+- dime ai ecopuntos
+- ai ecopuntos dime
+- donde ai ecopuntos
+- ai ecopuntos donde
+- como ai ecopuntos
+- ai ecopuntos como
+- komo ai ecopuntos
+- ai ecopuntos komo
+- decime estan ecopuntos
+- estan ecopuntos decime
+- dime estan ecopuntos
+- estan ecopuntos dime
+- donde estan ecopuntos
+- estan ecopuntos donde
+- como estan ecopuntos
+- estan ecopuntos como
+- komo estan ecopuntos
+- estan ecopuntos komo
+- decime están ecopuntos
+- están ecopuntos decime
+- dime están ecopuntos
+- están ecopuntos dime
+- donde están ecopuntos
+- están ecopuntos donde
+- como están ecopuntos
+- están ecopuntos como
+- komo están ecopuntos
+- están ecopuntos komo
+- decime cerca ecopuntos
+- cerca ecopuntos decime
+- dime cerca ecopuntos
+- cerca ecopuntos dime
+- donde cerca ecopuntos
+- cerca ecopuntos donde
+- como cerca ecopuntos
+- cerca ecopuntos como
+- komo cerca ecopuntos
+- cerca ecopuntos komo
+- decime cercano ecopuntos
+- cercano ecopuntos decime
+- dime cercano ecopuntos
+- cercano ecopuntos dime
+- donde cercano ecopuntos
+- cercano ecopuntos donde
+- como cercano ecopuntos
+- cercano ecopuntos como
+- komo cercano ecopuntos
+- cercano ecopuntos komo
+- decime hay punto
+- hay punto decime
+- dime hay punto
+- hay punto dime
+- donde hay punto
+- hay punto donde
+- como hay punto
+- hay punto como
+- komo hay punto
+- hay punto komo
+- decime ai punto
+- ai punto decime
+- dime ai punto
+- ai punto dime
+- donde ai punto
+- ai punto donde
+- como ai punto
+- ai punto como
+- komo ai punto
+- ai punto komo
+- decime estan punto
+- estan punto decime
+- dime estan punto
+- estan punto dime
+- donde estan punto
+- estan punto donde
+- como estan punto
+- estan punto como
+- komo estan punto
+- estan punto komo
+- decime están punto
+- están punto decime
+- dime están punto
+- están punto dime
+- donde están punto
+- están punto donde
+- como están punto
+- están punto como
+- komo están punto
+- están punto komo
+- decime cerca punto
+- cerca punto decime
+- dime cerca punto
+- cerca punto dime
+- donde cerca punto
+- cerca punto donde
+- como cerca punto
+- cerca punto como
+- komo cerca punto
+- cerca punto komo
+- decime cercano punto
+- cercano punto decime
+- dime cercano punto
+- cercano punto dime
+- donde cercano punto
+- cercano punto donde
+- como cercano punto
+- cercano punto como
+- komo cercano punto
+- cercano punto komo
+- decime hay puntos
+- hay puntos decime
+- dime hay puntos
+- hay puntos dime
+- donde hay puntos
+- hay puntos donde
+- como hay puntos
+- hay puntos como
+- komo hay puntos
+- hay puntos komo
+- decime ai puntos
+- ai puntos decime
+- dime ai puntos
+- ai puntos dime
+- donde ai puntos
+- ai puntos donde
+- como ai puntos
+- ai puntos como
+- komo ai puntos
+- ai puntos komo
+- decime estan puntos
+- estan puntos decime
+- dime estan puntos
+- estan puntos dime
+- donde estan puntos
+- estan puntos donde
+- como estan puntos
+- estan puntos como
+- komo estan puntos
+- estan puntos komo
+- decime están puntos
+- están puntos decime
+- dime están puntos
+- están puntos dime
+- donde están puntos
+- están puntos donde
+- como están puntos
+- están puntos como
+- komo están puntos
+- están puntos komo
+- decime cerca puntos
+- cerca puntos decime
+- dime cerca puntos
+- cerca puntos dime
+- donde cerca puntos
+- cerca puntos donde
+- como cerca puntos
+- cerca puntos como
+- komo cerca puntos
+- cerca puntos komo
+- decime cercano puntos
+- cercano puntos decime
+- dime cercano puntos
+- cercano puntos dime
+- donde cercano puntos
+- cercano puntos donde
+- como cercano puntos
+- cercano puntos como
+- komo cercano puntos
+- cercano puntos komo
+- decime hay donde
+- hay donde decime
+- dime hay donde
+- hay donde dime
+- donde hay donde
+- hay donde donde
+- como hay donde
+- hay donde como
+- komo hay donde
+- hay donde komo
+- decime ai donde
+- ai donde decime
+- dime ai donde
+- ai donde dime
+- donde ai donde
+- ai donde donde
+- como ai donde
+- ai donde como
+- komo ai donde
+- ai donde komo
+- decime estan donde
+- estan donde decime
+- dime estan donde
+- estan donde dime
+- donde estan donde
+- estan donde donde
+- como estan donde
+- estan donde como
+- komo estan donde
+- estan donde komo
+- decime están donde
+- están donde decime
+- dime están donde
+- están donde dime
+- donde están donde
+- están donde donde
+- como están donde
+- están donde como
+- komo están donde
+- están donde komo
+- decime cerca donde
+- cerca donde decime
+- dime cerca donde
+- cerca donde dime
+- donde cerca donde
+- cerca donde donde
+- como cerca donde
+- cerca donde como
+- komo cerca donde
+- cerca donde komo
+- decime cercano donde
+- cercano donde decime
+- dime cercano donde
+- cercano donde dime
+- donde cercano donde
+- cercano donde donde
+- como cercano donde
+- cercano donde como
+- komo cercano donde
+- cercano donde komo
+- decime hay ubicacion
+- hay ubicacion decime
+- dime hay ubicacion
+- hay ubicacion dime
+- donde hay ubicacion
+- hay ubicacion donde
+- como hay ubicacion
+- hay ubicacion como
+- komo hay ubicacion
+- hay ubicacion komo
+- decime ai ubicacion
+- ai ubicacion decime
+- dime ai ubicacion
+- ai ubicacion dime
+- donde ai ubicacion
+- ai ubicacion donde
+- como ai ubicacion
+- ai ubicacion como
+- komo ai ubicacion
+- ai ubicacion komo
+- decime estan ubicacion
+- estan ubicacion decime
+- dime estan ubicacion
+- estan ubicacion dime
+- donde estan ubicacion
+- estan ubicacion donde
+- como estan ubicacion
+- estan ubicacion como
+- komo estan ubicacion
+- estan ubicacion komo
+- decime están ubicacion
+- están ubicacion decime
+- dime están ubicacion
+- están ubicacion dime
+- donde están ubicacion
+- están ubicacion donde
+- como están ubicacion
+- están ubicacion como
+- komo están ubicacion
+- están ubicacion komo
+- decime cerca ubicacion
+- cerca ubicacion decime
+- dime cerca ubicacion
+- cerca ubicacion dime
+- donde cerca ubicacion
+- cerca ubicacion donde
+- como cerca ubicacion
+- cerca ubicacion como
+- komo cerca ubicacion
+- cerca ubicacion komo
+- decime cercano ubicacion
+- cercano ubicacion decime
+- dime cercano ubicacion
+- cercano ubicacion dime
+- donde cercano ubicacion
+- cercano ubicacion donde
+- como cercano ubicacion
+- cercano ubicacion como
+- komo cercano ubicacion
+- cercano ubicacion komo
+- decime hay ubicación
+- hay ubicación decime
+- dime hay ubicación
+- hay ubicación dime
+- donde hay ubicación
+- hay ubicación donde
+- como hay ubicación
+- hay ubicación como
+- komo hay ubicación
+- hay ubicación komo
+- decime ai ubicación
+- ai ubicación decime
+- dime ai ubicación
+- ai ubicación dime
+- donde ai ubicación
+- ai ubicación donde
+- como ai ubicación
+- ai ubicación como
+- komo ai ubicación
+- ai ubicación komo
+- decime estan ubicación
+- estan ubicación decime
+- dime estan ubicación
+- estan ubicación dime
+- donde estan ubicación
+- estan ubicación donde
+- como estan ubicación
+- estan ubicación como
+- komo estan ubicación
+- estan ubicación komo
+- decime están ubicación
+- están ubicación decime
+- dime están ubicación
+- están ubicación dime
+- donde están ubicación
+- están ubicación donde
+- como están ubicación
+- están ubicación como
+- komo están ubicación
+- están ubicación komo
+- decime cerca ubicación
+- cerca ubicación decime
+- dime cerca ubicación
+- cerca ubicación dime
+- donde cerca ubicación
+- cerca ubicación donde
+- como cerca ubicación
+- cerca ubicación como
+- komo cerca ubicación
+- cerca ubicación komo
+- decime cercano ubicación
+- cercano ubicación decime
+- dime cercano ubicación
+- cercano ubicación dime
+- donde cercano ubicación
+- cercano ubicación donde
+- como cercano ubicación
+- cercano ubicación como
+- komo cercano ubicación
+- cercano ubicación komo
+- ecopuntos
+- punto
+- puntos
+- donde
+- ubicacion
+- ubikasion
+- ubicación
+
+
+### AYUDA (257 frases)
+- decime ekokai ayuda
+- ekokai ayuda decime
+- dime ekokai ayuda
+- ekokai ayuda dime
+- explicame ekokai ayuda
+- ekokai ayuda explicame
+- ayudame ekokai ayuda
+- ekokai ayuda ayudame
+- ayúdame ekokai ayuda
+- ekokai ayuda ayúdame
+- decime sistema ayuda
+- sistema ayuda decime
+- dime sistema ayuda
+- sistema ayuda dime
+- explicame sistema ayuda
+- sistema ayuda explicame
+- ayudame sistema ayuda
+- sistema ayuda ayudame
+- ayúdame sistema ayuda
+- sistema ayuda ayúdame
+- decime esto ayuda
+- esto ayuda decime
+- dime esto ayuda
+- esto ayuda dime
+- explicame esto ayuda
+- esto ayuda explicame
+- ayudame esto ayuda
+- esto ayuda ayudame
+- ayúdame esto ayuda
+- esto ayuda ayúdame
+- decime eso ayuda
+- eso ayuda decime
+- dime eso ayuda
+- eso ayuda dime
+- explicame eso ayuda
+- eso ayuda explicame
+- ayudame eso ayuda
+- eso ayuda ayudame
+- ayúdame eso ayuda
+- eso ayuda ayúdame
+- decime todo ayuda
+- todo ayuda decime
+- dime todo ayuda
+- todo ayuda dime
+- explicame todo ayuda
+- todo ayuda explicame
+- ayudame todo ayuda
+- todo ayuda ayudame
+- ayúdame todo ayuda
+- todo ayuda ayúdame
+- decime ekokai como funciona
+- ekokai como funciona decime
+- dime ekokai como funciona
+- ekokai como funciona dime
+- explicame ekokai como funciona
+- ekokai como funciona explicame
+- ayudame ekokai como funciona
+- ekokai como funciona ayudame
+- ayúdame ekokai como funciona
+- ekokai como funciona ayúdame
+- decime sistema como funciona
+- sistema como funciona decime
+- dime sistema como funciona
+- sistema como funciona dime
+- explicame sistema como funciona
+- sistema como funciona explicame
+- ayudame sistema como funciona
+- sistema como funciona ayudame
+- ayúdame sistema como funciona
+- sistema como funciona ayúdame
+- decime esto como funciona
+- esto como funciona decime
+- dime esto como funciona
+- esto como funciona dime
+- explicame esto como funciona
+- esto como funciona explicame
+- ayudame esto como funciona
+- esto como funciona ayudame
+- ayúdame esto como funciona
+- esto como funciona ayúdame
+- decime eso como funciona
+- eso como funciona decime
+- dime eso como funciona
+- eso como funciona dime
+- explicame eso como funciona
+- eso como funciona explicame
+- ayudame eso como funciona
+- eso como funciona ayudame
+- ayúdame eso como funciona
+- eso como funciona ayúdame
+- decime todo como funciona
+- todo como funciona decime
+- dime todo como funciona
+- todo como funciona dime
+- explicame todo como funciona
+- todo como funciona explicame
+- ayudame todo como funciona
+- todo como funciona ayudame
+- ayúdame todo como funciona
+- todo como funciona ayúdame
+- decime ekokai que es
+- ekokai que es decime
+- dime ekokai que es
+- ekokai que es dime
+- explicame ekokai que es
+- ekokai que es explicame
+- ayudame ekokai que es
+- ekokai que es ayudame
+- ayúdame ekokai que es
+- ekokai que es ayúdame
+- decime sistema que es
+- sistema que es decime
+- dime sistema que es
+- sistema que es dime
+- explicame sistema que es
+- sistema que es explicame
+- ayudame sistema que es
+- sistema que es ayudame
+- ayúdame sistema que es
+- sistema que es ayúdame
+- decime esto que es
+- esto que es decime
+- dime esto que es
+- esto que es dime
+- explicame esto que es
+- esto que es explicame
+- ayudame esto que es
+- esto que es ayudame
+- ayúdame esto que es
+- esto que es ayúdame
+- decime eso que es
+- eso que es decime
+- dime eso que es
+- eso que es dime
+- explicame eso que es
+- eso que es explicame
+- ayudame eso que es
+- eso que es ayudame
+- ayúdame eso que es
+- eso que es ayúdame
+- decime todo que es
+- todo que es decime
+- dime todo que es
+- todo que es dime
+- explicame todo que es
+- todo que es explicame
+- ayudame todo que es
+- todo que es ayudame
+- ayúdame todo que es
+- todo que es ayúdame
+- decime ekokai qué es
+- ekokai qué es decime
+- dime ekokai qué es
+- ekokai qué es dime
+- explicame ekokai qué es
+- ekokai qué es explicame
+- ayudame ekokai qué es
+- ekokai qué es ayudame
+- ayúdame ekokai qué es
+- ekokai qué es ayúdame
+- decime sistema qué es
+- sistema qué es decime
+- dime sistema qué es
+- sistema qué es dime
+- explicame sistema qué es
+- sistema qué es explicame
+- ayudame sistema qué es
+- sistema qué es ayudame
+- ayúdame sistema qué es
+- sistema qué es ayúdame
+- decime esto qué es
+- esto qué es decime
+- dime esto qué es
+- esto qué es dime
+- explicame esto qué es
+- esto qué es explicame
+- ayudame esto qué es
+- esto qué es ayudame
+- ayúdame esto qué es
+- esto qué es ayúdame
+- decime eso qué es
+- eso qué es decime
+- dime eso qué es
+- eso qué es dime
+- explicame eso qué es
+- eso qué es explicame
+- ayudame eso qué es
+- eso qué es ayudame
+- ayúdame eso qué es
+- eso qué es ayúdame
+- decime todo qué es
+- todo qué es decime
+- dime todo qué es
+- todo qué es dime
+- explicame todo qué es
+- todo qué es explicame
+- ayudame todo qué es
+- todo qué es ayudame
+- ayúdame todo qué es
+- todo qué es ayúdame
+- decime ekokai explicar
+- ekokai explicar decime
+- dime ekokai explicar
+- ekokai explicar dime
+- explicame ekokai explicar
+- ekokai explicar explicame
+- ayudame ekokai explicar
+- ekokai explicar ayudame
+- ayúdame ekokai explicar
+- ekokai explicar ayúdame
+- decime sistema explicar
+- sistema explicar decime
+- dime sistema explicar
+- sistema explicar dime
+- explicame sistema explicar
+- sistema explicar explicame
+- ayudame sistema explicar
+- sistema explicar ayudame
+- ayúdame sistema explicar
+- sistema explicar ayúdame
+- decime esto explicar
+- esto explicar decime
+- dime esto explicar
+- esto explicar dime
+- explicame esto explicar
+- esto explicar explicame
+- ayudame esto explicar
+- esto explicar ayudame
+- ayúdame esto explicar
+- esto explicar ayúdame
+- decime eso explicar
+- eso explicar decime
+- dime eso explicar
+- eso explicar dime
+- explicame eso explicar
+- eso explicar explicame
+- ayudame eso explicar
+- eso explicar ayudame
+- ayúdame eso explicar
+- eso explicar ayúdame
+- decime todo explicar
+- todo explicar decime
+- dime todo explicar
+- todo explicar dime
+- explicame todo explicar
+- todo explicar explicame
+- ayudame todo explicar
+- todo explicar ayudame
+- ayúdame todo explicar
+- todo explicar ayúdame
+- ayuda
+- como funciona
+- komo funciona
+- que es
+- ke es
+- qué es
+- explicar
+
+
+## 📊 Estadísticas
+- Total de frases generadas: 1599
+- Categorías: 5
+
+## 🚀 Uso Rápido
+
+1. **Entrenamiento Manual:**
+   - Ve a Dialogflow CX
+   - Copia y pega las frases por categoría
+
+2. **Entrenamiento Automático:**
+   ```bash
+   node scripts/entrenar-bot.js
+   ```
+
+3. **Análisis de Logs:**
+   ```bash
+   node scripts/auto-entrenamiento.js
+   ```

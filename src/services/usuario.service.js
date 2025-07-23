@@ -62,11 +62,64 @@ const eliminarUsuario = async (id) => {
   return await usuarioRepo.eliminarUsuario(id);
 };
 
+const crearUsuario = async (datos) => {
+  console.log('🟡 [SERVICE] Creando usuario desde ecopunto:', datos);
+  
+  // Validar datos requeridos
+  if (!datos.nombre || !datos.apellido || !datos.dni || !datos.telefono) {
+    throw new Error('Nombre, apellido, DNI y teléfono son obligatorios');
+  }
+  
+  // Verificar si ya existe
+  console.log('🔍 [SERVICE] Verificando si el usuario ya existe...');
+  const existente = await usuarioRepo.buscarUsuario({ 
+    dni: datos.dni, 
+    telefono: datos.telefono 
+  });
+  
+  if (existente) {
+    throw new Error('Usuario ya existe con ese DNI o teléfono');
+  }
+  
+  // Preparar datos del usuario
+  const datosUsuario = {
+    ...datos,
+    rol: 'vecino',
+    tokens: 0,
+    activo: true,
+    fechaRegistro: new Date(),
+    requiereCambioPassword: false // No necesita password para registro por QR
+  };
+  
+  const usuario = await usuarioRepo.crearUsuario(datosUsuario);
+  console.log('✅ [SERVICE] Usuario creado exitosamente:', usuario.nombre);
+  
+  return usuario;
+};
+
+const actualizarTokens = async (id, tokensGanados) => {
+  console.log(`🟡 [SERVICE] Actualizando tokens para usuario ${id}: +${tokensGanados}`);
+  
+  const usuario = await usuarioRepo.buscarPorId(id);
+  if (!usuario) {
+    throw new Error('Usuario no encontrado');
+  }
+  
+  const nuevosTokens = (usuario.tokens || 0) + tokensGanados;
+  const usuarioActualizado = await usuarioRepo.actualizarUsuario(id, { tokens: nuevosTokens });
+  
+  console.log(`✅ [SERVICE] Tokens actualizados: ${usuario.tokens} → ${nuevosTokens}`);
+  
+  return usuarioActualizado;
+};
+
 module.exports = {
   registrarVecino,
   obtenerTodos,
   obtenerPorId,
   registrarConRol,
   actualizarUsuario,
-  eliminarUsuario
+  eliminarUsuario,
+  crearUsuario,
+  actualizarTokens
 };
