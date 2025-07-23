@@ -15,8 +15,13 @@ const eliminarTipoResiduo = async (id) => {
   return await tipoRepo.eliminar(id);
 };
 
+const actualizarTipoResiduo = async (id, data) => {
+  return await tipoRepo.actualizar(id, data);
+};
+
 module.exports = {
   crearTipoResiduo,
   obtenerTodos,
-  eliminarTipoResiduo
+  eliminarTipoResiduo,
+  actualizarTipoResiduo
 };

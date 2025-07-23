@@ -1,32 +1,27 @@
-const TipoResiduo = require('../models/tiporesiduo.model');
+const { getDB1 } = require('../config/database');
+const getTipoResiduoModel = require('../models/tiporesiduo.model');
 
-const crear = async (data) => {
-  console.log('🛠️ [REPO] → Creando tipo de residuo:', data.nombre);
-  return await TipoResiduo.create(data);
-};
+function getTipoResiduo() {
+  const db = getDB1();
+  if (!db) throw new Error('DB1 no inicializada');
+  return getTipoResiduoModel(db);
+}
 
-const listar = async () => {
-  console.log('📄 [REPO] → Listando tipos de residuos');
-  return await TipoResiduo.find().sort({ nombre: 1 });
-};
-
-const eliminar = async (id) => {
-  console.log(`🗑️ [REPO] → Eliminando tipo de residuo ID: ${id}`);
-  return await TipoResiduo.findByIdAndDelete(id);
-};
-
-const buscarPorNombre = async (nombre) => {
-  return await TipoResiduo.findOne({ nombre });
-};
-
-const buscarPorId = async (id) => {
-    return await TipoResiduo.findById(id);
-  };
-  
 module.exports = {
-  crear,
-  listar,
-  eliminar,
-  buscarPorNombre,
-  buscarPorId
+  async crear(data) {
+    const tipo = new (getTipoResiduo())(data);
+    return tipo.save();
+  },
+  async listar() {
+    return getTipoResiduo().find();
+  },
+  async buscarPorNombre(nombre) {
+    return getTipoResiduo().findOne({ nombre });
+  },
+  async buscarPorId(id) {
+    return getTipoResiduo().findById(id);
+  },
+  async eliminarTipoResiduo(id) {
+    return getTipoResiduo().findByIdAndDelete(id);
+  }
 };

@@ -22,4 +22,7 @@ router.delete('/:id', permitirRoles('administrador'), usuarioCtrl.eliminarUsuari
 
 // Requiere autenticación y rol ADMIN
 router.post('/registrar-encargado', authMiddleware, permitirRoles('administrador'), usuarioCtrl.registrarConRol);
+
+router.get('/:usuarioId/historial', permitirRoles('administrador', 'encargado'), usuarioCtrl.historialInteracciones);
+
 module.exports = router;

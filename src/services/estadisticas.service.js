@@ -1,10 +1,12 @@
-const Entrega = require('../models/entregaresiduo.model');
+const { connectDB1 } = require('../config/database');
+const getEntregaModel = require('../models/entregaresiduo.model');
 
 
 const obtenerKilosPorMes = async () => {
     console.log('📊 [SERVICE] Iniciando agrupación de kilos por mes...');
   
     try {
+      const Entrega = await getEntregaModel();
       const resultado = await Entrega.aggregate([
         {
           $group: {
@@ -56,6 +58,7 @@ const obtenerKilosPorMes = async () => {
   
       console.log('📅 [SERVICE] Rango del mes actual:', primerDiaMes.toISOString(), '→', ultimoDiaMes.toISOString());
   
+      const Entrega = await getEntregaModel();
       const resultado = await Entrega.aggregate([
         {
           $match: {
@@ -94,6 +97,7 @@ const obtenerKilosPorMes = async () => {
   };
   
 const obtenerTotalKilos = async () => {
+  const Entrega = await getEntregaModel();
   const resultado = await Entrega.aggregate([
     { $group: { _id: null, totalKg: { $sum: '$pesoKg' } } }
   ]);
@@ -101,6 +105,7 @@ const obtenerTotalKilos = async () => {
 };
 
 const obtenerSucursalConMasKilos = async () => {
+  const Entrega = await getEntregaModel();
   const resultado = await Entrega.aggregate([
     { $group: { _id: '$ecopunto', totalKg: { $sum: '$pesoKg' } } },
     { $sort: { totalKg: -1 } },

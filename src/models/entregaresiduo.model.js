@@ -1,5 +1,5 @@
+const { connectDB1 } = require('../config/database');
 const mongoose = require('mongoose');
-const { getDB1 } = require('../config/database');
 
 const EntregaResiduoSchema = new mongoose.Schema({
   usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
@@ -10,4 +10,7 @@ const EntregaResiduoSchema = new mongoose.Schema({
   fecha: { type: Date, default: Date.now }
 });
 
-module.exports = getDB1().model('EntregaResiduo', EntregaResiduoSchema, 'entregas');
+module.exports = async () => {
+  const db = await connectDB1();
+  return db.model('EntregaResiduo', EntregaResiduoSchema, 'entregas');
+};

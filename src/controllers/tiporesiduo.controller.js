@@ -32,8 +32,19 @@ const eliminar = async (req, res) => {
   }
 };
 
+const actualizar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const actualizado = await tipoService.actualizarTipoResiduo(id, req.body);
+    res.json(actualizado);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   crear,
   listar,
-  eliminar
+  eliminar,
+  actualizar
 };

@@ -9,5 +9,6 @@ router.use(authMiddleware);
 router.post('/', permitirRoles('administrador','encargado'), tipoCtrl.crear);
 router.get('/', permitirRoles('administrador', 'encargado', 'vecino'), tipoCtrl.listar);
 router.delete('/:id', permitirRoles('administrador'), tipoCtrl.eliminar);
+router.put('/:id', permitirRoles('administrador'), tipoCtrl.actualizar);
 
 module.exports = router;

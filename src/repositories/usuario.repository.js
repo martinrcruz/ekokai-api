@@ -62,13 +62,38 @@ const eliminarUsuario = async (id) => {
 };
 
 module.exports = {
-  crearUsuario,
-  buscarUsuario,
-  buscarPorCorreo,
-  buscarPorId,
-  listarUsuarios,
-  incrementarTokens,
-  buscarPorTelefono,
-  actualizarUsuario,
-  eliminarUsuario
+  async buscarUsuario(query) {
+    return getUsuario().findOne(query);
+  },
+  async crearUsuario(data) {
+    const usuario = new (getUsuario())(data);
+    return usuario.save();
+  },
+  async listarUsuarios() {
+    return getUsuario().find();
+  },
+  async buscarPorCorreo(email) {
+    return getUsuario().findOne({ email });
+  },
+  async buscarPorId(id) {
+    return getUsuario().findById(id);
+  },
+  async actualizarUsuario(id, data) {
+    return getUsuario().findByIdAndUpdate(id, data, { new: true });
+  },
+  async eliminarUsuario(id) {
+    return getUsuario().findByIdAndDelete(id);
+  },
+  async buscarPorTelefono(telefono) {
+    return getUsuario().findOne({ telefono });
+  },
+  async incrementarTokens(id, tokens) {
+    return getUsuario().findByIdAndUpdate(id, { $inc: { tokensAcumulados: tokens } }, { new: true });
+  },
+  async listarAdministradores() {
+    return getUsuario().find({ rol: 'administrador' });
+  },
+  async buscarAdministradorPorId(id) {
+    return getUsuario().findOne({ _id: id, rol: 'administrador' });
+  }
 };

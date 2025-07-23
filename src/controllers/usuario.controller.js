@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const usuarioRepo = require('../repositories/usuario.repository');
 const ecopuntoRepo = require('../repositories/ecopunto.repository')
 const usuarioService = require('../services/usuario.service')
+const entregaService = require('../services/entregaresiduo.service');
+const canjeService = require('../services/canje.service');
 // Admin registra encargado
 
 const registrarConRol = async (req, res) => {
@@ -106,11 +108,23 @@ const eliminarUsuario = async (req, res) => {
   }
 };
 
+const historialInteracciones = async (req, res) => {
+  try {
+    const usuarioId = req.params.usuarioId;
+    const entregas = await entregaService.obtenerHistorialUsuario(usuarioId);
+    const canjes = await canjeService.obtenerHistorialCanjes(usuarioId);
+    res.json({ entregas, canjes });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   registrarVecino,
   listarUsuarios,
   obtenerUsuario,
   registrarConRol,
   actualizarUsuario,
-  eliminarUsuario
+  eliminarUsuario,
+  historialInteracciones
 };
