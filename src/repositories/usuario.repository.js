@@ -1,25 +1,16 @@
 const Usuario = require('../models/usuario.model');
 
+
 const crearUsuario = async (datos) => {
   console.log('🛠️ [REPOSITORY] Guardando nuevo usuario con:', datos);
   return await Usuario.create(datos);
 };
 
-const buscarUsuario = async ({ email, dni, telefono }) => {
-  console.log('🔎 [REPOSITORY] Buscando usuario con email, dni o telefono:', { email, dni, telefono });
-  
-  const filtro = { $or: [] };
-  
-  if (email) filtro.$or.push({ email });
-  if (dni) filtro.$or.push({ dni });
-  if (telefono) filtro.$or.push({ telefono });
-  
-  console.log('🔎 [REPOSITORY] Filtro aplicado:', JSON.stringify(filtro));
-  
-  const resultado = await Usuario.findOne(filtro);
-  console.log('🔎 [REPOSITORY] Resultado de búsqueda:', resultado ? 'Usuario encontrado' : 'Usuario no encontrado');
-  
-  return resultado;
+const buscarUsuario = async ({ email, dni }) => {
+  console.log('🔎 [REPOSITORY] Buscando usuario con email o dni:', email, dni);
+  return await Usuario.findOne({
+    $or: [{ email }, { dni }]
+  });
 };
 
 
@@ -62,38 +53,13 @@ const eliminarUsuario = async (id) => {
 };
 
 module.exports = {
-  async buscarUsuario(query) {
-    return getUsuario().findOne(query);
-  },
-  async crearUsuario(data) {
-    const usuario = new (getUsuario())(data);
-    return usuario.save();
-  },
-  async listarUsuarios() {
-    return getUsuario().find();
-  },
-  async buscarPorCorreo(email) {
-    return getUsuario().findOne({ email });
-  },
-  async buscarPorId(id) {
-    return getUsuario().findById(id);
-  },
-  async actualizarUsuario(id, data) {
-    return getUsuario().findByIdAndUpdate(id, data, { new: true });
-  },
-  async eliminarUsuario(id) {
-    return getUsuario().findByIdAndDelete(id);
-  },
-  async buscarPorTelefono(telefono) {
-    return getUsuario().findOne({ telefono });
-  },
-  async incrementarTokens(id, tokens) {
-    return getUsuario().findByIdAndUpdate(id, { $inc: { tokensAcumulados: tokens } }, { new: true });
-  },
-  async listarAdministradores() {
-    return getUsuario().find({ rol: 'administrador' });
-  },
-  async buscarAdministradorPorId(id) {
-    return getUsuario().findOne({ _id: id, rol: 'administrador' });
-  }
+  crearUsuario,
+  buscarUsuario,
+  buscarPorCorreo,
+  buscarPorId,
+  listarUsuarios,
+  incrementarTokens,
+  buscarPorTelefono,
+  actualizarUsuario,
+  eliminarUsuario
 };

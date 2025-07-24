@@ -58,6 +58,7 @@ app.use('/webhook', checkRoute('/webhook', './routes/whatsapp.routes'));
 app.use('/admin', checkRoute('/admin', './routes/admin.routes'));
 app.use('/cupones', checkRoute('/cupones', './routes/cupon.routes'));
 app.use('/canjes', checkRoute('/canjes', './routes/canje.routes'));
+app.use('/articulos', checkRoute('/articulos', './routes/articulo.routes'));
 
 // Health check endpoint para Digital Ocean
 app.get('/health', (req, res) => {

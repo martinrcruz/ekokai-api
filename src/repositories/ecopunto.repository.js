@@ -20,5 +20,11 @@ module.exports = {
   },
   async actualizarEncargado(ecopuntoId, encargadoId) {
     return getEcopunto().findByIdAndUpdate(ecopuntoId, { encargado: encargadoId }, { new: true });
+  },
+  async actualizarEcopunto(ecopuntoId, datos) {
+    return getEcopunto().findByIdAndUpdate(ecopuntoId, datos, { new: true });
+  },
+  async eliminarEcopunto(ecopuntoId) {
+    return getEcopunto().findByIdAndDelete(ecopuntoId);
   }
 };

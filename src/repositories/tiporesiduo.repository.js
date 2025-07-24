@@ -23,5 +23,11 @@ module.exports = {
   },
   async eliminarTipoResiduo(id) {
     return getTipoResiduo().findByIdAndDelete(id);
+  },
+  async eliminar(id) {
+    return getTipoResiduo().findByIdAndDelete(id);
+  },
+  async actualizar(id, data) {
+    return getTipoResiduo().findByIdAndUpdate(id, data, { new: true });
   }
 };

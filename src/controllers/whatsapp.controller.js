@@ -769,7 +769,7 @@ Donde reciclar se convierte en premios. 🎁
 1️⃣ Consultar mis tokens
 2️⃣ Ver premios disponibles
 3️⃣ Ubicación de ecopuntos
-4️⃣ Información del sistema
+4️⃣ ¿Cómo funciona EKOKAI?
 
 ✍️ Elegí una opción o preguntame directamente.`
   ];
@@ -818,6 +818,8 @@ function esSaludo(mensaje) {
   return resultado;
 }
 
+// COMENTADO TEMPORALMENTE - REGISTRO DESHABILITADO
+/*
 function esOpcionRegistro(mensaje) {
   const opcionesRegistro = [
     'registrarme', 'registrarse', 'registrar', 'crear cuenta', 
@@ -850,20 +852,20 @@ function esOpcionRegistro(mensaje) {
   console.log(`[LOG] ¿Es opción de registro?: ${resultado} | Mensaje recibido: "${mensaje}"`);
   return resultado;
 }
+*/
 
 function interpretarOpcionMenu(mensaje) {
   const opcionesMenu = {
     '1': ['1', 'uno', 'tokens', 'consultar tokens', 'ver tokens', 'mis tokens', 'token'],
     '2': ['2', 'dos', 'cupones', 'ver cupones', 'cupones disponibles', 'canjear', 'premios', 'catalogo', 'catálogo'],
     '3': ['3', 'tres', 'punto', 'puntos', 'reciclaje', 'punto de reciclaje', 'ecopunto', 'ecopuntos', 'donde reciclar', 'donde puedo reciclar', 'ubicacion', 'ubicación'],
-    '4': ['4', 'cuatro', 'registrarme', 'registro', 'registrarse', 'crear cuenta'],
-    '5': ['5', 'cinco', 'como funciona', 'cómo funciona', 'como funciona ekokai', 'cómo funciona ekokai', 'ayuda', 'informacion', 'información', 'que es ekokai', 'qué es ekokai']
+    '4': ['4', 'cuatro', 'como funciona', 'cómo funciona', 'como funciona ekokai', 'cómo funciona ekokai', 'ayuda', 'informacion', 'información', 'que es ekokai', 'qué es ekokai']
   };
   
   console.log(`[LOG] Interpretando opción de menú: "${mensaje}"`);
   
   // Primero verificar números exactos
-  if (['1', '2', '3', '4', '5', '6', '7'].includes(mensaje.trim())) {
+  if (['1', '2', '3', '4'].includes(mensaje.trim())) {
     console.log(`[LOG] Opción numérica detectada: ${mensaje.trim()}`);
     return mensaje.trim();
   }
@@ -884,8 +886,8 @@ function interpretarOpcionMenu(mensaje) {
 async function manejarOpcionNoRegistrado(telefono, opcion) {
   console.log(`[LOG] Usuario NO registrado intentó acceder a opción: ${opcion}`);
   
-  // Para la opción 5 (Cómo funciona EKOKAI), mostrar información sin necesidad de registro
-  if (opcion === '5') {
+  // Para la opción 4 (Cómo funciona EKOKAI), mostrar información sin necesidad de registro
+  if (opcion === '4') {
     await responderWhatsApp(
       telefono,
       `🎯 **¿Cómo funciona EKOKAI?** 🌱\n\n` +
@@ -929,6 +931,8 @@ async function manejarOpcionNoRegistrado(telefono, opcion) {
 }
 
 // Función para detectar intenciones globales durante el registro
+// COMENTADO TEMPORALMENTE - REGISTRO DESHABILITADO
+/*
 function detectarIntencionGlobal(mensaje) {
   const texto = normalizarTexto(mensaje);
 
@@ -979,8 +983,11 @@ function detectarIntencionGlobal(mensaje) {
 
   return null;
 }
+*/
 
 // Función para validar si un apellido es válido
+// COMENTADO TEMPORALMENTE - REGISTRO DESHABILITADO
+/*
 function esApellidoValido(apellido) {
   const ap = normalizarTexto(apellido);
   // No debe contener números ni símbolos, ni ser muy largo
@@ -989,6 +996,7 @@ function esApellidoValido(apellido) {
   if (ap.length < 2 || ap.length > 30) return false;
   return true;
 }
+*/
 
 // Función para consultar Dialogflow y obtener el intent detectado
 async function detectarIntentDialogflow(texto, telefono) {
@@ -1065,6 +1073,8 @@ async function detectarIntentDialogflow(texto, telefono) {
 }
 
 // Mejorar el flujo de registro para usar Dialogflow para intenciones
+// COMENTADO TEMPORALMENTE - REGISTRO DESHABILITADO
+/*
 async function manejarFlujoRegistro(telefono, mensajeUsuario) {
   const estado = registroTemporal[telefono];
   console.log(`[LOG] Flujo de registro para ${telefono} | Paso actual: ${estado.paso} | Valor recibido: "${mensajeUsuario}"`);
@@ -1223,6 +1233,7 @@ async function manejarFlujoRegistro(telefono, mensajeUsuario) {
       break;
   }
 }
+*/
 
 async function manejarOpcionRegistrado(telefono, opcion, usuario) {
   console.log(`[LOG] Usuario registrado (${usuario.nombre}) seleccionó opción: ${opcion}`);
@@ -1263,10 +1274,6 @@ async function manejarOpcionRegistrado(telefono, opcion, usuario) {
       );
       break;
     case '4':
-      await responderWhatsApp(telefono, `✅ ¡Hola ${usuario.nombre}! Ya estás registrado en EKOKAI. ¿En qué puedo ayudarte hoy? 🌱`);
-      await enviarMenuPrincipal(telefono, usuario.nombre);
-      break;
-    case '5':
       await responderWhatsApp(
         telefono,
         `🎯 **¿Cómo funciona EKOKAI?** 🌱\n\n` +
@@ -1337,6 +1344,19 @@ const dialogflowWebhook = async (req, res) => {
     if (!telefono || !mensajeUsuario) {
       console.warn('[LOG] Teléfono o mensaje vacío. No se procesa la petición.');
       return res.status(400).send();
+    }
+
+    // 🔥 PRIORIDAD 1: Verificar si es una opción numérica del menú (ANTES de Dialogflow)
+    const opcionNumerica = interpretarOpcionMenu(mensajeLower);
+    if (opcionNumerica && ['1', '2', '3', '4'].includes(opcionNumerica)) {
+      console.log(`[LOG] Opción numérica detectada: ${opcionNumerica}`);
+      usuario = await obtenerUsuarioConCache(telefono);
+      if (usuario) {
+        await manejarOpcionRegistrado(telefono, opcionNumerica, usuario);
+      } else {
+        await manejarOpcionNoRegistrado(telefono, opcionNumerica);
+      }
+      return res.status(200).send();
     }
 
     // 🔥 NUEVO: Siempre consultar Dialogflow CX primero
@@ -1849,44 +1869,31 @@ const dialogflowWebhook = async (req, res) => {
     await responderWhatsApp(telefono, mensajeFallback);
     return res.status(200).send();
 
+    // 🔥 FALLBACK FINAL: Manejo de registro y otros casos
+    // COMENTADO TEMPORALMENTE - REGISTRO DESHABILITADO
+    /*
     if (registroTemporal[telefono]) {
       console.log('[LOG] Usuario está en flujo de registro.');
       await manejarFlujoRegistro(telefono, mensajeUsuario);
       return res.status(200).send();
     }
 
+    // Verificar si es opción de registro
+    if (esOpcionRegistro(mensajeLower)) {
+      console.log('[LOG] Iniciando flujo de registro para usuario NO registrado.');
+      registroTemporal[telefono] = { paso: 'nombre', datos: {} };
+      await responderWhatsApp(telefono, '✍️ ¡Perfecto! Vamos a registrarte. Por favor envíame tu nombre:');
+      return res.status(200).send();
+    }
+    */
+
+    // Si llegamos aquí, mostrar menú principal
     usuario = await obtenerUsuarioConCache(telefono);
-    console.log(`[LOG] Resultado búsqueda usuario: ${usuario ? 'Usuario encontrado' : 'Usuario NO encontrado'}`);
-
-    if (!usuario) {
-      if (esOpcionRegistro(mensajeLower)) {
-        console.log('[LOG] Iniciando flujo de registro para usuario NO registrado.');
-        registroTemporal[telefono] = { paso: 'nombre', datos: {} };
-        await responderWhatsApp(telefono, '✍️ ¡Perfecto! Vamos a registrarte. Por favor envíame tu nombre:');
-        return res.status(200).send();
-      }
-      
-      // Interpretar opción de menú con NLP
-      const opcionInterpretada = interpretarOpcionMenu(mensajeLower);
-      if (opcionInterpretada && ['1', '2', '3', '4', '5'].includes(opcionInterpretada)) {
-        await manejarOpcionNoRegistrado(telefono, opcionInterpretada);
-        return res.status(200).send();
-      }
-      
-      console.log('[LOG] Usuario NO registrado envió mensaje no reconocido. Se muestra menú principal.');
+    if (usuario) {
+      await enviarMenuPrincipal(telefono, usuario.nombre);
+    } else {
       await enviarMenuPrincipal(telefono);
-      return res.status(200).send();
     }
-
-    // Para usuarios registrados, interpretar opción con NLP
-    const opcionSeleccionada = interpretarOpcionMenu(mensajeLower);
-    if (opcionSeleccionada && ['1', '2', '3', '4', '5'].includes(opcionSeleccionada)) {
-      await manejarOpcionRegistrado(telefono, opcionSeleccionada, usuario);
-      return res.status(200).send();
-    }
-    
-    console.log('[LOG] Usuario registrado envió mensaje no reconocido. Se muestra menú principal.');
-    await enviarMenuPrincipal(telefono, usuario.nombre);
     return res.status(200).send();
 
   } catch (error) {

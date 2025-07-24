@@ -1,19 +1,18 @@
+// config/database.js
 const mongoose = require('mongoose');
 
-let DB1;
-
 async function connectDB1() {
-  if (!DB1) {
-    DB1 = await mongoose.createConnection(process.env.MONGO_URI_DB1, {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(process.env.MONGO_URI_DB1, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-    console.log(`✅ Conectado a DB1 correctamente`);
+    console.log('✅ Conectado a DB1 correctamente (conexión global)');
   }
-  return DB1;
+  return mongoose;
 }
 
 module.exports = {
   connectDB1,
-  getDB1: () => DB1
+  getDB1: () => mongoose.connection
 };

@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { getDB1 } = require('../config/database');
-const getUsuarioModel = require('../models/usuario.model');
+const Usuario = require('../models/usuario.model');
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -15,8 +14,6 @@ const authMiddleware = async (req, res, next) => {
     console.log('[AUTH] Verificando token con JWT_SECRET:', process.env.JWT_SECRET);
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     console.log('[AUTH] Payload decodificado:', payload);
-    const db = getDB1();
-    const Usuario = getUsuarioModel(db);
     const usuario = await Usuario.findById(payload.id);
     if (!usuario) {
       console.log('[AUTH] Usuario no válido para ID:', payload.id);

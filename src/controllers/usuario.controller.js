@@ -14,7 +14,7 @@ const registrarConRol = async (req, res) => {
   try {
     const { usuario, accessTokenTemporal } = await usuarioService.registrarConRol(req.body, 'encargado');
     console.log('✅ [CONTROLLER] Encargado creado con éxito:', usuario.email);
-    res.status(201).json({ mensaje: 'Encargado creado', usuario, accessTokenTemporal });
+    res.status(200).json({ mensaje: 'Encargado creado', usuario, accessTokenTemporal });
   } catch (err) {
     console.error('❌ [CONTROLLER] Error al crear encargado:', err.message);
     res.status(400).json({ error: err.message });
@@ -54,7 +54,7 @@ const registrarConRol = async (req, res) => {
       console.log('🔵 [registrarVecino] Datos finales para crear vecino:', datos);
       const nuevoVecino = await usuarioService.registrarConRol(datos, 'vecino');
       console.log('✅ [registrarVecino] Vecino creado:', nuevoVecino);
-      res.status(201).json(nuevoVecino);
+      res.status(200).json(nuevoVecino);
     } catch (err) {
       console.error('❌ [registrarVecino] Error al registrar vecino:', err);
       res.status(500).json({ error: err.message });

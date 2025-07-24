@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const { getDB1 } = require('../config/database');
 
 const UsuarioSchema = new mongoose.Schema({
   rol: { type: String, enum: ['vecino', 'encargado', 'administrador'], required: true },
@@ -38,7 +39,5 @@ UsuarioSchema.methods.compararContrasena = async function (contrasenaPlano) {
   return await bcrypt.compare(contrasenaPlano, this.password);
 };
 
-// Exporta una función que recibe la conexión y devuelve el modelo
-module.exports = (connection) => {
-  return connection.models.Usuario || connection.model('Usuario', UsuarioSchema, 'usuarios');
-};
+const Usuario = mongoose.models.Usuario || mongoose.model('Usuario', UsuarioSchema, 'usuarios');
+module.exports = Usuario;
