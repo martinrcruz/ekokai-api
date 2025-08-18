@@ -1,56 +1,68 @@
+// utils/twilio.helper.js
 const twilio = require('twilio');
+const {
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  TWILIO_WHATSAPP_NUMBER,       // Debe ser 'whatsapp:+123...'
+  TWILIO_MESSAGING_SERVICE_SID, // opcional
+} = process.env;
 
-console.log('[LOG] Configurando Twilio con SID:', process.env.TWILIO_ACCOUNT_SID ? 'Configurado' : 'NO CONFIGURADO');
-console.log('[LOG] Auth Token configurado:', process.env.TWILIO_AUTH_TOKEN ? 'Sí' : 'NO');
-console.log('[LOG] WhatsApp number:', process.env.TWILIO_WHATSAPP_NUMBER);
+const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-// Mostrar las credenciales reales que se están usando
-console.log('[LOG] TWILIO_ACCOUNT_SID real:', process.env.TWILIO_ACCOUNT_SID);
-console.log('[LOG] TWILIO_AUTH_TOKEN real:', process.env.TWILIO_AUTH_TOKEN ? 'Configurado' : 'NO CONFIGURADO');
-
-// Verificar si las credenciales son LIVE o TEST
-if (process.env.TWILIO_ACCOUNT_SID) {
-  if (process.env.TWILIO_ACCOUNT_SID.includes('AC1be585d06467e3e11576154ba13889d7')) {
-    console.log('[LOG] ✅ Usando credenciales LIVE de Twilio');
-  } else if (process.env.TWILIO_ACCOUNT_SID.includes('AC7597b6c2ab32bc7f38ce0eb2768e4b58')) {
-    console.log('[LOG] ⚠️ Usando credenciales TEST de Twilio');
-  } else {
-    console.log('[LOG] ❓ Credenciales desconocidas de Twilio');
-  }
+// Normaliza +E164 -> 'whatsapp:+E164'
+function toWhatsAppAddr(e164OrWhats) {
+  if (!e164OrWhats) return null;
+  let n = String(e164OrWhats).trim();
+  if (n.startsWith('whatsapp:')) return n;
+  // aceptar +E164 o E164 y anteponer whatsapp:
+  if (/^\+\d{6,15}$/.test(n)) return `whatsapp:${n}`;
+  if (/^\d{6,15}$/.test(n)) return `whatsapp:+${n}`;
+  return null;
 }
 
-const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+async function responderWhatsApp(to, body) {
+  const from = TWILIO_WHATSAPP_NUMBER; // debe iniciar con 'whatsapp:'
+  const toAddr = toWhatsAppAddr(to);
 
-async function responderWhatsApp(to, mensaje) {
-  const from = process.env.TWILIO_WHATSAPP_NUMBER;
-  const toFormatted = `whatsapp:${to}`;
-
-  console.log('📤 Enviando mensaje con Twilio...');
-  console.log('🔢 From:', from);
-  console.log('🔢 To:', toFormatted);
-  console.log('💬 Mensaje:', mensaje);
-
-  try {
-    const message = await client.messages.create({
-      body: mensaje,
-      from,
-      to: toFormatted,
-    });
-
-    console.log('✅ Mensaje enviado. SID:', message.sid);
-  } catch (error) {
-    console.error('❌ Error al enviar mensaje por WhatsApp:', error.message);
-    console.error('🔍 Error completo:', error);
-    if (error?.code) console.error('🔍 Twilio Error Code:', error.code);
-    if (error?.moreInfo) console.error('ℹ️ Más información:', error.moreInfo);
-    
-    // Log adicional para errores de autenticación
-    if (error.code === 20003) {
-      console.error('🔐 Error de autenticación de Twilio. Verifica:');
-      console.error('   - TWILIO_ACCOUNT_SID');
-      console.error('   - TWILIO_AUTH_TOKEN');
-    }
+  if (!from || !from.startsWith('whatsapp:')) {
+    throw new Error('TWILIO_WHATSAPP_NUMBER debe iniciar con "whatsapp:"');
   }
+  if (!toAddr) {
+    throw new Error('Número destino inválido. Debe ser +E164 o whatsapp:+E164');
+  }
+
+  const params = { from, to: toAddr, body };
+  if (TWILIO_MESSAGING_SERVICE_SID) {
+    params.messagingServiceSid = TWILIO_MESSAGING_SERVICE_SID;
+  }
+  return client.messages.create(params);
 }
 
-module.exports = { responderWhatsApp };
+async function responderWhatsAppTemplate(to, contentSid, variables = null) {
+  const from = TWILIO_WHATSAPP_NUMBER; // 'whatsapp:+...'
+  const toAddr = toWhatsAppAddr(to);
+
+  if (!from || !from.startsWith('whatsapp:')) {
+    throw new Error('TWILIO_WHATSAPP_NUMBER debe iniciar con "whatsapp:"');
+  }
+  if (!toAddr) {
+    throw new Error('Número destino inválido. Debe ser +E164 o whatsapp:+E164');
+  }
+  if (!contentSid || !/^HX[a-zA-Z0-9]{32}$/.test(contentSid)) {
+    throw new Error('Content SID inválido. Debe iniciar con "HX" y tener 34 caracteres.');
+  }
+
+  const params = { from, to: toAddr, contentSid };
+  if (variables && typeof variables === 'object') {
+    params.contentVariables = JSON.stringify(variables);
+  }
+  if (TWILIO_MESSAGING_SERVICE_SID) {
+    params.messagingServiceSid = TWILIO_MESSAGING_SERVICE_SID;
+  }
+  return client.messages.create(params);
+}
+
+module.exports = {
+  responderWhatsApp,
+  responderWhatsAppTemplate,
+};

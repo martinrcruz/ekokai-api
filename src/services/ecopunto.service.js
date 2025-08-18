@@ -35,7 +35,63 @@ const asignarEncargado = async (ecopuntoId, encargadoId) => {
   return actualizado;
 };
 
+const obtenerTotalKgPorEcopuntoId = async (ecopuntoId) => {
+  return ecopuntoRepo.calcularTotalKgPorEcopuntoId(ecopuntoId);
+};
+
+const obtenerTotalKgPorNombre = async (nombre) => {
+  return ecopuntoRepo.calcularTotalKgPorNombre(nombre);
+};
+
+const obtenerTotalKgMensualPorEcopuntoId = async (ecopuntoId) => {
+  return ecopuntoRepo.calcularTotalKgMensualPorEcopuntoId(ecopuntoId);
+};
+
+const obtenerTotalKgMensualPorNombre = async (nombre) => {
+  return ecopuntoRepo.calcularTotalKgMensualPorNombre(nombre);
+};
+
+const obtenerTotalVecinosPorEcopuntoId = async (ecopuntoId) => {
+  return ecopuntoRepo.contarVecinosPorEcopuntoId(ecopuntoId);
+};
+
+const obtenerTotalVecinosPorNombre = async (nombre) => {
+  return ecopuntoRepo.contarVecinosPorNombre(nombre);
+};
+
+const obtenerEntregasDetalladasPorEcopuntoId = async (ecopuntoId, opciones) => {
+  return ecopuntoRepo.listarEntregasDetalladasPorEcopuntoId(ecopuntoId, opciones);
+};
+
+const obtenerEntregasDetalladasPorNombre = async (nombre, opciones) => {
+  return ecopuntoRepo.listarEntregasDetalladasPorNombre(nombre, opciones);
+};
+
+// === Metas mensuales ===
+const crearOEditarMetaMensual = async ({ ecopuntoId, year, month, objetivoKg }) => {
+  return ecopuntoRepo.upsertMetaMensual({ ecopuntoId, year, month, objetivoKg });
+};
+
+const obtenerMetaMensual = async ({ ecopuntoId, year, month }) => {
+  return ecopuntoRepo.obtenerMetaMensual({ ecopuntoId, year, month });
+};
+
+const eliminarMetaMensual = async ({ ecopuntoId, year, month }) => {
+  return ecopuntoRepo.eliminarMetaMensual({ ecopuntoId, year, month });
+};
+
 module.exports = {
     crearEcopunto,
   asignarEncargado,
+  obtenerTotalKgPorEcopuntoId,
+  obtenerTotalKgPorNombre,
+  obtenerTotalKgMensualPorEcopuntoId,
+  obtenerTotalKgMensualPorNombre,
+  obtenerTotalVecinosPorEcopuntoId,
+  obtenerTotalVecinosPorNombre,
+  obtenerEntregasDetalladasPorEcopuntoId,
+  obtenerEntregasDetalladasPorNombre,
+  crearOEditarMetaMensual,
+  obtenerMetaMensual,
+  eliminarMetaMensual
 };

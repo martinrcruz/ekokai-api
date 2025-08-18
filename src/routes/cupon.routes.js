@@ -4,7 +4,7 @@ const cuponCtrl = require('../controllers/cupon.controller');
 const { authMiddleware, permitirRoles } = require('../middleware/auth.middleware');
 
 router.use(authMiddleware);
-router.use(permitirRoles('administrador'));
+router.use(permitirRoles('administrador','encargado'));
 
 // Rutas específicas (deben ir antes que las rutas con parámetros)
 router.get('/activos', cuponCtrl.listarCuponesActivos);

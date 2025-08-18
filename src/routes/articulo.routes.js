@@ -5,7 +5,7 @@ const { authMiddleware, permitirRoles } = require('../middleware/auth.middleware
 
 // Aplicar middleware de autenticación a todas las rutas
 router.use(authMiddleware);
-router.use(permitirRoles('administrador'));
+router.use(permitirRoles('administrador','encargado'));
 
 // Rutas CRUD
 router.get('/', articuloCtrl.listarArticulos);

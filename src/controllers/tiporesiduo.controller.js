@@ -6,7 +6,7 @@ const crear = async (req, res) => {
     console.log('📋 [CONTROLLER] Datos de creación:', req.body);
     
     // Validar datos requeridos
-    const { nombre, descripcion, tokensPorKg } = req.body;
+    const { nombre, descripcion, tokensPorKg, categoria, unidad, activo } = req.body;
     if (!nombre || !descripcion || tokensPorKg === undefined) {
       return res.status(400).json({
         success: false,
@@ -14,7 +14,19 @@ const crear = async (req, res) => {
       });
     }
     
-    const nuevoTipo = await tipoService.crearTipoResiduo(req.body);
+    // Normalizar unidad si viene en abreviatura
+    const unidadNormalizada = (unidad || '').toLowerCase();
+    const unidadMap = { kg: 'kilos', kilos: 'kilos', g: 'gramos', gramos: 'gramos', l: 'litros', lt: 'litros', litros: 'litros' };
+    const unidadFinal = unidadMap[unidadNormalizada] || unidad;
+
+    const nuevoTipo = await tipoService.crearTipoResiduo({
+      nombre,
+      descripcion,
+      tokensPorKg,
+      categoria,
+      unidad: unidadFinal,
+      activo
+    });
     console.log('✅ [CONTROLLER] Tipo de residuo creado exitosamente:', nuevoTipo._id);
     
     res.status(201).json({
@@ -129,23 +141,33 @@ const actualizar = async (req, res) => {
     }
     
     // Validar datos requeridos
-    const { nombre, descripcion, tokensPorKg } = req.body;
-    if (!nombre || !descripcion || tokensPorKg === undefined) {
-      return res.status(400).json({
-        success: false,
-        message: 'Faltan datos requeridos: nombre, descripcion, tokensPorKg'
-      });
+    const { nombre, descripcion, tokensPorKg, categoria, unidad, activo } = req.body;
+    
+    // Validar que tokensPorKg sea un número positivo si viene en el payload
+    if (tokensPorKg !== undefined && (isNaN(tokensPorKg) || Number(tokensPorKg) < 0)) {
+      return res.status(400).json({ success: false, message: 'tokensPorKg debe ser un número positivo' });
+    }
+
+    // Normalizar unidad si viene en abreviatura
+    let unidadActualizada = unidad;
+    if (unidadActualizada !== undefined) {
+      const unidadNorm = String(unidadActualizada).toLowerCase();
+      const unidadMapUpd = { kg: 'kilos', kilos: 'kilos', g: 'gramos', gramos: 'gramos', l: 'litros', lt: 'litros', litros: 'litros' };
+      unidadActualizada = unidadMapUpd[unidadNorm] || unidadActualizada;
+      const allowed = ['kilos', 'gramos', 'litros'];
+      if (!allowed.includes(unidadActualizada)) {
+        return res.status(400).json({ success: false, message: 'unidad inválida. Use: kilos, gramos o litros' });
+      }
     }
     
-    // Validar que tokensPorKg sea un número positivo
-    if (isNaN(tokensPorKg) || tokensPorKg < 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'tokensPorKg debe ser un número positivo'
-      });
-    }
-    
-    const actualizado = await tipoService.actualizarTipoResiduo(id, req.body);
+    const actualizado = await tipoService.actualizarTipoResiduo(id, {
+      ...(nombre !== undefined && { nombre }),
+      ...(descripcion !== undefined && { descripcion }),
+      ...(tokensPorKg !== undefined && { tokensPorKg }),
+      ...(categoria !== undefined && { categoria }),
+      ...(unidadActualizada !== undefined && { unidad: unidadActualizada }),
+      ...(activo !== undefined && { activo })
+    });
     console.log('✅ [CONTROLLER] Tipo de residuo actualizado exitosamente:', id);
     
     res.status(200).json({

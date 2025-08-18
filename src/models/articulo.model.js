@@ -10,7 +10,8 @@ const articuloSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true
+    trim: true,
+    index: true  // Índice definido aquí
   },
   grupo: {
     type: String,
@@ -41,7 +42,7 @@ const articuloSchema = new mongoose.Schema({
 });
 
 // Índices para mejorar el rendimiento de las consultas
-articuloSchema.index({ codigo: 1 });
+// articuloSchema.index({ codigo: 1 }); // ← ELIMINADO: duplicado con index: true arriba
 articuloSchema.index({ grupo: 1 });
 articuloSchema.index({ familia: 1 });
 articuloSchema.index({ eliminado: 1 });

@@ -21,7 +21,7 @@ router.get('/usuarios/:id/historial', permitirRoles('administrador'), adminCtrl.
 // =======================
 
 // Métricas de un ecopunto
-router.get('/ecopuntos/:id/metricas', permitirRoles('administrador'), adminCtrl.metricasEcopunto);
+router.get('/ecopuntos/:id/metricas', permitirRoles('administrador','encargado'), adminCtrl.metricasEcopunto);
 
 // =======================
 // 🎁 Premios
@@ -31,7 +31,7 @@ router.get('/ecopuntos/:id/metricas', permitirRoles('administrador'), adminCtrl.
 router.post('/premios', permitirRoles('administrador'), adminCtrl.crearPremio);
 
 // Listar premios
-router.get('/premios', permitirRoles('administrador'), adminCtrl.listarPremios);
+router.get('/premios', permitirRoles('administrador','encargado'), adminCtrl.listarPremios);
 
 // Actualizar un premio
 router.put('/premios/:id', permitirRoles('administrador'), adminCtrl.actualizarPremio);
