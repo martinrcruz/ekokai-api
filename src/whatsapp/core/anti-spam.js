@@ -9,13 +9,7 @@ function shouldSend(toE164, tag, windowMs = 5000) {
   const prev = last.get(key) || 0;
   const timeSince = now - prev;
   
-  console.log('[ANTI-SPAM] 🔒 Verificando anti-spam:', { 
-    toE164, 
-    tag, 
-    windowMs, 
-    timeSince, 
-    canSend: timeSince >= windowMs 
-  });
+ 
   
   if (timeSince < windowMs) {
     console.log('[ANTI-SPAM] ⏰ Bloqueado por anti-spam:', { toE164, tag, timeSince, windowMs });
@@ -23,7 +17,6 @@ function shouldSend(toE164, tag, windowMs = 5000) {
     return false;
   }
   
-  console.log('[ANTI-SPAM] ✅ Permitido enviar:', { toE164, tag });
   last.set(key, now);
   return true;
 }

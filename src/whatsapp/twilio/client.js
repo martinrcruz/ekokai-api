@@ -31,10 +31,6 @@ async function responderWhatsApp(toE164, body) {
   const from = TWILIO_WHATSAPP_NUMBER;
   const to = toWhatsAppAddr(toE164);
 
-  console.log('📤 Enviando mensaje con Twilio...');
-  console.log('🔢 From:', from);
-  console.log('🔢 To:', to);
-  console.log('💬 Mensaje:', body);
 
   if (!from || !from.startsWith('whatsapp:')) {
     throw new Error('TWILIO_WHATSAPP_NUMBER debe iniciar con "whatsapp:"');
@@ -47,7 +43,6 @@ async function responderWhatsApp(toE164, body) {
   }
 
   const msg = await client.messages.create(params);
-  console.log('✅ Mensaje enviado. SID:', msg.sid);
   return msg;
 }
 
@@ -55,10 +50,7 @@ async function responderWhatsAppTemplate(toE164, contentSid, variables = null) {
   const from = TWILIO_WHATSAPP_NUMBER;
   const to = toWhatsAppAddr(toE164);
 
-  console.log('📤 Enviando TEMPLATE con Twilio...');
-  console.log('🔢 From:', from);
-  console.log('🔢 To:', to);
-  console.log('🧾 contentSid:', contentSid);
+  
   if (variables) console.log('🧩 variables:', variables);
 
   if (!from || !from.startsWith('whatsapp:')) {
