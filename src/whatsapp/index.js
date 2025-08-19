@@ -1,7 +1,5 @@
 // src/whatsapp/index.js
-console.log('[WHATSAPP-INDEX] 🚀 Inicializando módulo WhatsApp...');
 
-console.log('[WHATSAPP-INDEX] 📦 Cargando core helpers...');
 const coreHelpers = require('./core/twilio.helper.js');
 const dfcxUtils = require('./core/dfcx.utils.js');
 

@@ -94,6 +94,7 @@ module.exports = {
   formatCatalogList,
   matchPrize,
   genReqId,
+  encontrarMejorCoincidencia,
   HOWTO_TEXT,
   ISSUE_PROMPT,
   ECOPUNTO_ISSUE_PROMPT,

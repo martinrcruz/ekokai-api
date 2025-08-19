@@ -1,7 +1,7 @@
 // src/whatsapp/flows/router.js
-const { ensureSession, resetSession } = require('../state/session.store');
+const { ensureSession, resetSession, incrementFallbackCount, resetFallbackCount } = require('../state/session.store');
 const { normalizarTexto } = require('../core/similarity');
-const { inferUnifiedIntent } = require('../lex/intents.combined');
+const { COMBINED_LEX, inferUnifiedIntent } = require('../lex/intents.combined');
 const { responderWhatsApp } = require('../core/twilio.helper');
 
 const {
@@ -107,9 +107,40 @@ async function handleMessage(toE164, userMsgRaw) {
     }
   }
 
+  // 🔥 Fast-path por alta confianza: si alguna familia de intents matchea con similitud ≥ 0.9,
+  // redirigimos directo al menú correspondiente sin más desambiguación.
+  try {
+    let highConfidenceIntent = null;
+    for (const intent of Object.keys(COMBINED_LEX)) {
+      const got = encontrarMejorCoincidencia(t, COMBINED_LEX[intent], 0.9);
+      if (got) { highConfidenceIntent = intent; break; }
+    }
+    if (highConfidenceIntent) {
+      console.log('[FLOW-ROUTER] 🚀 Alta confianza detectada para intent:', highConfidenceIntent);
+      // Problemas: enviar menú directo
+      if (['problema', 'menu_problema', 'no_ver', 'otro_problema'].includes(highConfidenceIntent)) {
+        try { resetFallbackCount(toE164); } catch (_) {}
+        await sendMenuProblema(toE164);
+        return true;
+      }
+      // Menús principales por dominio
+      if (highConfidenceIntent === 'consulta_cupones') { try { resetFallbackCount(toE164); } catch (_) {} await sendMenuCuponera(toE164); return true; }
+      if (highConfidenceIntent === 'menu_ecopunto')    { try { resetFallbackCount(toE164); } catch (_) {} await sendMenuEcopunto(toE164); return true; }
+      if (highConfidenceIntent === 'menu_huella')      { try { resetFallbackCount(toE164); } catch (_) {} await sendMenuHuella(toE164); return true; }
+      if (highConfidenceIntent === 'menu_funcionamiento') { try { resetFallbackCount(toE164); } catch (_) {} await sendMenuFuncionamiento(toE164); return true; }
+      if (highConfidenceIntent === 'menu_separar')     { try { resetFallbackCount(toE164); } catch (_) {} await sendMenuSeparar(toE164); return true; }
+    }
+  } catch (e) {
+    console.warn('[FLOW-ROUTER] ⚠️ Error en fast-path alta confianza:', e?.message);
+  }
+
   console.log(`[ROUTER] 🔍 Detectando intent para: "${msg}"`);
   const inferred = inferUnifiedIntent(t);
   console.log(`[ROUTER] 📋 Intent detectado: "${inferred}"`);
+  // Reiniciar contador de fallback si logramos detectar y manejar algo
+  if (inferred) {
+    try { resetFallbackCount(toE164); } catch (_) {}
+  }
 
   // salir / volver al menú
   if (inferred === 'menu_volver' || t === 'salir') {
@@ -186,6 +217,7 @@ async function handleMessage(toE164, userMsgRaw) {
 
   // --- Accesos rápidos por intent ---
   // Cuponera
+  if (inferred === 'consulta_cupones') { await sendMenuCuponera(toE164); return true; }
   if (inferred === 'canjear_cupon')     return startCanjearQuickFlow(toE164);
   if (inferred === 'ver_cupon')         return startVerCuponesFlow(toE164);
   if (inferred === 'ver_catalogo')      return startVerCatalogoFlow(toE164);
@@ -193,6 +225,7 @@ async function handleMessage(toE164, userMsgRaw) {
   if (inferred === 'problema_cupon')    return startProblemaCuponFlow(toE164);
 
   // Ecopunto
+  if (inferred === 'menu_ecopunto')       { await sendMenuEcopunto(toE164); return true; }
   if (inferred === 'ubicacion_ecopunto')  return startEcopuntoUbicacionesFlow(toE164);
   if (inferred === 'horario_ecopunto')    return startEcopuntoHorarioFlow(toE164);
   if (inferred === 'materiales_ecopunto') return startEcopuntoMaterialesFlow(toE164);
@@ -222,9 +255,17 @@ async function handleMessage(toE164, userMsgRaw) {
   if (inferred === 'no_ver')              return startProblemaNoVerFlow(toE164);
   if (inferred === 'otro_problema')       return startProblemaOtroFlow(toE164);
 
-  // No se pudo rutear
+  // No se pudo rutear → política de "Ups..."
   console.log('[FLOW-ROUTER] ❌ No se pudo rutear el mensaje:', { msg, t });
-  return false;
+  const count = incrementFallbackCount(toE164);
+  if (count < 3) {
+    await responderWhatsApp(toE164, 'Ups, no te he entendido. ¿Puedes repetirlo?');
+    return true;
+  }
+  await responderWhatsApp(toE164, 'No hemos logrado entenderte. Este es el menu principal:');
+  await sendMenuPrincipal(toE164);
+  try { resetFallbackCount(toE164); } catch (_) {}
+  return true;
 }
 
 module.exports = { handleMessage };

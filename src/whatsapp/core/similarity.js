@@ -32,28 +32,35 @@ function normalizarTexto(txt) {
     const s1 = normalizarTexto(str1);
     const s2 = normalizarTexto(str2);
     if (s1 === s2) return 1.0;
-    if (s1.includes(s2) || s2.includes(s1)) return 0.9;
-    const longer = s1.length > s2.length ? s1 : s2;
-    const shorter = s1.length > s2.length ? s2 : s1;
-    if (longer.length === 0) return 1.0;
-    const distance = levenshteinDistance(longer, shorter);
-    return (longer.length - distance) / longer.length;
+    // Evitar falsos positivos por subcadenas: solo dar alta similitud si es coincidencia por palabra
+    const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const shorter = s1.length <= s2.length ? s1 : s2;
+    const longer  = s1.length <= s2.length ? s2 : s1;
+    if (shorter.length >= 3) {
+      const pattern = new RegExp(`(^|\\W)${escape(shorter)}(\\W|$)`);
+      if (pattern.test(longer)) {
+        return 0.9;
+      }
+    }
+    const longerLeven = s1.length > s2.length ? s1 : s2;
+    const shorterLeven = s1.length > s2.length ? s2 : s1;
+    if (longerLeven.length === 0) return 1.0;
+    const distance = levenshteinDistance(longerLeven, shorterLeven);
+    return (longerLeven.length - distance) / longerLeven.length;
   }
   
   function encontrarMejorCoincidencia(mensaje, opciones, umbral = 0.5) {
-    console.log(`[LOG] Buscando coincidencia para: "${mensaje}"`);
-    console.log(`[LOG] Opciones disponibles: ${JSON.stringify(opciones)}`);
+   
     let mejorCoincidencia = null;
     let mejorSimilitud = 0;
     for (const opcion of opciones) {
       const similitud = calcularSimilitud(mensaje, opcion);
-      console.log(`[LOG] Similitud con "${opcion}": ${similitud}`);
+      
       if (similitud > mejorSimilitud && similitud >= umbral) {
         mejorSimilitud = similitud;
         mejorCoincidencia = opcion;
       }
     }
-    console.log(`[LOG] Mejor coincidencia: "${mejorCoincidencia}" (similitud: ${mejorSimilitud})`);
     return mejorCoincidencia;
   }
   

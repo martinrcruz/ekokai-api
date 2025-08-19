@@ -4,7 +4,7 @@ const INTENT_LEX = {
   // CUPONERA
   // ---------------------------
   consulta_cupones: [
-    'cupones','cuponera','canjes','canjear cupones','ver cupones','promos',
+    'cupones','cuponera','canjes','promos',
     'las promos', 'promo vigente', 'promociones', 'beneficios', 'descuentitos',
     'mis promos', 'mis promo', 'mis promo’', 'mis beneficios',
     'cuponcito', 'cuponcitos', 'vaucher', 'voucher', 'vauchers',
@@ -20,7 +20,13 @@ const INTENT_LEX = {
     'cangear el cupon','canjiar el cupon','como lo cangeo','kiero canjear','quiero cangear',
     'hacer el cange','aplikar el kupon','meter el cupon','poner el cupon','usar el voucher',
     'validar el vauchér','hacer valer la promo','dónde hago el cange','a donde canjeo',
-    'canjeo el cupon','canjear ya la promo','validar vouchercito'
+    'canjeo el cupon','canjear ya la promo','validar vouchercito',
+    // Añadidos
+    'Che, quiero canjear un premio, ¿cómo hago?',
+    'Quiero hacer un canje, guaso.',
+    'Dale, melete que canjeo este cupón, loco.',
+    'Posta que quiero usar un cupón, ¿viste?',
+    '¡Lo quiero canjear ya!'
   ],
 
   ver_cupon: [
@@ -31,7 +37,13 @@ const INTENT_LEX = {
     'che mostrame mis cupones','qué tengo en la cuponera','ver mis vouchers',
     'tengo cupones?', 'mis promos vigentes', 'ver mis promo’',
     'ke cupones tengo', 'q cupones tengo', 'apareze mis cupones',
-    'ver lo ke tengo pa canjear'
+    'ver lo ke tengo pa canjear',
+    // Añadidos
+    'Che, ¿qué onda mis cupones, amiga?',
+    'Quiero ver qué cupones tengo disponibles.',
+    '¿Qué me queda pa\' canjear, che?',
+    'Mostrame los premios que tengo, po.',
+    'Abrime la cuponera, ¿dale?'
   ],
 
   ver_catalogo: [
@@ -40,7 +52,13 @@ const INTENT_LEX = {
     'quiero ver el catálogo','ver opciones de canje',
     'cataloguito','katalogo','catálogo de premios','catálogo de canjes',
     'qué hay en el catálogo','vichar catálogo','vichar los premios',
-    'ver el muestrario','ke opsiones hay en el catálogo'
+    'ver el muestrario','ke opsiones hay en el catálogo',
+    // Añadidos
+    '¿Qué hay pa\' canjear en el catálogo?',
+    'Loco, mostrame el catálogo completo.',
+    'Quiero ver todos los premios, ¿dónde están?',
+    'A ver, pasame el cataloguito, dale.',
+    'Dame el listado completo de los cupones, ¿eh?'
   ],
 
   como_canjear: [
@@ -48,7 +66,13 @@ const INTENT_LEX = {
     'como usar','hacer efectivo','truco pa cambiar','pinchar la promo',
     'komo canjear','como se canjea','como hago pa canjear','como se usa el cupon',
     'como lo meto','como lo aplico','pasito a pasito del canje','tutorial del canje',
-    'pasos del cange','che explicame el canje'
+    'pasos del cange','che explicame el canje',
+    // Añadidos
+    'Eh, ¿cómo es que se canjea esta joda?',
+    'No tengo ni idea de cómo se usa la cuponera, ¿me explicás?',
+    'Pasame el paso a paso, que no entiendo nada, ñeri.',
+    '¿Qué tengo que hacer para canjear un cupón?',
+    'Me guiás en el proceso, porfa, ¿si?'
   ],
 
   problema_cupon: [
@@ -57,7 +81,13 @@ const INTENT_LEX = {
     'no aparece el cupón','error al canjear','drama con el cupon','probema con el kupon',
     'quilombo con el cupon','el qr no lee','me tira error el cupon','no me lo valida',
     'no me lo acepta', 'se buguea al canjear','no me llegó el cupon','se me cayó el canje',
-    'me dice invalido','no anda el vauchér','apareze error kupon'
+    'me dice invalido','no anda el vauchér','apareze error kupon',
+    // Añadidos
+    'Este cupón no funciona, loco. ¡Me tira error!',
+    'No me reconoce el QR, ¡qué bronca!',
+    'Se ve que se venció el cupón, no anda más.',
+    'No me llegó el cupón que tenía que canjear, ¿qué onda?',
+    'Se rompió, no pude canjearlo. ¡Maldición!'
   ],
 
   // ---------------------------
@@ -66,7 +96,7 @@ const INTENT_LEX = {
   menu_ecopunto: [
     'ecopunto','ecopuntos','puntos verdes','punto verde',
     'info ecopunto','sobre los ecopuntos','quiero reciclar',
-    'los puntitos verdes','dónde reciclo','como es lo del punto verde',
+    'los puntitos verdes','como es lo del punto verde',
     'che ecopunto','tema ecopunto','ayuda con ecopunto','ke onda ecopunto'
   ],
 
@@ -76,16 +106,28 @@ const INTENT_LEX = {
     'dónde está el punto verde','dónde queda el punto','por dónde andan',
     'la dire del ecopunto','pasame la ubicación','mandame la ubi',
     'ubicame el punto verde','como llegar al punto','mapita del ecopunto',
-    'ubi del punto verde'
+    'ubi del punto verde',
+    // Añadidos
+    'Che, ¿dónde queda el Ecopunto, culiao?',
+    '¿Por dónde están los puntos verdes?',
+    'Decime la dirección de un Ecopunto cerca.',
+    '¿Hay un mapa de dónde puedo ir a reciclar?',
+    'Necesito la ubicación del Ecopunto, ¿dale?'
   ],
 
   horario_ecopunto: [
-    'horario ecopunto','que reciben','qué reciben','materiales ecopunto','reciclar',
+    'horario ecopunto',
     'a qué hora atienden','cuándo abren','horarios de atención',
     'horario punto verde','a qué hora cierran','horario hoy',
     'horario fin de semana','a ke hora estan','cuando laburan',
     'horario sab y dom','estan abiertos ahora','cierran temprano?',
-    'abren feriados?','qué horario manejan','hasta qué hora'
+    'abren feriados?','qué horario manejan','hasta qué hora',
+    // Añadidos
+    '¿A qué hora abren los Ecopuntos, eh?',
+    '¿Hasta qué hora atienden hoy, ma?',
+    'Necesito los horarios de los Ecopuntos, ¿me los pasás?',
+    '¿Abren hoy o no, che?',
+    '¿Cuándo cierran los Ecopuntos?'
   ],
 
   materiales_ecopunto: [
@@ -93,7 +135,13 @@ const INTENT_LEX = {
     'qué materiales van','qué reciben en el ecopunto','qué se deposita',
     'qué entra y qué no','materiales permitidos','que cosas van',
     'entra el plastico?','llevan vidrio?','se acepta carton?','latas van?',
-    'qué onda con los materiales','aceptan tetra?','va telgopor?','styrofoam va?'
+    'qué onda con los materiales','aceptan tetra?','va telgopor?','styrofoam va?',
+    // Añadidos
+    'Che, ¿qué tipo de materiales aceptan en el Ecopunto?',
+    '¿Qué se puede llevar a reciclar, loco?',
+    '¿Aceptan vidrio y plástico?',
+    'Decime la lista de materiales que reciben.',
+    '¿Se puede llevar latas, pa?'
   ],
 
   problema_ecopunto: [
@@ -112,14 +160,26 @@ const INTENT_LEX = {
     'cuanto recicle','cuánto reciclé','che cuanto recicle','cuanto llevo','cuánto llevo',
     'cuanta basura junte','cuánta basura junté','estadisticas huella','estadísticas huella',
     'mi huellita eco','mi data de reciclaje','qué tan verde voy',
-    'mi progreso eco','mi historial eco'
+    'mi progreso eco','mi historial eco',
+    // Añadidos
+    'Quiero ver mi huella verde.',
+    '¿Cuánta basura junté, ma?',
+    'Mostrame mi impacto, che.',
+    'Quiero ver cuántos kilos reciclé.',
+    '¿Cómo va mi huellita, eh?'
   ],
 
   huella_mensual: [
     'huella mensual','este mes','de este mes','kg este mes','kilos este mes',
     'cuanto recicle este mes','cuánto reciclé este mes','cuanto junte este mes','cuánta basura junté este mes',
     'este mes cómo vengo','lo del mes','lo juntado este mes','cuanto hice este mes',
-    'mi total del mes','mi resumen mensual','q llevo este mes','kilos del mes'
+    'mi total del mes','mi resumen mensual','q llevo este mes','kilos del mes',
+    // Añadidos
+    '¿Cuánto llevo reciclado este mes, loco?',
+    'Mostrame mi huella del mes, dale.',
+    '¿Cuántos kilos acumulé en estos días?',
+    'Quiero ver lo de este mes, che.',
+    '¿Cómo va mi huella mensual?'
   ],
 
   huella_acumulada: [
@@ -143,7 +203,13 @@ const INTENT_LEX = {
     'qué hacer para mejorar la huella','recomendaciones huella','como mejorar','che como es el impacto',
     'como achicar','dame tips','reducir','guella bajar','consejo pa reducir','guia pa mejorar el impacto',
     'trucos pa bajar la guella','ideas pa reducir','kiero bajar la huella que hago',
-    'trucos pa reducir','recomendaciones pa bajar'
+    'trucos pa reducir','recomendaciones pa bajar',
+    // Añadidos
+    '¿Cómo hago para mejorar mi huella?',
+    'Pasame unos tips para reciclar mejor.',
+    '¿Qué me recomendás para sumar más kilos?',
+    'Decime unos consejos para mejorar la huella verde.',
+    'Quiero saber cómo puedo aumentar mi reciclaje.'
   ],
 
   // ---------------------------
@@ -152,7 +218,13 @@ const INTENT_LEX = {
   menu_funcionamiento: [
     'como funciona', 'que es ekokai','significado',
     'como labura ekokai','que onda ekokai','como es esto de ekokai',
-    'explicame ekokai','de qué se trata ekokai'
+    'explicame ekokai','de qué se trata ekokai',
+    // Añadidos
+    'Che, explicame cómo labura esto.',
+    '¿De qué se trata Ekokai?',
+    'Necesito saber cómo funciona esta joda.',
+    'Explicame Ekokai, ¿qué es?',
+    'Quiero entender cómo funciona el servicio.'
   ],
 
   como_participo: [
@@ -163,13 +235,25 @@ const INTENT_LEX = {
     'como me uno','komo me uno','como me sumo','como me zumo','que onda pa anotarse',
     'como me prendo','como consigo','komo obtener premios','como me engancho',
     'quiero ser parte','como le entro','que pasos sigo pa participar',
-    'che me anoto','dame info quiero participar'
+    'che me anoto','dame info quiero participar',
+    // Añadidos
+    '¿Cómo hago para participar, amiga?',
+    'Quiero sumarme, ¿qué tengo que hacer?',
+    '¿Cómo arranco a reciclar con ustedes?',
+    'Quiero saber cómo ganar cupones.',
+    '¿Cómo puedo ayudar a Ekokai, loco?'
   ],
 
   que_gano: [
     'que gano','que premios','que puedo ganar','que puedo ganar con ekokai',
     'ke dan','que dan','ke corresponde','ke beneficios','que regalo','que obtengo',
-    'que me toca','ke me toka','que me llevo','ke me llevo','ke puedo llevarme'
+    'que me toca','ke me toka','que me llevo','ke me llevo','ke puedo llevarme',
+    // Añadidos
+    '¿Qué se gana con esto?',
+    '¿Qué me llevo si reciclo?',
+    'Decime qué beneficios tengo, dale.',
+    '¿Qué premios puedo ganar?',
+    'Quiero saber qué me llevo.'
   ],
 
   calculo_cupones: [
@@ -185,14 +269,26 @@ const INTENT_LEX = {
   menu_separar: [
     'como separar', 'como limpiar','que residuos','guía de separación',
     'cómo preparo los residuos','tips de separación','cómo lo separo','cómo lo acomodo',
-    'cómo lo preparo pa llevar','pasos pa separar','consejos pa separar'
+    'cómo lo preparo pa llevar','pasos pa separar','consejos pa separar',
+    // Añadidos
+    '¿Cómo se separa la basura, ma?',
+    'Necesito saber cómo limpiar los residuos.',
+    '¿Cómo clasifico lo que voy a llevar?',
+    'Explicame cómo se separa la basura.',
+    '¿Cómo preparo los residuos?'
   ],
 
   que_residuos: [
     'que residuos aceptan', 'aceptan','correctos','q reciben','q resiven','ke materiale',
     'que materiales','ke cosas','cartones','envases','vidrios','papeles','plastikos',
     'puede','llevar','botellas','boteya','agarran','permitido','dejar','tirar',
-    'que es reciclable'
+    'que es reciclable',
+    // Añadidos
+    '¿Qué residuos aceptan, che?',
+    '¿Qué va y qué no va en el Ecopunto?',
+    'Decime qué puedo llevar a reciclar.',
+    'Quiero saber qué entra en el Ecopunto.',
+    '¿Qué residuos son los correctos?'
   ],
 
   como_limpio: [
@@ -220,7 +316,13 @@ const INTENT_LEX = {
   problema: [
     'problema','reclamo','queja','no me anda','no funciona','ayuda con problema',
     'tuve un problema','algo falló','algo fallo','tengo un drama','se rompió','me falla',
-    'se tilda','anda mal','no tira','no responde','me crashea','probema'
+    'se tilda','anda mal','no tira','no responde','me crashea','probema',
+    // Añadidos
+    'Tuve un problema con el servicio.',
+    'No anda el chatbot, loco.',
+    'Se me crasheó la app, ¿qué onda?',
+    'Hay un problema con mis datos.',
+    'Me colgué con un error, ¿me ayudás?'
   ],
 
   menu_problema: [
@@ -229,7 +331,13 @@ const INTENT_LEX = {
     'tengo un tema','algo no me cierra','quiero reportar','tengo un inconveniente',
     'ayudita porfa','no es eso lo mio','no me pinta esa opcion',
     'no es lo ke tengo','no me va ninguna','ni a palos es eso',
-    'me pasa otra cosa distinta'
+    'me pasa otra cosa distinta',
+    // Añadidos
+    'Necesito ayuda, tengo un drama.',
+    'Quiero reportar un problema, che.',
+    'No veo mis datos, ¿qué pasó?',
+    'No puedo ver mis cupones, ¡qué garrón!',
+    'Necesito ayuda, porfa.'
   ],
 
   no_ver: [
