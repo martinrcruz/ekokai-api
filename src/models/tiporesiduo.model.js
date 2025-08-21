@@ -9,6 +9,4 @@ const TipoResiduoSchema = new mongoose.Schema({
   activo: { type: Boolean, default: true }
 }, { timestamps: true });
 
-module.exports = (connection) => {
-  return connection.models.TipoResiduo || connection.model('TipoResiduo', TipoResiduoSchema, 'tiporesiduos');
-};
+module.exports = mongoose.model('TipoResiduo', TipoResiduoSchema, 'tiporesiduos');

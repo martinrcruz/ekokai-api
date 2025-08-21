@@ -4,6 +4,12 @@ const { connectDB1 } = require('./config/database'); // conectamos de forma así
 const startServer = async () => {
   try {
     await connectDB1(); // esperamos conexión
+    
+    // Importar todos los modelos ANTES de cargar app.js
+    console.log('📚 Importando modelos de Mongoose...');
+    require('./models');
+    console.log('✅ Modelos importados correctamente');
+    
     const app = require('./app');
     const PORT = process.env.PORT || 8080;
 

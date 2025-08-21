@@ -21,31 +21,75 @@ const sucursalTop = async (req, res) => {
 };
 
 const kilosPorMes = async (req, res) => {
-    try {
-      console.log('📥 [CONTROLLER] GET /estadisticas/kilos-por-mes');
-      const data = await estadisticasService.obtenerKilosPorMes();
-      console.log('📤 [CONTROLLER] Enviando datos de kilos por mes...');
-      res.json(data);
-    } catch (err) {
-      console.error('❌ [CONTROLLER] Error en /kilos-por-mes:', err.message);
-      res.status(500).json({ error: err.message });
-    }
-  };
-  
-  const progresoMetaMensual = async (req, res) => {
-    try {
-      console.log('📥 [CONTROLLER] GET /estadisticas/meta-mensual');
-      const data = await estadisticasService.calcularProgresoMetaMensual(3000);
-      console.log('📤 [CONTROLLER] Enviando progreso mensual:', data);
-      res.json(data);
-    } catch (err) {
-      console.error('❌ [CONTROLLER] Error en /meta-mensual:', err.message);
-      res.status(500).json({ error: err.message });
-    }
-  };
+  try {
+    console.log('📥 [CONTROLLER] GET /estadisticas/kilos-por-mes');
+    const data = await estadisticasService.obtenerKilosPorMes();
+    console.log('📤 [CONTROLLER] Enviando datos de kilos por mes...');
+    res.json(data);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error en /kilos-por-mes:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const progresoMetaMensual = async (req, res) => {
+  try {
+    const { ecopuntoId } = req.query;
+    const data = await estadisticasService.calcularProgresoMetaMensual(ecopuntoId);
+    res.json(data);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error en /meta-mensual:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// === NUEVOS ENDPOINTS PARA USUARIO LOGEADO ===
+
+const kilosUsuarioHoy = async (req, res) => {
+  try {
+    console.log('📥 [CONTROLLER] GET /estadisticas/usuario-hoy/kilos');
+    const usuarioId = req.usuario._id;
+    const data = await estadisticasService.obtenerKilosUsuarioHoy(usuarioId);
+    console.log('📤 [CONTROLLER] Enviando kilos del usuario hoy:', data);
+    res.json(data);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error en /usuario-hoy/kilos:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const metaDiariaUsuario = async (req, res) => {
+  try {
+    console.log('📥 [CONTROLLER] GET /estadisticas/usuario-hoy/meta');
+    const usuarioId = req.usuario._id;
+    const data = await estadisticasService.obtenerMetaDiariaUsuario(usuarioId);
+    console.log('📤 [CONTROLLER] Enviando meta diaria del usuario:', data);
+    res.json(data);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error en /usuario-hoy/meta:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const estadisticasUsuarioHoy = async (req, res) => {
+  try {
+    console.log('📥 [CONTROLLER] GET /estadisticas/usuario-hoy');
+    const usuarioId = req.usuario._id;
+    const data = await estadisticasService.obtenerEstadisticasUsuarioHoy(usuarioId);
+    console.log('📤 [CONTROLLER] Enviando estadísticas completas del usuario hoy:', data);
+    res.json(data);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error en /usuario-hoy:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   totalKilos,
   sucursalTop,
   kilosPorMes,
-  progresoMetaMensual
+  progresoMetaMensual,
+  kilosUsuarioHoy,
+  metaDiariaUsuario,
+  estadisticasUsuarioHoy
 };

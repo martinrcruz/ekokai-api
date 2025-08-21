@@ -11,7 +11,7 @@ const calcularCupones = (pesoKg) => {
   return Math.ceil(pesoKg * 2); // Multiplicador de 2 para mantener la lógica especificada
 };
 
-const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, descripcion = '' }) => {
+const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, descripcion = '', encargadoId = null }) => {
   console.log('🟡 [SERVICE] Iniciando registro de entrega...');
 
   const tipo = await tipoRepo.buscarPorId(tipoResiduoId);
@@ -45,9 +45,11 @@ const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, 
     ecopunto: ecopuntoId,
     tipoResiduo: tipoResiduoId,
     pesoKg,
-    tokensOtorgados: cuponesGenerados,
+    cuponesGenerados: cuponesGenerados,
     cuponGenerado: cupon._id,
-    descripcion
+    descripcion,
+    encargado: encargadoId, // ID del encargado que procesa la entrega
+    estado: 'completado'
   });
 
   console.log('📌 [SERVICE] Entrega guardada correctamente');
@@ -62,8 +64,18 @@ const obtenerHistorialUsuario = async (usuarioId) => {
   return await entregaRepo.listarPorUsuario(usuarioId);
 };
 
+const obtenerHistorialCompleto = async (filtros = {}) => {
+  return await entregaRepo.listarTodasLasEntregas(filtros);
+};
+
+const obtenerEstadisticas = async () => {
+  return await entregaRepo.obtenerEstadisticas();
+};
+
 module.exports = {
   registrarEntrega,
   obtenerHistorialUsuario,
+  obtenerHistorialCompleto,
+  obtenerEstadisticas,
   calcularCupones
 };

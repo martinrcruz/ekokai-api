@@ -23,7 +23,8 @@ const registrarEntrega = async (req, res) => {
       ecopuntoId, 
       tipoResiduoId, 
       pesoKg, 
-      descripcion: descripcion || ''
+      descripcion: descripcion || '',
+      encargadoId: req.user._id
     });
     
     console.log('✅ [CONTROLLER] Entrega registrada exitosamente');
@@ -50,7 +51,49 @@ const historialUsuario = async (req, res) => {
   }
 };
 
+const historialCompleto = async (req, res) => {
+  try {
+    console.log('🎯 [CONTROLLER] → GET /entregas/historial');
+    
+    const filtros = {
+      usuarioId: req.query.usuarioId,
+      ecopuntoId: req.query.ecopuntoId,
+      tipoResiduoId: req.query.tipoResiduoId,
+      estado: req.query.estado,
+      fechaDesde: req.query.fechaDesde,
+      fechaHasta: req.query.fechaHasta
+    };
+    
+    const historial = await servicio.obtenerHistorialCompleto(filtros);
+    res.json({
+      ok: true,
+      historial,
+      total: historial.length
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener historial completo:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const estadisticas = async (req, res) => {
+  try {
+    console.log('🎯 [CONTROLLER] → GET /entregas/estadisticas');
+    
+    const stats = await servicio.obtenerEstadisticas();
+    res.json({
+      ok: true,
+      estadisticas: stats
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener estadísticas:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   registrarEntrega,
-  historialUsuario
+  historialUsuario,
+  historialCompleto,
+  estadisticas
 };

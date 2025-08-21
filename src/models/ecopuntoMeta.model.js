@@ -16,8 +16,6 @@ EcopuntoMetaSchema.pre('save', function (next) {
   next();
 });
 
-module.exports = (connection) => {
-  return connection.models.EcopuntoMeta || connection.model('EcopuntoMeta', EcopuntoMetaSchema, 'ecopunto_metas');
-};
+module.exports = mongoose.model('EcopuntoMeta', EcopuntoMetaSchema, 'ecopunto_metas');
 
 

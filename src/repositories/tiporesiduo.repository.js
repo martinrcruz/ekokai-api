@@ -1,33 +1,26 @@
-const { getDB1 } = require('../config/database');
-const getTipoResiduoModel = require('../models/tiporesiduo.model');
-
-function getTipoResiduo() {
-  const db = getDB1();
-  if (!db) throw new Error('DB1 no inicializada');
-  return getTipoResiduoModel(db);
-}
+const TipoResiduo = require('../models/tiporesiduo.model');
 
 module.exports = {
   async crear(data) {
-    const tipo = new (getTipoResiduo())(data);
+    const tipo = new TipoResiduo(data);
     return tipo.save();
   },
   async listar() {
-    return getTipoResiduo().find();
+    return TipoResiduo.find();
   },
   async buscarPorNombre(nombre) {
-    return getTipoResiduo().findOne({ nombre });
+    return TipoResiduo.findOne({ nombre });
   },
   async buscarPorId(id) {
-    return getTipoResiduo().findById(id);
+    return TipoResiduo.findById(id);
   },
   async eliminarTipoResiduo(id) {
-    return getTipoResiduo().findByIdAndDelete(id);
+    return TipoResiduo.findByIdAndDelete(id);
   },
   async eliminar(id) {
-    return getTipoResiduo().findByIdAndDelete(id);
+    return TipoResiduo.findByIdAndDelete(id);
   },
   async actualizar(id, data) {
-    return getTipoResiduo().findByIdAndUpdate(id, data, { new: true });
+    return TipoResiduo.findByIdAndUpdate(id, data, { new: true });
   }
 };

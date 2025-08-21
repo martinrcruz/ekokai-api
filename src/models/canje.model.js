@@ -1,4 +1,3 @@
-const { connectDB1 } = require('../config/database');
 const mongoose = require('mongoose');
 
 const CanjeSchema = new mongoose.Schema({
@@ -43,7 +42,4 @@ CanjeSchema.index({ usuarioId: 1, fechaCanje: -1 });
 CanjeSchema.index({ comercioId: 1, fechaCanje: -1 });
 CanjeSchema.index({ estado: 1 });
 
-module.exports = async () => {
-  const db = await connectDB1();
-  return db.model('Canje', CanjeSchema);
-};
+module.exports = mongoose.model('Canje', CanjeSchema);

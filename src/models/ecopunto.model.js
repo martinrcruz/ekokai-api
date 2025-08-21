@@ -13,16 +13,14 @@ const EcopuntoSchema = new mongoose.Schema({
   activo: { type: Boolean, default: true }
 });
 
-// models/ecopunto.model.js
+// Virtual para vecinos
 EcopuntoSchema.virtual('vecinos', {
-    ref: 'Usuario',
-    localField: '_id',
-    foreignField: 'ecopuntoId',
-  });
-  
-  EcopuntoSchema.set('toObject', { virtuals: true });
-  EcopuntoSchema.set('toJSON', { virtuals: true });
+  ref: 'Usuario',
+  localField: '_id',
+  foreignField: 'ecopuntoId',
+});
 
-module.exports = (connection) => {
-  return connection.models.Ecopunto || connection.model('Ecopunto', EcopuntoSchema, 'ecopuntos');
-};
+EcopuntoSchema.set('toObject', { virtuals: true });
+EcopuntoSchema.set('toJSON', { virtuals: true });
+
+module.exports = mongoose.model('Ecopunto', EcopuntoSchema, 'ecopuntos');

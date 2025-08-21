@@ -1,4 +1,3 @@
-const { connectDB1 } = require('../config/database');
 const mongoose = require('mongoose');
 
 const CuponSchema = new mongoose.Schema({
@@ -116,8 +115,5 @@ CuponSchema.methods.usarCupon = function(usuarioId, comercioId, tokensGastados) 
     return this.save();
 };
 
-module.exports = async () => {
-  const db = await connectDB1();
-  return db.model('Cupon', CuponSchema);
-};
+module.exports = mongoose.model('Cupon', CuponSchema);
   

@@ -1,20 +1,12 @@
-const { getDB1 } = require('../config/database');
-const getEcopuntoModel = require('../models/ecopunto.model');
+const Ecopunto = require('../models/ecopunto.model');
 const Usuario = require('../models/usuario.model');
 const mongoose = require('mongoose');
-const getEcopuntoMetaModel = require('../models/ecopuntoMeta.model');
-
-function getEcopunto() {
-  const db = getDB1();
-  if (!db) throw new Error('DB1 no inicializada');
-  return getEcopuntoModel(db);
-}
+const EcopuntoMeta = require('../models/ecopuntoMeta.model');
+const EntregaResiduo = require('../models/entregaresiduo.model');
 
 async function _getEntregasCollection() {
-  const db = getDB1();
-  if (!db) throw new Error('DB1 no inicializada');
-  // Acceso directo a la colección nativa (sin modelo)
-  return db.collection('entregas'); // usa el nombre real que tengas
+  // Usar el modelo directamente
+  return EntregaResiduo;
 }
 
 async function calcularTotalKgPorEcopuntoId(ecopuntoId) {
@@ -43,7 +35,6 @@ async function calcularTotalKgPorEcopuntoId(ecopuntoId) {
 
 async function calcularTotalKgPorNombre(nombre) {
   // busca el ecopunto por nombre (case-insensitive) y delega al sumatorio por id
-  const Ecopunto = getEcopuntoModel(getDB1());
   const ecopunto = await Ecopunto.findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
   if (!ecopunto) return { totalKg: 0, ecopunto: null };
 
@@ -81,7 +72,6 @@ async function calcularTotalKgMensualPorEcopuntoId(ecopuntoId) {
 }
 
 async function calcularTotalKgMensualPorNombre(nombre) {
-  const Ecopunto = getEcopuntoModel(getDB1());
   const ecopunto = await Ecopunto.findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
   if (!ecopunto) return { series: [], ecopunto: null };
   const series = await calcularTotalKgMensualPorEcopuntoId(ecopunto._id);
@@ -95,7 +85,6 @@ async function contarVecinosPorEcopuntoId(ecopuntoId) {
 }
 
 async function contarVecinosPorNombre(nombre) {
-  const Ecopunto = getEcopuntoModel(getDB1());
   const ecopunto = await Ecopunto.findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
   if (!ecopunto) return { totalVecinos: 0, ecopunto: null };
   const totalVecinos = await contarVecinosPorEcopuntoId(ecopunto._id);
@@ -146,9 +135,8 @@ async function listarEntregasDetalladasPorEcopuntoId(ecopuntoId, { desde, hasta,
 }
 
 async function listarEntregasDetalladasPorNombre(nombre, opts = {}) {
-  const Ecopunto = getEcopuntoModel(getDB1());
   const ecopunto = await Ecopunto.findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
-  if (!ecopunto) return { entregas: [], ecopunto: null };
+  if (!ecopunto) return { entregas, ecopunto: null };
   const entregas = await listarEntregasDetalladasPorEcopuntoId(ecopunto._id, opts);
   return { entregas, ecopunto };
 }
@@ -168,23 +156,23 @@ module.exports = {
       encargado: data.encargado || null
     };
     
-    const ecopunto = new (getEcopunto())(ecopuntoData);
+    const ecopunto = new Ecopunto(ecopuntoData);
     return ecopunto.save();
   },
   async obtenerPorId(id) {
-    return getEcopunto().findById(id);
+    return Ecopunto.findById(id);
   },
   async obtenerPorNombre(nombre) {
-    return getEcopunto().findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
+    return Ecopunto.findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
   },
   async listarEcopuntosConDetalle() {
-    return getEcopunto().find().populate('encargado').populate('vecinos');
+    return Ecopunto.find().populate('encargado').populate('vecinos');
   },
   async buscarPorEncargado(encargadoId) {
-    return getEcopunto().findOne({ encargado: encargadoId });
+    return Ecopunto.findOne({ encargado: encargadoId });
   },
   async actualizarEncargado(ecopuntoId, encargadoId) {
-    return getEcopunto().findByIdAndUpdate(ecopuntoId, { encargado: encargadoId }, { new: true });
+    return Ecopunto.findByIdAndUpdate(ecopuntoId, { encargado: encargadoId }, { new: true });
   },
   async actualizarEcopunto(ecopuntoId, datos) {
     const updateData = { ...datos };
@@ -196,10 +184,10 @@ module.exports = {
     if (updateData.activo === undefined) updateData.activo = true;
     if (updateData.descripcion === undefined) updateData.descripcion = '';
     
-    return getEcopunto().findByIdAndUpdate(ecopuntoId, updateData, { new: true });
+    return Ecopunto.findByIdAndUpdate(ecopuntoId, updateData, { new: true });
   },
   async eliminarEcopunto(ecopuntoId) {
-    return getEcopunto().findByIdAndDelete(ecopuntoId);
+    return Ecopunto.findByIdAndDelete(ecopuntoId);
   },
 
   calcularTotalKgPorEcopuntoId,
@@ -213,8 +201,6 @@ module.exports = {
 
   // === Metas mensuales ===
   async upsertMetaMensual({ ecopuntoId, year, month, objetivoKg }) {
-    const db = getDB1();
-    const EcopuntoMeta = getEcopuntoMetaModel(db);
     const filter = { ecopunto: new mongoose.Types.ObjectId(ecopuntoId), year, month };
     const update = { $set: { objetivoKg, actualizadoEn: new Date() }, $setOnInsert: { creadoEn: new Date() } };
     const options = { upsert: true, new: true, returnDocument: 'after' };
@@ -222,13 +208,9 @@ module.exports = {
     return res;
   },
   async obtenerMetaMensual({ ecopuntoId, year, month }) {
-    const db = getDB1();
-    const EcopuntoMeta = getEcopuntoMetaModel(db);
     return EcopuntoMeta.findOne({ ecopunto: new mongoose.Types.ObjectId(ecopuntoId), year, month });
   },
   async eliminarMetaMensual({ ecopuntoId, year, month }) {
-    const db = getDB1();
-    const EcopuntoMeta = getEcopuntoMetaModel(db);
     return EcopuntoMeta.findOneAndDelete({ ecopunto: new mongoose.Types.ObjectId(ecopuntoId), year, month });
   }
 
