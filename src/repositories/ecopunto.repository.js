@@ -156,7 +156,19 @@ async function listarEntregasDetalladasPorNombre(nombre, opts = {}) {
 
 module.exports = {
   async crearEcopunto(data) {
-    const ecopunto = new (getEcopunto())(data);
+    const ecopuntoData = {
+      nombre: data.nombre,
+      direccion: data.direccion,
+      zona: data.zona,
+      descripcion: data.descripcion || '',
+      horarioApertura: data.horarioApertura || '08:00',
+      horarioCierre: data.horarioCierre || '20:00',
+      capacidadMaxima: data.capacidadMaxima || 1000,
+      activo: data.activo !== undefined ? data.activo : true,
+      encargado: data.encargado || null
+    };
+    
+    const ecopunto = new (getEcopunto())(ecopuntoData);
     return ecopunto.save();
   },
   async obtenerPorId(id) {
@@ -175,7 +187,16 @@ module.exports = {
     return getEcopunto().findByIdAndUpdate(ecopuntoId, { encargado: encargadoId }, { new: true });
   },
   async actualizarEcopunto(ecopuntoId, datos) {
-    return getEcopunto().findByIdAndUpdate(ecopuntoId, datos, { new: true });
+    const updateData = { ...datos };
+    
+    // Asegurar que los campos opcionales tengan valores por defecto si no se proporcionan
+    if (updateData.horarioApertura === undefined) updateData.horarioApertura = '08:00';
+    if (updateData.horarioCierre === undefined) updateData.horarioCierre = '20:00';
+    if (updateData.capacidadMaxima === undefined) updateData.capacidadMaxima = 1000;
+    if (updateData.activo === undefined) updateData.activo = true;
+    if (updateData.descripcion === undefined) updateData.descripcion = '';
+    
+    return getEcopunto().findByIdAndUpdate(ecopuntoId, updateData, { new: true });
   },
   async eliminarEcopunto(ecopuntoId) {
     return getEcopunto().findByIdAndDelete(ecopuntoId);

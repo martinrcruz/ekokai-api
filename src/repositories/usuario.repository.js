@@ -52,6 +52,12 @@ const eliminarUsuario = async (id) => {
   return await Usuario.findByIdAndDelete(id);
 };
 
+// ✅ Buscar usuarios por criterios específicos
+const buscarUsuariosPorCriterios = async (query) => {
+  console.log('🔍 [REPOSITORY] Buscando usuarios con query:', query);
+  return await Usuario.find(query).sort({ fechaCreacion: -1 });
+};
+
 module.exports = {
   crearUsuario,
   buscarUsuario,
@@ -61,5 +67,6 @@ module.exports = {
   incrementarTokens,
   buscarPorTelefono,
   actualizarUsuario,
-  eliminarUsuario
+  eliminarUsuario,
+  buscarUsuariosPorCriterios
 };

@@ -243,7 +243,7 @@ router.post('/', async (req, res) => {
   try {
     console.log('📥 [ROUTE] POST /api/ecopunto - Creando nuevo ecopunto:', req.body);
     
-    const { nombre, direccion, zona, horarioApertura, horarioCierre, capacidadMaxima, descripcion } = req.body;
+    const { nombre, direccion, zona, horarioApertura, horarioCierre, capacidadMaxima, descripcion, activo } = req.body;
     
     // Validar datos requeridos
     if (!nombre || !direccion || !zona) {
@@ -260,7 +260,8 @@ router.post('/', async (req, res) => {
       horarioApertura: horarioApertura || '08:00',
       horarioCierre: horarioCierre || '20:00',
       capacidadMaxima: capacidadMaxima || 1000,
-      descripcion: descripcion || ''
+      descripcion: descripcion || '',
+      activo: activo !== undefined ? activo : true
     };
     
     const nuevoEcopunto = await ecopuntoRepo.crearEcopunto(datosEcopunto);
@@ -295,7 +296,7 @@ router.put('/:id', async (req, res) => {
     console.log('📋 [ROUTE] Datos de actualización:', req.body);
     
     const { id } = req.params;
-    const { nombre, direccion, zona, horarioApertura, horarioCierre, capacidadMaxima, descripcion, encargadoId } = req.body;
+    const { nombre, direccion, zona, horarioApertura, horarioCierre, capacidadMaxima, descripcion, activo, encargadoId } = req.body;
     
     // Validar datos requeridos
     if (!nombre || !direccion || !zona) {
@@ -312,7 +313,8 @@ router.put('/:id', async (req, res) => {
       horarioApertura: horarioApertura || '08:00',
       horarioCierre: horarioCierre || '20:00',
       capacidadMaxima: capacidadMaxima || 1000,
-      descripcion: descripcion || ''
+      descripcion: descripcion || '',
+      activo: activo !== undefined ? activo : true
     };
     
     // Si se proporciona un encargadoId, actualizarlo también

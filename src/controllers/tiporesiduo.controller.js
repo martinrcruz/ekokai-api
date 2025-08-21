@@ -50,11 +50,8 @@ const listar = async (req, res) => {
     const tipos = await tipoService.obtenerTodos();
     console.log('✅ [CONTROLLER] Tipos de residuo obtenidos:', tipos.length);
     
-    res.status(200).json({
-      success: true,
-      message: 'Tipos de residuo obtenidos exitosamente',
-      data: tipos
-    });
+    // Respuesta simplificada para el frontend
+    res.status(200).json(tipos);
   } catch (error) {
     console.error('❌ [CONTROLLER] Error al listar tipos de residuo:', error);
     res.status(500).json({ 

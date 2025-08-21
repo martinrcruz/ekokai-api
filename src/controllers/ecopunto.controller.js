@@ -3,8 +3,18 @@ const ecopuntoRepo= require('../repositories/ecopunto.repository');
 const crearEcopunto = async (req, res) => {
     console.log('🎯 [CONTROLLER] → POST /ecopuntos');
     try {
-      const { nombre, direccion, encargadoId } = req.body;
-      const nuevoEcopunto = await ecopuntoService.crearEcopunto({ nombre, direccion, encargadoId });
+      const { nombre, direccion, zona, descripcion, horarioApertura, horarioCierre, capacidadMaxima, activo, encargadoId } = req.body;
+      const nuevoEcopunto = await ecopuntoService.crearEcopunto({ 
+        nombre, 
+        direccion, 
+        zona, 
+        descripcion, 
+        horarioApertura, 
+        horarioCierre, 
+        capacidadMaxima, 
+        activo, 
+        encargadoId 
+      });
       return res.status(201).json(nuevoEcopunto);
     } catch (err) {
       console.error('❌ [CONTROLLER] Error al crear ecopunto:', err.message);

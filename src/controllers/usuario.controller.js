@@ -108,6 +108,32 @@ const eliminarUsuario = async (req, res) => {
   }
 };
 
+// ✅ Cambiar estado de usuario (activar/desactivar)
+const cambiarEstadoUsuario = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { activo } = req.body;
+    
+    console.log('🔄 [CONTROLLER] Cambiando estado de usuario', id, 'a:', activo);
+    
+    if (typeof activo !== 'boolean') {
+      return res.status(400).json({ error: 'El campo "activo" debe ser un booleano' });
+    }
+    
+    const actualizado = await usuarioService.actualizarUsuario(id, { activo });
+    if (!actualizado) return res.status(404).json({ error: 'Usuario no encontrado' });
+    
+    console.log('✅ [CONTROLLER] Estado de usuario cambiado exitosamente');
+    res.json({ 
+      mensaje: `Usuario ${activo ? 'activado' : 'desactivado'} exitosamente`,
+      usuario: actualizado 
+    });
+  } catch (err) {
+    console.error('❌ [cambiarEstadoUsuario] Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 const historialInteracciones = async (req, res) => {
   try {
     const usuarioId = req.params.usuarioId;
@@ -119,6 +145,25 @@ const historialInteracciones = async (req, res) => {
   }
 };
 
+// ✅ Buscar vecinos por DNI, teléfono o nombre
+const buscarVecinos = async (req, res) => {
+  try {
+    const { dni, telefono, nombre } = req.query;
+    
+    if (!dni && !telefono && !nombre) {
+      return res.status(400).json({ 
+        error: 'Debe proporcionar al menos un criterio de búsqueda: dni, telefono o nombre' 
+      });
+    }
+    
+    const vecinos = await usuarioService.buscarVecinos({ dni, telefono, nombre });
+    res.json(vecinos);
+  } catch (error) {
+    console.error('❌ [buscarVecinos] Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   registrarVecino,
   listarUsuarios,
@@ -126,5 +171,7 @@ module.exports = {
   registrarConRol,
   actualizarUsuario,
   eliminarUsuario,
-  historialInteracciones
+  cambiarEstadoUsuario,
+  historialInteracciones,
+  buscarVecinos
 };

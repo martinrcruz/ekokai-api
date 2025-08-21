@@ -3,8 +3,36 @@ const servicio = require('../services/entregaresiduo.service');
 const registrarEntrega = async (req, res) => {
   try {
     console.log('🎯 [CONTROLLER] → POST /entregas');
-    const entrega = await servicio.registrarEntrega(req.body);
-    res.status(201).json(entrega);
+    console.log('📋 [CONTROLLER] Datos recibidos:', req.body);
+    
+    const { usuarioId, ecopuntoId, tipoResiduoId, pesoKg, descripcion } = req.body;
+    
+    // Validaciones básicas
+    if (!usuarioId || !ecopuntoId || !tipoResiduoId || !pesoKg) {
+      return res.status(400).json({ 
+        error: 'Faltan campos requeridos: usuarioId, ecopuntoId, tipoResiduoId, pesoKg' 
+      });
+    }
+    
+    if (pesoKg <= 0) {
+      return res.status(400).json({ error: 'El peso debe ser mayor a 0' });
+    }
+    
+    const resultado = await servicio.registrarEntrega({
+      usuarioId, 
+      ecopuntoId, 
+      tipoResiduoId, 
+      pesoKg, 
+      descripcion: descripcion || ''
+    });
+    
+    console.log('✅ [CONTROLLER] Entrega registrada exitosamente');
+    res.status(201).json({
+      mensaje: 'Entrega registrada exitosamente',
+      entrega: resultado.entrega,
+      cupon: resultado.cupon,
+      cuponesGenerados: resultado.cuponesGenerados
+    });
   } catch (error) {
     console.error('❌ [CONTROLLER] Error al registrar entrega:', error.message);
     res.status(400).json({ error: error.message });

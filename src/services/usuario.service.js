@@ -113,6 +113,34 @@ const actualizarTokens = async (id, tokensGanados) => {
   return usuarioActualizado;
 };
 
+// ✅ Buscar vecinos por criterios
+const buscarVecinos = async (criterios) => {
+  console.log('🔍 [SERVICE] Buscando vecinos con criterios:', criterios);
+  
+  const { dni, telefono, nombre } = criterios;
+  let query = { rol: 'vecino', activo: true };
+  
+  if (dni) {
+    query.dni = { $regex: dni.toString().replace(/\D/g, ''), $options: 'i' };
+  }
+  
+  if (telefono) {
+    query.telefono = { $regex: telefono.toString().replace(/\D/g, ''), $options: 'i' };
+  }
+  
+  if (nombre) {
+    query.$or = [
+      { nombre: { $regex: nombre, $options: 'i' } },
+      { apellido: { $regex: nombre, $options: 'i' } }
+    ];
+  }
+  
+  const vecinos = await usuarioRepo.buscarUsuariosPorCriterios(query);
+  console.log(`✅ [SERVICE] Encontrados ${vecinos.length} vecinos`);
+  
+  return vecinos;
+};
+
 module.exports = {
   registrarVecino,
   obtenerTodos,
@@ -121,5 +149,6 @@ module.exports = {
   actualizarUsuario,
   eliminarUsuario,
   crearUsuario,
-  actualizarTokens
+  actualizarTokens,
+  buscarVecinos
 };

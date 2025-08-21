@@ -1,12 +1,18 @@
-const { connectDB1 } = require('../config/database');
+const { getDB1 } = require('../config/database');
 const getEntregaModel = require('../models/entregaresiduo.model');
+
+async function getEntrega() {
+  const db = getDB1();
+  if (!db) throw new Error('DB1 no inicializada');
+  return getEntregaModel(db);
+}
 
 
 const obtenerKilosPorMes = async () => {
     console.log('📊 [SERVICE] Iniciando agrupación de kilos por mes...');
   
     try {
-      const Entrega = await getEntregaModel();
+      const Entrega = await getEntrega();
       const resultado = await Entrega.aggregate([
         {
           $group: {
@@ -58,7 +64,7 @@ const obtenerKilosPorMes = async () => {
   
       console.log('📅 [SERVICE] Rango del mes actual:', primerDiaMes.toISOString(), '→', ultimoDiaMes.toISOString());
   
-      const Entrega = await getEntregaModel();
+      const Entrega = await getEntrega();
       const resultado = await Entrega.aggregate([
         {
           $match: {
@@ -97,7 +103,7 @@ const obtenerKilosPorMes = async () => {
   };
   
 const obtenerTotalKilos = async () => {
-  const Entrega = await getEntregaModel();
+  const Entrega = await getEntrega();
   const resultado = await Entrega.aggregate([
     { $group: { _id: null, totalKg: { $sum: '$pesoKg' } } }
   ]);
@@ -105,7 +111,7 @@ const obtenerTotalKilos = async () => {
 };
 
 const obtenerSucursalConMasKilos = async () => {
-  const Entrega = await getEntregaModel();
+  const Entrega = await getEntrega();
   const resultado = await Entrega.aggregate([
     { $group: { _id: '$ecopunto', totalKg: { $sum: '$pesoKg' } } },
     { $sort: { totalKg: -1 } },

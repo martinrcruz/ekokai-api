@@ -8,7 +8,10 @@ const crearTipoResiduo = async (data) => {
 };
 
 const obtenerTodos = async () => {
-  return await tipoRepo.listar();
+  console.log('🟡 [SERVICE] → Obteniendo todos los tipos de residuo');
+  const tipos = await tipoRepo.listar();
+  console.log(`✅ [SERVICE] Tipos de residuo obtenidos: ${tipos.length}`);
+  return tipos;
 };
 
 const obtenerPorId = async (id) => {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const EcopuntoMetaSchema = new mongoose.Schema({
-  ecopunto: { type: mongoose.Schema.Types.ObjectId, ref: 'Ecopunto', required: true },
+  ecopunto: { type: mongoose.Schema.Types.ObjectId, required: true },
   year: { type: Number, required: true },
   month: { type: Number, min: 1, max: 12, required: true },
   objetivoKg: { type: Number, required: true },

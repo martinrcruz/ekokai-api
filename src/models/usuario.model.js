@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const { getDB1 } = require('../config/database');
+const { connectDB1 } = require('../config/database');
 
 const UsuarioSchema = new mongoose.Schema({
   rol: { type: String, enum: ['vecino', 'encargado', 'administrador'], required: true },
@@ -21,7 +21,6 @@ const UsuarioSchema = new mongoose.Schema({
   ultimaConexion: { type: Date, default: Date.now },
   ecopuntoId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Ecopunto',
     default: null,
   },
   requiereCambioPassword: { type: Boolean, default: false }
