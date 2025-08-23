@@ -1,5 +1,5 @@
 const usuarioRepo = require('../repositories/usuario.repository');
-const entregaRepo = require('../repositories/entregaresiduio.repository');
+const entregaRepo = require('../repositories/entregaresiduo.repository');
 const premioService = require('../services/premio.service');
 
 // Listar usuarios

@@ -5,8 +5,8 @@ const EcopuntoMeta = require('../models/ecopuntoMeta.model');
 const EntregaResiduo = require('../models/entregaresiduo.model');
 
 async function _getEntregasCollection() {
-  // Usar el modelo directamente
-  return EntregaResiduo;
+  // Para usar aggregate().toArray(), necesitamos la colección directamente
+  return EntregaResiduo.collection;
 }
 
 async function calcularTotalKgPorEcopuntoId(ecopuntoId) {
@@ -68,7 +68,7 @@ async function calcularTotalKgMensualPorEcopuntoId(ecopuntoId) {
     }
   ];
 
-  return entregas.aggregate(pipeline).toArray();
+  return await entregas.aggregate(pipeline).toArray();
 }
 
 async function calcularTotalKgMensualPorNombre(nombre) {
@@ -131,12 +131,12 @@ async function listarEntregasDetalladasPorEcopuntoId(ecopuntoId, { desde, hasta,
   const max = Number.isFinite(Number(limit)) ? Math.max(1, Math.min(500, Number(limit))) : 100;
   pipeline.push({ $limit: max });
 
-  return entregas.aggregate(pipeline).toArray();
+  return await entregas.aggregate(pipeline).toArray();
 }
 
 async function listarEntregasDetalladasPorNombre(nombre, opts = {}) {
   const ecopunto = await Ecopunto.findOne({ nombre: new RegExp(`^${nombre}$`, 'i') });
-  if (!ecopunto) return { entregas, ecopunto: null };
+  if (!ecopunto) return { entregas: [], ecopunto: null };
   const entregas = await listarEntregasDetalladasPorEcopuntoId(ecopunto._id, opts);
   return { entregas, ecopunto };
 }

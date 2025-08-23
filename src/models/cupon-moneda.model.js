@@ -124,3 +124,5 @@ cuponMonedaSchema.methods.obtenerHistorialResumido = function() {
 };
 
 module.exports = mongoose.model('CuponMoneda', cuponMonedaSchema);
+
+

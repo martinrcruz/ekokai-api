@@ -16,6 +16,28 @@ router.get('/test-estado', (req, res) => {
   res.json({ message: 'Ruta de prueba funcionando', timestamp: new Date().toISOString() });
 });
 
+// ✅ RUTA DE PRUEBA TEMPORAL PARA HISTORIAL (SIN AUTENTICACIÓN)
+router.get('/test-historial/:usuarioId', async (req, res) => {
+  try {
+    console.log('🧪 [TEST] Ruta de prueba /test-historial accedida para usuario:', req.params.usuarioId);
+    const entregaService = require('../services/entregaresiduo.service');
+    const canjeService = require('../services/canje.service');
+    
+    const entregas = await entregaService.obtenerHistorialUsuario(req.params.usuarioId);
+    const canjes = await canjeService.obtenerHistorialCanjes(req.params.usuarioId);
+    
+    res.json({ 
+      message: 'Test de historial exitoso',
+      entregas, 
+      canjes,
+      timestamp: new Date().toISOString() 
+    });
+  } catch (error) {
+    console.error('❌ [TEST] Error en test-historial:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // ✅ RUTA DE PRUEBA PATCH TEMPORAL
 router.patch('/test-estado', (req, res) => {
   console.log('🧪 [TEST] Ruta de prueba PATCH /test-estado accedida');

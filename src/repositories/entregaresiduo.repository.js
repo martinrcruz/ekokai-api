@@ -48,5 +48,33 @@ module.exports = {
       totalPeso: totalPeso[0]?.total || 0,
       totalCupones: totalCupones[0]?.total || 0
     };
+  },
+
+  // Métodos adicionales para admin
+  async historialPorUsuario(usuarioId) {
+    return EntregaResiduo.find({ usuario: usuarioId })
+      .populate('tipoResiduo', 'nombre descripcion')
+      .populate('ecopunto', 'nombre direccion')
+      .populate('encargado', 'nombre apellido')
+      .sort({ fecha: -1 });
+  },
+
+  async metricasPorEcopunto(ecopuntoId) {
+    const entregas = await EntregaResiduo.find({ ecopunto: ecopuntoId })
+      .populate('usuario', 'nombre apellido')
+      .populate('tipoResiduo', 'nombre')
+      .sort({ fecha: -1 });
+
+    const totalKg = entregas.reduce((sum, entrega) => sum + (entrega.pesoKg || 0), 0);
+    const totalCupones = entregas.reduce((sum, entrega) => sum + (entrega.cuponesGenerados || 0), 0);
+    const usuariosUnicos = new Set(entregas.map(e => e.usuario._id.toString())).size;
+
+    return {
+      entregas,
+      totalKg,
+      totalCupones,
+      usuariosUnicos,
+      totalEntregas: entregas.length
+    };
   }
 };

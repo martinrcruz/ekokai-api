@@ -42,6 +42,14 @@ const premioSchema = new mongoose.Schema({
   orden: {
     type: Number,
     default: 0
+  },
+  createdDate: {
+    type: Date,
+    default: Date.now
+  },
+  updatedDate: {
+    type: Date,
+    default: Date.now
   }
 }, {
   timestamps: true
@@ -52,6 +60,22 @@ premioSchema.index({ activo: 1 });
 premioSchema.index({ categoria: 1 });
 premioSchema.index({ destacado: 1 });
 premioSchema.index({ orden: 1 });
+
+// Middleware para actualizar automáticamente updatedDate
+premioSchema.pre('save', function(next) {
+  this.updatedDate = new Date();
+  next();
+});
+
+premioSchema.pre('findOneAndUpdate', function(next) {
+  this.set({ updatedDate: new Date() });
+  next();
+});
+
+premioSchema.pre('updateOne', function(next) {
+  this.set({ updatedDate: new Date() });
+  next();
+});
 
 module.exports = mongoose.model('Premio', premioSchema);
 

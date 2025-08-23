@@ -101,7 +101,11 @@ const eliminarUsuario = async (req, res) => {
     console.log('🗑️ [CONTROLLER] Eliminando usuario', id);
     const eliminado = await usuarioService.eliminarUsuario(id);
     if (!eliminado) return res.status(404).json({ error: 'Usuario no encontrado' });
-    res.json({ mensaje: 'Usuario eliminado' });
+    res.json({ 
+      ok: true,
+      message: 'Usuario eliminado exitosamente',
+      data: null
+    });
   } catch (err) {
     console.error('❌ [eliminarUsuario] Error:', err);
     res.status(500).json({ error: err.message });
@@ -125,8 +129,9 @@ const cambiarEstadoUsuario = async (req, res) => {
     
     console.log('✅ [CONTROLLER] Estado de usuario cambiado exitosamente');
     res.json({ 
-      mensaje: `Usuario ${activo ? 'activado' : 'desactivado'} exitosamente`,
-      usuario: actualizado 
+      ok: true,
+      message: `Usuario ${activo ? 'activado' : 'desactivado'} exitosamente`,
+      data: { usuario: actualizado }
     });
   } catch (err) {
     console.error('❌ [cambiarEstadoUsuario] Error:', err);

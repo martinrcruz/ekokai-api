@@ -1,15 +1,13 @@
-const getCanjeModel = require('../models/canje.model');
+const Canje = require('../models/canje.model');
 
 const crearCanje = async (data) => {
-  const Canje = await getCanjeModel();
   return await Canje.create(data);
 };
 
 const listarCanjesPorUsuario = async (usuarioId) => {
-  const Canje = await getCanjeModel();
-  return await Canje.find({ usuario: usuarioId })
-    .populate('premio')
-    .sort({ fecha: -1 });
+  return await Canje.find({ usuarioId: usuarioId })
+    .populate('cuponId')
+    .sort({ fechaCanje: -1 });
 };
 
 module.exports = { crearCanje, listarCanjesPorUsuario }; 

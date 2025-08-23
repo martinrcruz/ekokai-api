@@ -1,4 +1,4 @@
-const entregaRepo = require('../repositories/entregaresiduio.repository');
+const entregaRepo = require('../repositories/entregaresiduo.repository');
 const usuarioRepo = require('../repositories/usuario.repository');
 const tipoRepo = require('../repositories/tiporesiduo.repository');
 const cuponRepo = require('../repositories/cupon.repository');

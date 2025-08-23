@@ -1,13 +1,11 @@
-const getCuponModel = require('../models/cupon.model');
-const getCanjeModel = require('../models/canje.model');
+const Cupon = require('../models/cupon.model');
+const Canje = require('../models/canje.model');
 
 const crearCupon = async (data) => {
-  const Cupon = await getCuponModel();
   return await Cupon.create(data);
 };
 
 const listarCupones = async () => {
-  const Cupon = await getCuponModel();
   return await Cupon.find()
     .populate('usuariosAsociados.usuarioId', 'nombre apellido email')
     .populate('comerciosAsociados.comercioId', 'nombre apellido email')
@@ -15,7 +13,6 @@ const listarCupones = async () => {
 };
 
 const obtenerCuponPorId = async (id) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findById(id)
     .populate('usuariosAsociados.usuarioId', 'nombre apellido email')
     .populate('comerciosAsociados.comercioId', 'nombre apellido email')
@@ -24,17 +21,14 @@ const obtenerCuponPorId = async (id) => {
 };
 
 const actualizarCupon = async (id, data) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findByIdAndUpdate(id, data, { new: true });
 };
 
 const eliminarCupon = async (id) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findByIdAndDelete(id);
 };
 
 const listarCuponesActivos = async () => {
-  const Cupon = await getCuponModel();
   return await Cupon.find({ activo: true })
     .populate('usuariosAsociados.usuarioId', 'nombre apellido email')
     .populate('comerciosAsociados.comercioId', 'nombre apellido email')
@@ -42,7 +36,6 @@ const listarCuponesActivos = async () => {
 };
 
 const buscarCuponesPorNombre = async (nombre) => {
-  const Cupon = await getCuponModel();
   const regex = new RegExp(nombre, 'i');
   return await Cupon.find({ 
     nombre: regex,
@@ -54,7 +47,6 @@ const buscarCuponesPorNombre = async (nombre) => {
 
 // Nuevas funcionalidades
 const generarCuponesMasivos = async (data, cantidad) => {
-  const Cupon = await getCuponModel();
   const cupones = [];
   
   for (let i = 0; i < cantidad; i++) {
@@ -67,7 +59,6 @@ const generarCuponesMasivos = async (data, cantidad) => {
 };
 
 const asociarUsuario = async (cuponId, usuarioId) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findByIdAndUpdate(
     cuponId,
     { 
@@ -83,7 +74,6 @@ const asociarUsuario = async (cuponId, usuarioId) => {
 };
 
 const desasociarUsuario = async (cuponId, usuarioId) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findByIdAndUpdate(
     cuponId,
     { 
@@ -96,7 +86,6 @@ const desasociarUsuario = async (cuponId, usuarioId) => {
 };
 
 const asociarComercio = async (cuponId, comercioId) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findByIdAndUpdate(
     cuponId,
     { 
@@ -112,7 +101,6 @@ const asociarComercio = async (cuponId, comercioId) => {
 };
 
 const desasociarComercio = async (cuponId, comercioId) => {
-  const Cupon = await getCuponModel();
   return await Cupon.findByIdAndUpdate(
     cuponId,
     { 
@@ -125,8 +113,6 @@ const desasociarComercio = async (cuponId, comercioId) => {
 };
 
 const canjearCupon = async (cuponId, usuarioId, comercioId, tokensGastados) => {
-  const Cupon = await getCuponModel();
-  const Canje = await getCanjeModel();
   
   const cupon = await Cupon.findById(cuponId);
   if (!cupon) {
@@ -149,7 +135,6 @@ const canjearCupon = async (cuponId, usuarioId, comercioId, tokensGastados) => {
 };
 
 const listarCanjes = async (filtros = {}) => {
-  const Canje = await getCanjeModel();
   let query = {};
   
   if (filtros.cuponId) query.cuponId = filtros.cuponId;
@@ -166,7 +151,6 @@ const listarCanjes = async (filtros = {}) => {
 };
 
 const aprobarCanje = async (canjeId, aprobadoPor, observaciones = '') => {
-  const Canje = await getCanjeModel();
   return await Canje.findByIdAndUpdate(
     canjeId,
     {
@@ -180,7 +164,6 @@ const aprobarCanje = async (canjeId, aprobadoPor, observaciones = '') => {
 };
 
 const rechazarCanje = async (canjeId, aprobadoPor, observaciones = '') => {
-  const Canje = await getCanjeModel();
   return await Canje.findByIdAndUpdate(
     canjeId,
     {
@@ -194,8 +177,6 @@ const rechazarCanje = async (canjeId, aprobadoPor, observaciones = '') => {
 };
 
 const obtenerEstadisticasCupones = async () => {
-  const Cupon = await getCuponModel();
-  const Canje = await getCanjeModel();
   
   const totalCupones = await Cupon.countDocuments();
   const cuponesActivos = await Cupon.countDocuments({ activo: true });
@@ -208,6 +189,12 @@ const obtenerEstadisticasCupones = async () => {
     totalCanjes,
     canjesPendientes
   };
+};
+
+const listarCanjesPorUsuario = async (usuarioId) => {
+  return await Canje.find({ usuarioId: usuarioId })
+    .populate('cuponId')
+    .sort({ fechaCanje: -1 });
 };
 
 module.exports = { 
@@ -225,6 +212,7 @@ module.exports = {
   desasociarComercio,
   canjearCupon,
   listarCanjes,
+  listarCanjesPorUsuario,
   aprobarCanje,
   rechazarCanje,
   obtenerEstadisticasCupones
