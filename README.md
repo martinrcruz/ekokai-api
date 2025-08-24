@@ -1,7 +1,5 @@
 # Ekokai Backend
-
 Backend para la plataforma Ekokai, un sistema de gestión de reciclaje que permite a administradores, encargados y vecinos interactuar con ecopuntos, registrar entregas de residuos, acumular tokens y consultar estadísticas. Incluye integración con WhatsApp mediante Dialogflow y Twilio para interacción vía chatbot.
-
 ## Tabla de Contenidos
 
 - [Tecnologías](#tecnologías)
