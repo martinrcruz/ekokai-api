@@ -58,12 +58,9 @@ app.use('/ecopuntos', checkRoute('/ecopuntos', './routes/ecopunto.routes'));
 app.use('/entregas', checkRoute('/entregas', './routes/entregaresiduo.routes'));
 app.use('/tipos-residuo', checkRoute('/tipos-residuo', './routes/tiporesiduo.routes'));
 app.use('/estadisticas', checkRoute('/estadisticas', './routes/estadisticas.routes'));
-app.use('/webhook', checkRoute('/webhook', './routes/whatsapp.routes'));
-console.log('[APP-ROUTES] 📱 Ruta /webhook registrada en Express');
 app.use('/admin', checkRoute('/admin', './routes/admin.routes'));
 app.use('/cupones', checkRoute('/cupones', './routes/cupon.routes'));
 app.use('/canjes', checkRoute('/canjes', './routes/canje.routes'));
-app.use('/articulos', checkRoute('/articulos', './routes/articulo.routes'));
 app.use('/premios', checkRoute('/premios', './routes/premio.routes'));
 
 // Health check endpoint para Digital Ocean

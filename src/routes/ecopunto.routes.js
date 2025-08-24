@@ -1,9 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  registrarUsuarioDesdeEcopunto, 
-  procesarReciclaje 
-} = require('../controllers/whatsapp.controller');
 const ecopuntoRepo = require('../repositories/ecopunto.repository');
 
 const ecopuntoCtrl = require('../controllers/ecopunto.controller');

@@ -11,7 +11,6 @@ require('./tiporesiduo.model');
 require('./entregaresiduo.model');
 require('./cupon.model');
 require('./canje.model');
-require('./articulo.model');
 require('./premio.model');
 require('./cupon-moneda.model');
 
