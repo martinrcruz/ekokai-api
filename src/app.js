@@ -61,7 +61,11 @@ app.use('/estadisticas', checkRoute('/estadisticas', './routes/estadisticas.rout
 app.use('/admin', checkRoute('/admin', './routes/admin.routes'));
 app.use('/cupones', checkRoute('/cupones', './routes/cupon.routes'));
 app.use('/canjes', checkRoute('/canjes', './routes/canje.routes'));
+app.use('/canjes', checkRoute('/canjes-reciclaje', './routes/canjeReciclaje.routes'));
+app.use('/recompensas', checkRoute('/recompensas', './routes/recompensa.routes'));
 app.use('/premios', checkRoute('/premios', './routes/premio.routes'));
+app.use('/qr', checkRoute('/qr', './routes/qr.routes'));
+app.use('/trazabilidad', checkRoute('/trazabilidad', './routes/trazabilidad.routes'));
 
 // Health check endpoint para Digital Ocean
 app.get('/health', (req, res) => {

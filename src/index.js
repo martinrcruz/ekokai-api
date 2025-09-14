@@ -1,9 +1,14 @@
 require('dotenv').config();
 const { connectDB1 } = require('./config/database'); // conectamos de forma asíncrona
+const { testSequelizeConnection, syncSequelizeModels } = require('./config/sequelize');
 
 const startServer = async () => {
   try {
     await connectDB1(); // esperamos conexión
+    
+    // Conectar y sincronizar Sequelize
+    await testSequelizeConnection();
+    await syncSequelizeModels();
     
     // Importar todos los modelos ANTES de cargar app.js
     console.log('📚 Importando modelos de Mongoose...');

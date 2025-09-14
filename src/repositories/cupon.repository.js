@@ -197,6 +197,48 @@ const listarCanjesPorUsuario = async (usuarioId) => {
     .sort({ fechaCanje: -1 });
 };
 
+/**
+ * Obtener cupones disponibles de un usuario
+ */
+const obtenerCuponesDisponibles = async (usuarioId) => {
+  return await Cupon.findAll({
+    where: {
+      usuarioId: usuarioId,
+      activo: true,
+      usado: false
+    },
+    order: [['fechaCreacion', 'ASC']]
+  });
+};
+
+/**
+ * Marcar cupón como usado
+ */
+const marcarComoUsado = async (cuponId) => {
+  const [updatedRowsCount] = await Cupon.update({
+    usado: true,
+    fechaUso: new Date()
+  }, {
+    where: { id: cuponId }
+  });
+  
+  if (updatedRowsCount === 0) {
+    throw new Error('Cupón no encontrado');
+  }
+  
+  return await Cupon.findByPk(cuponId);
+};
+
+/**
+ * Buscar cupones por usuario
+ */
+const buscarCuponesPorUsuario = async (usuarioId) => {
+  return await Cupon.findAll({
+    where: { usuarioId },
+    order: [['fechaCreacion', 'DESC']]
+  });
+};
+
 module.exports = { 
   crearCupon, 
   listarCupones, 
@@ -215,5 +257,8 @@ module.exports = {
   listarCanjesPorUsuario,
   aprobarCanje,
   rechazarCanje,
-  obtenerEstadisticasCupones
+  obtenerEstadisticasCupones,
+  obtenerCuponesDisponibles,
+  marcarComoUsado,
+  buscarCuponesPorUsuario
 };
