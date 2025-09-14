@@ -10,7 +10,9 @@
     "test-credentials": "node scripts/test-credentials.js",
     "docker:build": "docker build -t ekokai-api .",
     "docker:run": "docker run -p 8080:8080 ekokai-api",
-    "docker:compose": "docker-compose up --build"
+    "docker:compose": "docker-compose up --build",
+    "postinstall": "npm rebuild sqlite3",
+    "verify-sqlite": "node scripts/verify-sqlite.js"
   },
   "keywords": [],
   "author": "",

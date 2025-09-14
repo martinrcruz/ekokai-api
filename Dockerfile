@@ -1,14 +1,22 @@
 # Usar Node.js 18 LTS
 FROM node:18-alpine
 
+# Instalar dependencias del sistema necesarias para SQLite3
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    sqlite-dev
+
 # Establecer directorio de trabajo
 WORKDIR /app
 
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm ci --only=production
+# Instalar dependencias y rebuild SQLite3 para la arquitectura correcta
+RUN npm ci --only=production && \
+    npm rebuild sqlite3
 
 # Copiar código fuente
 COPY . .
