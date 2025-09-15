@@ -40,7 +40,26 @@ async function testSequelizeConnection() {
   }
 }
 
-// Función para sincronizar modelos
+// Función para ejecutar migraciones
+async function runMigrations() {
+  try {
+    const { execSync } = require('child_process');
+    
+    console.log('🔄 Ejecutando migraciones de base de datos...');
+    execSync('npx sequelize-cli db:migrate', { 
+      stdio: 'inherit',
+      env: process.env
+    });
+    
+    console.log('✅ Migraciones ejecutadas correctamente');
+    return true;
+  } catch (error) {
+    console.error('❌ Error al ejecutar migraciones:', error.message);
+    return false;
+  }
+}
+
+// Función para sincronizar modelos (fallback)
 async function syncSequelizeModels() {
   try {
     await sequelize.sync({ alter: true });
@@ -55,5 +74,6 @@ async function syncSequelizeModels() {
 module.exports = {
   sequelize,
   testSequelizeConnection,
+  runMigrations,
   syncSequelizeModels
 };

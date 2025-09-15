@@ -34,9 +34,5 @@ EXPOSE 8080
 # Variable de entorno para el puerto
 ENV PORT=8080
 
-# Script de inicio que ejecuta migraciones y luego inicia la aplicación
-COPY scripts/start.sh /app/scripts/start.sh
-RUN chmod +x /app/scripts/start.sh
-
-# Comando para iniciar la aplicación
-CMD ["/app/scripts/start.sh"] 
+# Comando para iniciar la aplicación (las migraciones se ejecutan automáticamente)
+CMD ["npm", "start"] 

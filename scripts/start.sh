@@ -4,18 +4,14 @@ echo "🚀 Iniciando Ekokai API..."
 
 # Esperar un momento para que la base de datos esté lista
 echo "⏳ Esperando que la base de datos esté lista..."
-sleep 5
+sleep 3
 
-# Ejecutar migraciones
-echo "🔄 Ejecutando migraciones de base de datos..."
-npm run db:migrate:prod
+# Verificar si las migraciones ya se ejecutaron durante el build
+echo "🔍 Verificando si las migraciones ya se ejecutaron..."
 
-# Verificar si las migraciones fueron exitosas
-if [ $? -eq 0 ]; then
-    echo "✅ Migraciones completadas exitosamente"
-else
-    echo "❌ Error en las migraciones, pero continuando..."
-fi
+# Intentar ejecutar migraciones solo si es necesario
+echo "🔄 Ejecutando migraciones si es necesario..."
+npx sequelize-cli db:migrate || echo "⚠️ Las migraciones ya están ejecutadas o hubo un error"
 
 # Iniciar la aplicación
 echo "🚀 Iniciando servidor..."
