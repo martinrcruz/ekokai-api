@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { testSequelizeConnection, runMigrations, syncSequelizeModels } = require('./config/sequelize');
+const { testSequelizeConnection, runMigrations, runSeeders, syncSequelizeModels } = require('./config/sequelize');
 
 const startServer = async () => {
   try {
@@ -17,6 +17,11 @@ const startServer = async () => {
       await syncSequelizeModels();
     }
     console.log('✅ Base de datos configurada correctamente');
+    
+    // Ejecutar seeders
+    console.log('🌱 Ejecutando seeders...');
+    await runSeeders();
+    console.log('✅ Datos iniciales cargados correctamente');
     
     // Importar todos los modelos ANTES de cargar app.js
     console.log('📚 Importando modelos de Sequelize...');

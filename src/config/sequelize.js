@@ -115,6 +115,83 @@ async function runMigrations() {
   }
 }
 
+// Función para ejecutar seeders
+async function runSeeders() {
+  try {
+    console.log('🌱 Ejecutando seeders...');
+    
+    // Verificar si ya existen usuarios administradores
+    const [existingUsers] = await sequelize.query(`
+      SELECT COUNT(*) as count FROM usuarios WHERE email IN ('admin@ekokai.com', 'superadmin@ekokai.com');
+    `);
+    
+    if (existingUsers[0].count > 0) {
+      console.log('⏭️ Usuarios administradores ya existen, saltando seeders');
+      return true;
+    }
+    
+    // Ejecutar seeder de usuarios administradores
+    const bcrypt = require('bcrypt');
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    
+    await sequelize.query(`
+      INSERT INTO usuarios (
+        id, rol, nombre, apellido, email, password, telefono, pais, zona, 
+        direccion, "tokensAcumulados", activo, "requiereCambioPassword", 
+        "fechaCreacion", "ultimaModificacion", "createdAt", "updatedAt"
+      ) VALUES 
+      (
+        '00000000-0000-0000-0000-000000000001',
+        'administrador',
+        'Admin',
+        'Ekokai',
+        'admin@ekokai.com',
+        '${hashedPassword}',
+        '+5491123456789',
+        'Argentina',
+        'CABA',
+        'Av. Corrientes 1234',
+        0,
+        true,
+        false,
+        NOW(),
+        NOW(),
+        NOW(),
+        NOW()
+      ),
+      (
+        '00000000-0000-0000-0000-000000000002',
+        'administrador',
+        'Super',
+        'Admin',
+        'superadmin@ekokai.com',
+        '${hashedPassword}',
+        '+5491123456790',
+        'Argentina',
+        'CABA',
+        'Av. Santa Fe 5678',
+        0,
+        true,
+        false,
+        NOW(),
+        NOW(),
+        NOW(),
+        NOW()
+      )
+      ON CONFLICT (email) DO NOTHING;
+    `);
+    
+    console.log('✅ Usuarios administradores creados correctamente');
+    console.log('👤 admin@ekokai.com (password: admin123)');
+    console.log('👤 superadmin@ekokai.com (password: admin123)');
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Error al ejecutar seeders:', error.message);
+    return false;
+  }
+}
+
 // Función para sincronizar modelos (fallback)
 async function syncSequelizeModels() {
   try {
@@ -131,5 +208,6 @@ module.exports = {
   sequelize,
   testSequelizeConnection,
   runMigrations,
+  runSeeders,
   syncSequelizeModels
 };
