@@ -1,12 +1,12 @@
 # Usar Node.js 18 LTS
 FROM node:18-alpine
 
-# Instalar dependencias del sistema necesarias para SQLite3
+# Instalar dependencias del sistema necesarias para PostgreSQL
 RUN apk add --no-cache \
     python3 \
     make \
     g++ \
-    sqlite-dev
+    postgresql-client
 
 # Establecer directorio de trabajo
 WORKDIR /app
@@ -14,9 +14,8 @@ WORKDIR /app
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias y rebuild SQLite3 para la arquitectura correcta
-RUN npm ci --only=production && \
-    npm rebuild sqlite3
+# Instalar dependencias
+RUN npm ci --only=production
 
 # Copiar código fuente
 COPY . .
@@ -35,5 +34,9 @@ EXPOSE 8080
 # Variable de entorno para el puerto
 ENV PORT=8080
 
+# Script de inicio que ejecuta migraciones y luego inicia la aplicación
+COPY scripts/start.sh /app/scripts/start.sh
+RUN chmod +x /app/scripts/start.sh
+
 # Comando para iniciar la aplicación
-CMD ["npm", "start"] 
+CMD ["/app/scripts/start.sh"] 
