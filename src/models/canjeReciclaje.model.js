@@ -1,147 +1,123 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const CanjeReciclajeSchema = new mongoose.Schema({
+const CanjeReciclaje = sequelize.define('CanjeReciclaje', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
   usuarioId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario',
-    required: true
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
   },
   qrCode: {
-    type: String,
-    required: true,
-    index: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   qrReciclajeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'QRReciclaje',
-    required: true
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: 'qr_reciclajes',
+      key: 'id'
+    }
   },
   phoneNumber: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   estado: {
-    type: String,
-    enum: ['iniciado', 'primera_imagen_validada', 'completado', 'fallido'],
-    default: 'iniciado',
-    required: true
+    type: DataTypes.ENUM('iniciado', 'primera_imagen_validada', 'completado', 'fallido'),
+    defaultValue: 'iniciado',
+    allowNull: false
   },
   fechaInicio: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   },
-  fechaCompletado: Date,
+  fechaCompletado: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
   imagenes: {
-    primera: {
-      ruta: String,
-      timestamp: Date,
-      validacion: {
-        exitosa: Boolean,
-        confianza: Number,
-        elementos_encontrados: {
-          bolsa_basura: Boolean,
-          qr_visible: Boolean,
-          fondo_ekokai: Boolean,
-          stand_reciclaje: Boolean
-        },
-        issues: [String]
-      }
-    },
-    segunda: {
-      ruta: String,
-      timestamp: Date,
-      validacion: {
-        exitosa: Boolean,
-        confianza: Number,
-        elementos_encontrados: {
-          bolsa_basura: Boolean,
-          qr_visible: Boolean,
-          basurero: Boolean,
-          fondo_diferente: Boolean
-        },
-        issues: [String]
-      }
-    }
+    type: DataTypes.JSONB,
+    allowNull: true
   },
   tokensGenerados: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
-  cuponGenerado: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cupon'
-  },
-  ubicacion: {
-    stand: {
-      latitud: Number,
-      longitud: Number,
-      direccion: String
-    },
-    disposicion: {
-      latitud: Number,
-      longitud: Number,
-      direccion: String
+  cuponGeneradoId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'cupones',
+      key: 'id'
     }
   },
-  metadata: {
-    conversationId: String,
-    startTime: Date,
-    completedTime: Date,
-    intentos: {
-      type: Number,
-      default: 1
-    },
-    dispositivo: String,
-    appVersion: String,
-    processingTime: Number // en milisegundos
+  ubicacion: {
+    type: DataTypes.JSONB,
+    allowNull: true
   },
-  observaciones: String,
+  metadata: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  observaciones: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   activo: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
+}, {
+  tableName: 'canjes_reciclaje',
+  timestamps: false,
+  indexes: [
+    {
+      fields: ['usuarioId', 'fechaInicio']
+    },
+    {
+      fields: ['qrCode']
+    },
+    {
+      fields: ['phoneNumber', 'fechaInicio']
+    },
+    {
+      fields: ['estado', 'fechaInicio']
+    },
+    {
+      fields: ['fechaCompletado']
+    }
+  ]
 });
 
-// Índices para optimizar consultas
-CanjeReciclajeSchema.index({ usuarioId: 1, fechaInicio: -1 });
-CanjeReciclajeSchema.index({ qrCode: 1 });
-CanjeReciclajeSchema.index({ phoneNumber: 1, fechaInicio: -1 });
-CanjeReciclajeSchema.index({ estado: 1, fechaInicio: -1 });
-CanjeReciclajeSchema.index({ fechaCompletado: -1 });
-
 // Método para completar el canje
-CanjeReciclajeSchema.methods.completar = function(cuponId, tokensGenerados) {
+CanjeReciclaje.prototype.completar = function(cuponId, tokensGenerados) {
   this.estado = 'completado';
   this.fechaCompletado = new Date();
-  this.cuponGenerado = cuponId;
+  this.cuponGeneradoId = cuponId;
   this.tokensGenerados = tokensGenerados;
-  this.metadata.completedTime = new Date();
-  this.metadata.processingTime = this.metadata.completedTime - this.metadata.startTime;
+  
+  if (this.metadata) {
+    this.metadata.completedTime = new Date();
+    this.metadata.processingTime = this.metadata.completedTime - this.metadata.startTime;
+  }
+  
   return this.save();
 };
 
 // Método para marcar como fallido
-CanjeReciclajeSchema.methods.marcarComoFallido = function(razon) {
+CanjeReciclaje.prototype.marcarComoFallido = function(razon) {
   this.estado = 'fallido';
   this.observaciones = razon;
   return this.save();
 };
 
-// Método estático para obtener estadísticas
-CanjeReciclajeSchema.statics.obtenerEstadisticas = async function(filtros = {}) {
-  const pipeline = [
-    { $match: filtros },
-    {
-      $group: {
-        _id: '$estado',
-        count: { $sum: 1 },
-        tokensTotal: { $sum: '$tokensGenerados' }
-      }
-    }
-  ];
-  
-  return await this.aggregate(pipeline);
-};
-
-const CanjeReciclaje = mongoose.model('CanjeReciclaje', CanjeReciclajeSchema);
 module.exports = CanjeReciclaje;

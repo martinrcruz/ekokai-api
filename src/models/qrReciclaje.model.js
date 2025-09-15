@@ -1,100 +1,122 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const QRReciclajeSchema = new mongoose.Schema({
+const QRReciclaje = sequelize.define('QRReciclaje', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
   codigo: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
   },
   tipo: {
-    type: String,
-    enum: ['reciclaje'],
-    default: 'reciclaje',
-    required: true
+    type: DataTypes.ENUM('reciclaje'),
+    defaultValue: 'reciclaje',
+    allowNull: false
   },
   estado: {
-    type: String,
-    enum: ['activo', 'usado', 'expirado', 'cancelado'],
-    default: 'activo',
-    required: true
+    type: DataTypes.ENUM('activo', 'usado', 'expirado', 'cancelado'),
+    defaultValue: 'activo',
+    allowNull: false
   },
   fechaCreacion: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   },
   fechaExpiracion: {
-    type: Date,
-    default: function() {
+    type: DataTypes.DATE,
+    defaultValue: () => {
       // Por defecto expira en 30 días
-      return new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() + 30);
+      return fecha;
     }
   },
-  fechaUso: Date,
-  usuarioCreador: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario'
+  fechaUso: {
+    type: DataTypes.DATE,
+    allowNull: true
   },
-  usuarioUso: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario'
+  usuarioCreadorId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  usuarioUsoId: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
   },
   ecopuntoId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Ecopunto'
-  },
-  configuracion: {
-    tamano: {
-      type: String,
-      default: '20x20cm'
-    },
-    descripcion: String,
-    instrucciones: String,
-    valorTokens: {
-      type: Number,
-      default: 10
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'ecopuntos',
+      key: 'id'
     }
   },
+  configuracion: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
   metadatos: {
-    ubicacionCreacion: String,
-    dispositivoCreacion: String,
-    versionApp: String,
-    lote: String
+    type: DataTypes.JSONB,
+    allowNull: true
   },
   activo: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
+}, {
+  tableName: 'qr_reciclajes',
+  timestamps: false,
+  indexes: [
+    {
+      fields: ['codigo']
+    },
+    {
+      fields: ['estado', 'fechaCreacion']
+    },
+    {
+      fields: ['usuarioUsoId', 'fechaUso']
+    },
+    {
+      fields: ['ecopuntoId']
+    },
+    {
+      fields: ['fechaExpiracion']
+    }
+  ]
 });
 
-// Índices para optimizar consultas
-QRReciclajeSchema.index({ codigo: 1 });
-QRReciclajeSchema.index({ estado: 1, fechaCreacion: -1 });
-QRReciclajeSchema.index({ usuarioUso: 1, fechaUso: -1 });
-QRReciclajeSchema.index({ ecopuntoId: 1 });
-QRReciclajeSchema.index({ fechaExpiracion: 1 });
-
 // Método para verificar si el QR está activo y válido
-QRReciclajeSchema.methods.esValido = function() {
+QRReciclaje.prototype.esValido = function() {
   return this.estado === 'activo' && 
          this.activo === true && 
          this.fechaExpiracion > new Date();
 };
 
 // Método para marcar como usado
-QRReciclajeSchema.methods.marcarComoUsado = function(usuarioId) {
+QRReciclaje.prototype.marcarComoUsado = function(usuarioId) {
   this.estado = 'usado';
   this.fechaUso = new Date();
-  this.usuarioUso = usuarioId;
+  this.usuarioUsoId = usuarioId;
   return this.save();
 };
 
 // Método estático para generar código único
-QRReciclajeSchema.statics.generarCodigo = function() {
+QRReciclaje.generarCodigo = function() {
   const timestamp = Date.now().toString(36);
   const random = Math.random().toString(36).substr(2, 5);
   return `EKOKAI-RECYCLE-${timestamp}-${random}`.toUpperCase();
 };
 
-const QRReciclaje = mongoose.model('QRReciclaje', QRReciclajeSchema);
 module.exports = QRReciclaje;

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose'); // Removido - usando Sequelize
 const CanjeReciclaje = require('../models/canjeReciclaje.model');
 const QRReciclaje = require('../models/qrReciclaje.model');
 const Usuario = require('../models/usuario.model');

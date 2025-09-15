@@ -1,21 +1,60 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const EcopuntoMetaSchema = new mongoose.Schema({
-  ecopunto: { type: mongoose.Schema.Types.ObjectId, required: true },
-  year: { type: Number, required: true },
-  month: { type: Number, min: 1, max: 12, required: true },
-  objetivoKg: { type: Number, required: true },
-  creadoEn: { type: Date, default: Date.now },
-  actualizadoEn: { type: Date, default: Date.now }
+const EcopuntoMeta = sequelize.define('EcopuntoMeta', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  ecopuntoId: { 
+    type: DataTypes.UUID, 
+    allowNull: false,
+    references: {
+      model: 'ecopuntos',
+      key: 'id'
+    }
+  },
+  year: { 
+    type: DataTypes.INTEGER, 
+    allowNull: false 
+  },
+  month: { 
+    type: DataTypes.INTEGER, 
+    allowNull: false,
+    validate: {
+      min: 1,
+      max: 12
+    }
+  },
+  objetivoKg: { 
+    type: DataTypes.DECIMAL(10, 2), 
+    allowNull: false 
+  },
+  creadoEn: { 
+    type: DataTypes.DATE, 
+    defaultValue: DataTypes.NOW 
+  },
+  actualizadoEn: { 
+    type: DataTypes.DATE, 
+    defaultValue: DataTypes.NOW 
+  }
+}, {
+  tableName: 'ecopunto_metas',
+  timestamps: false,
+  indexes: [
+    {
+      unique: true,
+      fields: ['ecopuntoId', 'year', 'month']
+    }
+  ],
+  hooks: {
+    beforeUpdate: (meta) => {
+      meta.actualizadoEn = new Date();
+    }
+  }
 });
 
-EcopuntoMetaSchema.index({ ecopunto: 1, year: 1, month: 1 }, { unique: true });
-
-EcopuntoMetaSchema.pre('save', function (next) {
-  this.actualizadoEn = new Date();
-  next();
-});
-
-module.exports = mongoose.model('EcopuntoMeta', EcopuntoMetaSchema, 'ecopunto_metas');
+module.exports = EcopuntoMeta;
 
 

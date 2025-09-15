@@ -1,26 +1,57 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const EcopuntoSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  direccion: { type: String, required: true },
-  zona: { type: String, required: true },
-  descripcion: { type: String, default: '' },
-  horarioApertura: { type: String, default: '08:00' },
-  horarioCierre: { type: String, default: '20:00' },
-  capacidadMaxima: { type: Number, default: 1000 },
-  encargado: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' },
-  fechaCreacion: { type: Date, default: Date.now },
-  activo: { type: Boolean, default: true }
+const Ecopunto = sequelize.define('Ecopunto', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  nombre: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  },
+  direccion: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  },
+  zona: { 
+    type: DataTypes.STRING, 
+    allowNull: false 
+  },
+  descripcion: { 
+    type: DataTypes.TEXT, 
+    defaultValue: '' 
+  },
+  horarioApertura: { 
+    type: DataTypes.STRING, 
+    defaultValue: '08:00' 
+  },
+  horarioCierre: { 
+    type: DataTypes.STRING, 
+    defaultValue: '20:00' 
+  },
+  capacidadMaxima: { 
+    type: DataTypes.INTEGER, 
+    defaultValue: 1000 
+  },
+  encargadoId: { 
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  activo: { 
+    type: DataTypes.BOOLEAN, 
+    defaultValue: true 
+  }
+}, {
+  tableName: 'ecopuntos',
+  timestamps: true,
+  createdAt: 'fechaCreacion',
+  updatedAt: 'updatedAt'
 });
 
-// Virtual para vecinos
-EcopuntoSchema.virtual('vecinos', {
-  ref: 'Usuario',
-  localField: '_id',
-  foreignField: 'ecopuntoId',
-});
-
-EcopuntoSchema.set('toObject', { virtuals: true });
-EcopuntoSchema.set('toJSON', { virtuals: true });
-
-module.exports = mongoose.model('Ecopunto', EcopuntoSchema, 'ecopuntos');
+module.exports = Ecopunto;

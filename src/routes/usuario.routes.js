@@ -1,8 +1,25 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const usuarioCtrl = require('../controllers/usuario.controller');
 const { authMiddleware, permitirRoles } = require('../middleware/auth.middleware');
+
+// ✅ RUTA DE PRUEBA SIN AUTENTICACIÓN (DEBE IR ANTES DEL MIDDLEWARE)
+router.get('/test-sin-auth', (req, res) => {
+  console.log('🧪 [TEST] Ruta de prueba sin auth accedida');
+  res.json({ message: 'Ruta sin auth funcionando', timestamp: new Date().toISOString() });
+});
+
+// ✅ RUTA DE PRUEBA CON AUTENTICACIÓN MANUAL
+router.get('/test-con-auth', authMiddleware, (req, res) => {
+  console.log('🧪 [TEST] Ruta de prueba con auth accedida');
+  res.json({ message: 'Ruta con auth funcionando', usuario: req.usuario?.email, timestamp: new Date().toISOString() });
+});
+
+// ✅ RUTA DE PRUEBA PARA VERIFICAR SI EL MIDDLEWARE ESTÁ BLOQUEANDO
+router.get('/test-middleware', (req, res) => {
+  console.log('🧪 [TEST] Ruta de prueba middleware accedida');
+  res.json({ message: 'Ruta middleware funcionando', timestamp: new Date().toISOString() });
+});
 
 // Aplica JWT a todas las rutas
 router.use(authMiddleware);
@@ -16,6 +33,7 @@ router.get('/test-estado', (req, res) => {
   console.log('🧪 [TEST] Ruta de prueba /test-estado accedida');
   res.json({ message: 'Ruta de prueba funcionando', timestamp: new Date().toISOString() });
 });
+
 
 // ✅ RUTA DE PRUEBA TEMPORAL PARA HISTORIAL (SIN AUTENTICACIÓN)
 router.get('/test-historial/:usuarioId', async (req, res) => {
@@ -108,8 +126,17 @@ router.get('/buscar-vecinos', permitirRoles('administrador', 'encargado'), usuar
 // ✅ REGISTRAR VECINO - DEBE IR ANTES DE CUALQUIER RUTA CON PARÁMETROS
 router.post('/registrar', permitirRoles('administrador','encargado'), usuarioCtrl.registrarVecino);
 
+// ✅ REGISTRO DE VECINO DESDE WHATSAPP (SIN AUTENTICACIÓN)
+router.post('/registro-vecino', usuarioCtrl.registroVecinoWhatsApp);
+
 // ✅ REGISTRAR ENCARGADO - DEBE IR ANTES DE CUALQUIER RUTA CON PARÁMETROS
 router.post('/registrar-encargado', permitirRoles('administrador'), usuarioCtrl.registrarConRol);
+
+// ✅ ADMINISTRADOR lista solo usuarios vecinos (DEBE IR ANTES DE LAS RUTAS CON PARÁMETROS)
+router.get('/vecinos', permitirRoles('administrador'), usuarioCtrl.listarVecinos);
+
+// ✅ ADMINISTRADOR lista usuarios no vecinos (DEBE IR ANTES DE LAS RUTAS CON PARÁMETROS)
+router.get('/no-vecinos', permitirRoles('administrador'), usuarioCtrl.listarUsuariosNoVecinos);
 
 // ========================================
 // RUTAS CON PARÁMETROS (DEBEN IR DESPUÉS)

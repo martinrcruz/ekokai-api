@@ -60,7 +60,74 @@ const registrarConRol = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
-  
+
+// ✅ REGISTRO DE VECINO DESDE WHATSAPP
+const registroVecinoWhatsApp = async (req, res) => {
+  try {
+    const datos = req.body;
+    console.log('📱 [registroVecinoWhatsApp] Datos recibidos:', datos);
+
+    // Validar datos requeridos
+    if (!datos.dni || !datos.telefono) {
+      return res.status(400).json({
+        success: false,
+        mensaje: 'DNI y teléfono son obligatorios'
+      });
+    }
+
+    // Verificar si el usuario ya existe
+    const usuarioExistente = await usuarioRepo.buscarUsuario({ 
+      dni: datos.dni, 
+      telefono: datos.telefono 
+    });
+
+    if (usuarioExistente) {
+      return res.status(409).json({
+        success: false,
+        mensaje: 'Usuario ya existe con ese DNI o teléfono'
+      });
+    }
+
+    // Preparar datos del usuario
+    const datosUsuario = {
+      nombre: datos.nombre || `Usuario${datos.dni}`,
+      apellido: datos.apellido || 'Temporal',
+      dni: datos.dni,
+      telefono: datos.telefono,
+      email: datos.email || `user${datos.dni}@ekokai-temp.com`,
+      rol: 'vecino',
+      tokensAcumulados: 0,
+      activo: true,
+      fechaCreacion: new Date(),
+      registroAutomatico: true,
+      fuente: 'whatsapp_dni'
+    };
+
+    const nuevoVecino = await usuarioRepo.crearUsuario(datosUsuario);
+    console.log('✅ [registroVecinoWhatsApp] Vecino creado:', nuevoVecino.email);
+
+    res.status(201).json({
+      success: true,
+      usuario: {
+        id: nuevoVecino._id,
+        nombre: nuevoVecino.nombre,
+        apellido: nuevoVecino.apellido,
+        dni: nuevoVecino.dni,
+        telefono: nuevoVecino.telefono,
+        tokensAcumulados: nuevoVecino.tokensAcumulados
+      },
+      mensaje: 'Usuario registrado exitosamente'
+    });
+
+  } catch (err) {
+    console.error('❌ [registroVecinoWhatsApp] Error:', err);
+    res.status(500).json({
+      success: false,
+      mensaje: 'Error interno del servidor',
+      error: err.message
+    });
+  }
+};
 
 const listarUsuarios = async (req, res) => {
   try {
@@ -169,8 +236,35 @@ const buscarVecinos = async (req, res) => {
   }
 };
 
+// ✅ Obtener solo usuarios vecinos
+const listarVecinos = async (req, res) => {
+  try {
+    console.log('🔍 [CONTROLLER] Obteniendo usuarios vecinos');
+    const vecinos = await usuarioService.obtenerUsuariosPorRol('vecino');
+    console.log(`✅ [CONTROLLER] Obtenidos ${vecinos.length} vecinos`);
+    res.json(vecinos);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error al obtener vecinos:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// ✅ Obtener usuarios que no son vecinos (encargados y administradores)
+const listarUsuariosNoVecinos = async (req, res) => {
+  try {
+    console.log('🔍 [CONTROLLER] Obteniendo usuarios no vecinos');
+    const usuarios = await usuarioService.obtenerUsuariosNoVecinos();
+    console.log(`✅ [CONTROLLER] Obtenidos ${usuarios.length} usuarios no vecinos`);
+    res.json(usuarios);
+  } catch (err) {
+    console.error('❌ [CONTROLLER] Error al obtener usuarios no vecinos:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   registrarVecino,
+  registroVecinoWhatsApp,
   listarUsuarios,
   obtenerUsuario,
   registrarConRol,
@@ -178,5 +272,7 @@ module.exports = {
   eliminarUsuario,
   cambiarEstadoUsuario,
   historialInteracciones,
-  buscarVecinos
+  buscarVecinos,
+  listarVecinos,
+  listarUsuariosNoVecinos
 };

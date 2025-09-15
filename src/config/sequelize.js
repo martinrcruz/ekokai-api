@@ -1,14 +1,24 @@
 // config/sequelize.js
 const { Sequelize } = require('sequelize');
 
-// Configuración de Sequelize para SQLite (puedes cambiar a otro DB si es necesario)
+// Configuración de Sequelize para PostgreSQL
 const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: process.env.SQLITE_PATH || './database.sqlite',
+  dialect: 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  port: process.env.DB_PORT || 5432,
+  database: process.env.DB_NAME || 'ekokai_db',
+  username: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'postgres',
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
   define: {
     timestamps: true,
     underscored: false,
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
   }
 });
 

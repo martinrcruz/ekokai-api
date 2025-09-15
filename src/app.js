@@ -53,7 +53,7 @@ function checkRoute(path, modulePath) {
 // Rutas
 // ======================
 app.use('/auth', checkRoute('/auth', './routes/auth.routes'));
-app.use('/usuarios', checkRoute('/usuarios', './routes/usuario.routes'));
+app.use('/usuarios', checkRoute('/usuarios', './routes/usuario.routes.test'));
 app.use('/ecopuntos', checkRoute('/ecopuntos', './routes/ecopunto.routes'));
 app.use('/entregas', checkRoute('/entregas', './routes/entregaresiduo.routes'));
 app.use('/tipos-residuo', checkRoute('/tipos-residuo', './routes/tiporesiduo.routes'));
@@ -75,6 +75,11 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development'
   });
+});
+
+// ✅ RUTA DE PRUEBA DIRECTA EN APP
+app.get('/test-directo', (req, res) => {
+  res.json({ message: 'Ruta directa funcionando', timestamp: new Date().toISOString() });
 });
 
 module.exports = app;

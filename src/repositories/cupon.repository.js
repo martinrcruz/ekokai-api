@@ -6,43 +6,47 @@ const crearCupon = async (data) => {
 };
 
 const listarCupones = async () => {
-  return await Cupon.find()
-    .populate('usuariosAsociados.usuarioId', 'nombre apellido email')
-    .populate('comerciosAsociados.comercioId', 'nombre apellido email')
-    .sort({ fechaCreacion: -1 });
+  return await Cupon.findAll({
+    order: [['fechaCreacion', 'DESC']]
+  });
 };
 
 const obtenerCuponPorId = async (id) => {
-  return await Cupon.findById(id)
-    .populate('usuariosAsociados.usuarioId', 'nombre apellido email')
-    .populate('comerciosAsociados.comercioId', 'nombre apellido email')
-    .populate('historialUso.usuarioId', 'nombre apellido email')
-    .populate('historialUso.comercioId', 'nombre apellido email');
+  return await Cupon.findByPk(id);
 };
 
 const actualizarCupon = async (id, data) => {
-  return await Cupon.findByIdAndUpdate(id, data, { new: true });
+  const cupon = await Cupon.findByPk(id);
+  if (!cupon) return null;
+  
+  await cupon.update(data);
+  return cupon;
 };
 
 const eliminarCupon = async (id) => {
-  return await Cupon.findByIdAndDelete(id);
+  const cupon = await Cupon.findByPk(id);
+  if (!cupon) return null;
+  
+  await cupon.destroy();
+  return cupon;
 };
 
 const listarCuponesActivos = async () => {
-  return await Cupon.find({ activo: true })
-    .populate('usuariosAsociados.usuarioId', 'nombre apellido email')
-    .populate('comerciosAsociados.comercioId', 'nombre apellido email')
-    .sort({ fechaCreacion: -1 });
+  return await Cupon.findAll({
+    where: { activo: true },
+    order: [['fechaCreacion', 'DESC']]
+  });
 };
 
 const buscarCuponesPorNombre = async (nombre) => {
-  const regex = new RegExp(nombre, 'i');
-  return await Cupon.find({ 
-    nombre: regex,
-    activo: true 
-  }).populate('usuariosAsociados.usuarioId', 'nombre apellido email')
-    .populate('comerciosAsociados.comercioId', 'nombre apellido email')
-    .sort({ fechaCreacion: -1 });
+  const { Op } = require('sequelize');
+  return await Cupon.findAll({ 
+    where: {
+      nombre: { [Op.iLike]: `%${nombre}%` },
+      activo: true 
+    },
+    order: [['fechaCreacion', 'DESC']]
+  });
 };
 
 // Nuevas funcionalidades
@@ -59,70 +63,53 @@ const generarCuponesMasivos = async (data, cantidad) => {
 };
 
 const asociarUsuario = async (cuponId, usuarioId) => {
-  return await Cupon.findByIdAndUpdate(
-    cuponId,
-    { 
-      $addToSet: { 
-        usuariosAsociados: { 
-          usuarioId, 
-          fechaAsociacion: new Date() 
-        } 
-      } 
-    },
-    { new: true }
-  );
-};
-
-const desasociarUsuario = async (cuponId, usuarioId) => {
-  return await Cupon.findByIdAndUpdate(
-    cuponId,
-    { 
-      $pull: { 
-        usuariosAsociados: { usuarioId } 
-      } 
-    },
-    { new: true }
-  );
-};
-
-const asociarComercio = async (cuponId, comercioId) => {
-  return await Cupon.findByIdAndUpdate(
-    cuponId,
-    { 
-      $addToSet: { 
-        comerciosAsociados: { 
-          comercioId, 
-          fechaAsociacion: new Date() 
-        } 
-      } 
-    },
-    { new: true }
-  );
-};
-
-const desasociarComercio = async (cuponId, comercioId) => {
-  return await Cupon.findByIdAndUpdate(
-    cuponId,
-    { 
-      $pull: { 
-        comerciosAsociados: { comercioId } 
-      } 
-    },
-    { new: true }
-  );
-};
-
-const canjearCupon = async (cuponId, usuarioId, comercioId, tokensGastados) => {
-  
-  const cupon = await Cupon.findById(cuponId);
+  const cupon = await Cupon.findByPk(cuponId);
   if (!cupon) {
     throw new Error('Cupón no encontrado');
   }
   
-  // Usar el cupón
-  await cupon.usarCupon(usuarioId, comercioId, tokensGastados);
+  await cupon.update({ usuarioId });
+  return cupon;
+};
+
+const desasociarUsuario = async (cuponId, usuarioId) => {
+  const cupon = await Cupon.findByPk(cuponId);
+  if (!cupon) {
+    throw new Error('Cupón no encontrado');
+  }
   
-  // Crear registro de canje
+  await cupon.update({ usuarioId: null });
+  return cupon;
+};
+
+const asociarComercio = async (cuponId, comercioId) => {
+  const cupon = await Cupon.findByPk(cuponId);
+  if (!cupon) {
+    throw new Error('Cupón no encontrado');
+  }
+  
+  await cupon.update({ comercioId });
+  return cupon;
+};
+
+const desasociarComercio = async (cuponId, comercioId) => {
+  const cupon = await Cupon.findByPk(cuponId);
+  if (!cupon) {
+    throw new Error('Cupón no encontrado');
+  }
+  
+  await cupon.update({ comercioId: null });
+  return cupon;
+};
+
+const canjearCupon = async (cuponId, usuarioId, comercioId, tokensGastados) => {
+  const cupon = await Cupon.findByPk(cuponId);
+  if (!cupon) {
+    throw new Error('Cupón no encontrado');
+  }
+  
+  // TODO: Implementar lógica de uso de cupón con Sequelize
+  // Por ahora solo crear el registro de canje
   const canje = await Canje.create({
     cuponId,
     usuarioId,
@@ -135,53 +122,52 @@ const canjearCupon = async (cuponId, usuarioId, comercioId, tokensGastados) => {
 };
 
 const listarCanjes = async (filtros = {}) => {
-  let query = {};
+  let whereClause = {};
   
-  if (filtros.cuponId) query.cuponId = filtros.cuponId;
-  if (filtros.usuarioId) query.usuarioId = filtros.usuarioId;
-  if (filtros.comercioId) query.comercioId = filtros.comercioId;
-  if (filtros.estado) query.estado = filtros.estado;
+  if (filtros.cuponId) whereClause.cuponId = filtros.cuponId;
+  if (filtros.usuarioId) whereClause.usuarioId = filtros.usuarioId;
+  if (filtros.comercioId) whereClause.comercioId = filtros.comercioId;
+  if (filtros.estado) whereClause.estado = filtros.estado;
   
-  return await Canje.find(query)
-    .populate('cuponId', 'nombre codigo')
-    .populate('usuarioId', 'nombre apellido email')
-    .populate('comercioId', 'nombre apellido email')
-    .populate('aprobadoPor', 'nombre apellido')
-    .sort({ fechaCanje: -1 });
+  return await Canje.findAll({
+    where: whereClause,
+    order: [['fechaCanje', 'DESC']]
+  });
 };
 
 const aprobarCanje = async (canjeId, aprobadoPor, observaciones = '') => {
-  return await Canje.findByIdAndUpdate(
-    canjeId,
-    {
-      estado: 'aprobado',
-      aprobadoPor,
-      fechaAprobacion: new Date(),
-      observaciones
-    },
-    { new: true }
-  );
+  const canje = await Canje.findByPk(canjeId);
+  if (!canje) return null;
+  
+  await canje.update({
+    estado: 'aprobado',
+    aprobadoPor,
+    fechaAprobacion: new Date(),
+    observaciones
+  });
+  
+  return canje;
 };
 
 const rechazarCanje = async (canjeId, aprobadoPor, observaciones = '') => {
-  return await Canje.findByIdAndUpdate(
-    canjeId,
-    {
-      estado: 'rechazado',
-      aprobadoPor,
-      fechaAprobacion: new Date(),
-      observaciones
-    },
-    { new: true }
-  );
+  const canje = await Canje.findByPk(canjeId);
+  if (!canje) return null;
+  
+  await canje.update({
+    estado: 'rechazado',
+    aprobadoPor,
+    fechaAprobacion: new Date(),
+    observaciones
+  });
+  
+  return canje;
 };
 
 const obtenerEstadisticasCupones = async () => {
-  
-  const totalCupones = await Cupon.countDocuments();
-  const cuponesActivos = await Cupon.countDocuments({ activo: true });
-  const totalCanjes = await Canje.countDocuments();
-  const canjesPendientes = await Canje.countDocuments({ estado: 'pendiente' });
+  const totalCupones = await Cupon.count();
+  const cuponesActivos = await Cupon.count({ where: { activo: true } });
+  const totalCanjes = await Canje.count();
+  const canjesPendientes = await Canje.count({ where: { estado: 'pendiente' } });
   
   return {
     totalCupones,
@@ -192,9 +178,10 @@ const obtenerEstadisticasCupones = async () => {
 };
 
 const listarCanjesPorUsuario = async (usuarioId) => {
-  return await Canje.find({ usuarioId: usuarioId })
-    .populate('cuponId')
-    .sort({ fechaCanje: -1 });
+  return await Canje.findAll({
+    where: { usuarioId: usuarioId },
+    order: [['fechaCanje', 'DESC']]
+  });
 };
 
 /**

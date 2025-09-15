@@ -1,114 +1,107 @@
 const EntregaResiduo = require('../models/entregaresiduo.model');
+const Ecopunto = require('../models/ecopunto.model');
+const { Op, fn, col, literal } = require('sequelize');
 
 const obtenerKilosPorMes = async () => {
-    console.log('📊 [SERVICE] Iniciando agrupación de kilos por mes...');
-  
-    try {
-      const resultado = await EntregaResiduo.aggregate([
-        {
-          $group: {
-            _id: {
-              year: { $year: '$fecha' },
-              month: { $month: '$fecha' }
-            },
-            totalKg: { $sum: '$pesoKg' }
-          }
-        },
-        {
-          $project: {
-            mes: {
-              $concat: [
-                { $toString: '$_id.year' },
-                '-',
-                {
-                  $cond: {
-                    if: { $lt: ['$_id.month', 10] },
-                    then: { $concat: ['0', { $toString: '$_id.month' }] },
-                    else: { $toString: '$_id.month' }
-                  }
-                }
-              ]
-            },
-            totalKg: 1,
-            _id: 0
-          }
-        },
-        { $sort: { mes: 1 } }
-      ]);
-  
-      console.log('✅ [SERVICE] Resultado de agregación:', resultado);
-      return resultado;
-    } catch (error) {
-      console.error('❌ [SERVICE] Error en obtenerKilosPorMes:', error.message);
-      throw new Error('No se pudo calcular los kilos por mes');
-    }
-  };
-  
-  
-  const calcularProgresoMetaMensual = async (ecopuntoId = null, metaKg = 3000) => {
-    console.log('📊 [SERVICE] Calculando progreso mensual hacia meta de', metaKg, 'kg');
-  
-    try {
-      const ahora = new Date();
-      const primerDiaMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-      const ultimoDiaMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0);
-  
-      console.log('📅 [SERVICE] Rango del mes actual:', primerDiaMes.toISOString(), '→', ultimoDiaMes.toISOString());
-  
-      const matchStage = {
-        fecha: { $gte: primerDiaMes, $lte: ultimoDiaMes }
-      };
+  console.log('📊 [SERVICE] Iniciando agrupación de kilos por mes...');
+
+  try {
+    const resultado = await EntregaResiduo.findAll({
+      attributes: [
+        [fn('EXTRACT', literal('YEAR FROM "fecha"')), 'year'],
+        [fn('EXTRACT', literal('MONTH FROM "fecha"')), 'month'],
+        [fn('SUM', col('pesoKg')), 'totalKg']
+      ],
+      group: [
+        fn('EXTRACT', literal('YEAR FROM "fecha"')),
+        fn('EXTRACT', literal('MONTH FROM "fecha"'))
+      ],
+      order: [
+        [fn('EXTRACT', literal('YEAR FROM "fecha"')), 'ASC'],
+        [fn('EXTRACT', literal('MONTH FROM "fecha"')), 'ASC']
+      ],
+      raw: true
+    });
+
+    // Formatear resultado para compatibilidad con el frontend
+    const resultadoFormateado = resultado.map(item => {
+      const year = parseInt(item.year);
+      const month = parseInt(item.month);
+      const monthStr = month.toString().padStart(2, '0');
       
-      // Si se especifica un ecopunto, filtrar por él
-      if (ecopuntoId) {
-        matchStage.ecopunto = ecopuntoId;
-      }
-  
-      const resultado = await EntregaResiduo.aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: null,
-            totalKg: { $sum: '$pesoKg' }
-          }
-        }
-      ]);
-  
-      console.log('📈 [SERVICE] Resultado de la agregación:', resultado);
-  
-      const totalKg = resultado[0]?.totalKg || 0;
-      const porcentaje = Math.min((totalKg / metaKg) * 100, 100).toFixed(2);
-      const restante = Math.max(metaKg - totalKg, 0).toFixed(2);
-      const mesActual = `${primerDiaMes.getFullYear()}-${(primerDiaMes.getMonth() + 1).toString().padStart(2, '0')}`;
-  
-      const datos = {
-        mes: mesActual,
-        totalKg: totalKg.toFixed(2),
-        metaKg,
-        porcentaje: Number(porcentaje),
-        restante: Number(restante)
+      return {
+        mes: `${year}-${monthStr}`,
+        totalKg: parseFloat(item.totalKg) || 0
       };
-  
-      console.log('✅ [SERVICE] Datos finales:', datos);
-      return datos;
-    } catch (error) {
-      console.error('❌ [SERVICE] Error al calcular progreso mensual:', error.message);
-      throw new Error('No se pudo calcular el progreso mensual');
+    });
+
+    console.log('✅ [SERVICE] Resultado de agregación:', resultadoFormateado);
+    return resultadoFormateado;
+  } catch (error) {
+    console.error('❌ [SERVICE] Error en obtenerKilosPorMes:', error.message);
+    throw new Error('No se pudo calcular los kilos por mes');
+  }
+};
+
+const calcularProgresoMetaMensual = async (ecopuntoId = null, metaKg = 3000) => {
+  console.log('📊 [SERVICE] Calculando progreso mensual hacia meta de', metaKg, 'kg');
+
+  try {
+    const ahora = new Date();
+    const primerDiaMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
+    const ultimoDiaMes = new Date(ahora.getFullYear(), ahora.getMonth() + 1, 0);
+
+    console.log('📅 [SERVICE] Rango del mes actual:', primerDiaMes.toISOString(), '→', ultimoDiaMes.toISOString());
+
+    const whereClause = {
+      fecha: {
+        [Op.between]: [primerDiaMes, ultimoDiaMes]
+      }
+    };
+
+    // Si se especifica un ecopunto, filtrar por él
+    if (ecopuntoId) {
+      whereClause.ecopuntoId = ecopuntoId;
     }
-  };
-  
+
+    const totalKg = await EntregaResiduo.sum('pesoKg', {
+      where: whereClause
+    }) || 0;
+
+    console.log('📈 [SERVICE] Total KG del mes:', totalKg);
+
+    const porcentaje = Math.min((totalKg / metaKg) * 100, 100);
+    const restante = Math.max(metaKg - totalKg, 0);
+    const mesActual = `${primerDiaMes.getFullYear()}-${(primerDiaMes.getMonth() + 1).toString().padStart(2, '0')}`;
+
+    const datos = {
+      mes: mesActual,
+      totalKg: parseFloat(totalKg.toFixed(2)),
+      metaKg,
+      porcentaje: parseFloat(porcentaje.toFixed(2)),
+      restante: parseFloat(restante.toFixed(2))
+    };
+
+    console.log('✅ [SERVICE] Datos finales:', datos);
+    return datos;
+  } catch (error) {
+    console.error('❌ [SERVICE] Error al calcular progreso mensual:', error.message);
+    throw new Error('No se pudo calcular el progreso mensual');
+  }
+};
+
 const obtenerTotalKilos = async (ecopuntoId = null) => {
   try {
-    const matchStage = {};
+    const whereClause = {};
     if (ecopuntoId) {
-      matchStage.ecopunto = ecopuntoId;
+      whereClause.ecopuntoId = ecopuntoId;
     }
     
-    const resultado = await EntregaResiduo.aggregate([
-      { $match: matchStage },
-      { $group: { _id: null, totalKg: { $sum: '$pesoKg' } } }
-    ]);
-    return resultado[0]?.totalKg || 0;
+    const totalKg = await EntregaResiduo.sum('pesoKg', {
+      where: whereClause
+    }) || 0;
+
+    return parseFloat(totalKg.toFixed(2));
   } catch (error) {
     console.error('❌ [SERVICE] Error al obtener total de kilos:', error.message);
     throw new Error('No se pudo calcular el total de kilos');
@@ -117,41 +110,38 @@ const obtenerTotalKilos = async (ecopuntoId = null) => {
 
 const obtenerSucursalConMasKilos = async () => {
   try {
-    const resultado = await EntregaResiduo.aggregate([
-      {
-        $group: {
-          _id: '$ecopunto',
-          totalKg: { $sum: '$pesoKg' }
-        }
-      },
-      { $sort: { totalKg: -1 } },
-      { $limit: 1 },
-      {
-        $lookup: {
-          from: 'ecopuntos',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'ecopuntoInfo'
-        }
-      },
-      { $unwind: '$ecopuntoInfo' },
-      {
-        $project: {
-          _id: 0,
-          sucursal: '$ecopuntoInfo.nombre',
-          totalKg: 1
-        }
-      }
-    ]);
+    // Primero obtener el ecopunto con más kilos
+    const resultado = await EntregaResiduo.findAll({
+      attributes: [
+        'ecopuntoId',
+        [fn('SUM', col('pesoKg')), 'totalKg']
+      ],
+      group: ['ecopuntoId'],
+      order: [[fn('SUM', col('pesoKg')), 'DESC']],
+      limit: 1,
+      raw: true
+    });
+
+    if (resultado.length > 0) {
+      const topResult = resultado[0];
+      
+      // Buscar información del ecopunto
+      const ecopunto = await Ecopunto.findByPk(topResult.ecopuntoId);
+      
+      return {
+        sucursal: ecopunto?.nombre || 'Sin nombre',
+        totalKg: parseFloat(topResult.totalKg) || 0
+      };
+    }
     
-    return resultado[0] || { sucursal: 'Sin datos', totalKg: 0 };
+    return { sucursal: 'Sin datos', totalKg: 0 };
   } catch (error) {
     console.error('❌ [SERVICE] Error al obtener sucursal top:', error.message);
     throw new Error('No se pudo calcular la sucursal top');
   }
 };
 
-// === NUEVOS MÉTODOS PARA USUARIO LOGEADO ===
+// === MÉTODOS PARA USUARIO LOGEADO ===
 
 const obtenerKilosUsuarioHoy = async (usuarioId) => {
   try {
@@ -161,24 +151,17 @@ const obtenerKilosUsuarioHoy = async (usuarioId) => {
     const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
     const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1);
     
-    const resultado = await EntregaResiduo.aggregate([
-      {
-        $match: {
-          encargado: usuarioId,
-          fecha: { $gte: inicioDia, $lt: finDia }
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          kilosHoy: { $sum: '$pesoKg' }
+    const kilosHoy = await EntregaResiduo.sum('pesoKg', {
+      where: {
+        encargadoId: usuarioId,
+        fecha: {
+          [Op.between]: [inicioDia, finDia]
         }
       }
-    ]);
+    }) || 0;
     
-    const kilosHoy = resultado[0]?.kilosHoy || 0;
     console.log('✅ [SERVICE] Kilos del usuario hoy:', kilosHoy);
-    return { kilosHoy };
+    return { kilosHoy: parseFloat(kilosHoy.toFixed(2)) };
   } catch (error) {
     console.error('❌ [SERVICE] Error al obtener kilos del usuario hoy:', error.message);
     throw new Error('No se pudo calcular los kilos del usuario hoy');
@@ -218,8 +201,8 @@ const obtenerEstadisticasUsuarioHoy = async (usuarioId) => {
     const estadisticas = {
       kilosHoy,
       metaDiaria,
-      porcentajeMeta: Math.round(porcentajeMeta * 100) / 100,
-      kilosRestantes: Math.round(kilosRestantes * 100) / 100
+      porcentajeMeta: parseFloat(porcentajeMeta.toFixed(2)),
+      kilosRestantes: parseFloat(kilosRestantes.toFixed(2))
     };
     
     console.log('✅ [SERVICE] Estadísticas completas del usuario hoy:', estadisticas);

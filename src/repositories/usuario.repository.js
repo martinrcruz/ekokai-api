@@ -9,15 +9,18 @@ const crearUsuario = async (datos) => {
 
 const buscarUsuario = async ({ email, dni }) => {
   console.log('🔎 [REPOSITORY] Buscando usuario con email o dni:', email, dni);
+  const { Op } = require('sequelize');
   return await Usuario.findOne({
-    $or: [{ email }, { dni }]
+    where: {
+      [Op.or]: [{ email }, { dni }]
+    }
   });
 };
 
 
 
 const buscarPorCorreo = async (email) => {
-  return await Usuario.findOne({ email });
+  return await Usuario.findOne({ where: { email } });
 };
 
 const buscarPorId = async (id) => {
@@ -25,35 +28,21 @@ const buscarPorId = async (id) => {
     console.log('🔍 [REPOSITORY] Buscando usuario por ID:', id);
     
     // Obtener usuario básico
-    const usuario = await Usuario.findById(id);
+    const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       console.log('❌ [REPOSITORY] Usuario no encontrado:', id);
       return null;
     }
     
     // Calcular kilos totales del usuario
-    const resultado = await EntregaResiduo.aggregate([
-      {
-        $match: {
-          usuario: usuario._id,
-          estado: 'completado' // Solo entregas completadas
-        }
-      },
-      {
-        $group: {
-          _id: null,
-          kilosTotal: { $sum: '$pesoKg' }
-        }
-      }
-    ]);
+    const totalKilos = await EntregaResiduo.sum('pesoKg', {
+      where: { usuarioId: id }
+    });
     
-    const kilosTotal = resultado[0]?.kilosTotal || 0;
+    const usuarioObj = usuario.toJSON();
+    usuarioObj.kilosTotal = totalKilos || 0;
     
-    // Convertir a objeto plano y agregar kilosTotal
-    const usuarioObj = usuario.toObject();
-    usuarioObj.kilosTotal = kilosTotal;
-    
-    console.log(`✅ [REPOSITORY] Usuario encontrado: ${usuario.nombre} ${usuario.apellido} con ${kilosTotal} kg y ${usuarioObj.tokensAcumulados || 0} tokens`);
+    console.log(`✅ [REPOSITORY] Usuario encontrado: ${usuario.nombre} ${usuario.apellido} con ${usuarioObj.kilosTotal} kg y ${usuarioObj.tokensAcumulados || 0} tokens`);
     
     return usuarioObj;
     
@@ -65,51 +54,30 @@ const buscarPorId = async (id) => {
 
 const listarUsuarios = async (filtro = {}) => {
   try {
-    console.log('🔄 [REPOSITORY] Obteniendo usuarios con kilos totales...');
+    console.log('🔄 [REPOSITORY] Obteniendo usuarios...');
     
-    // Obtener usuarios básicos
-    const usuarios = await Usuario.find(filtro).sort({ fechaCreacion: -1 });
+    // Obtener usuarios básicos con Sequelize
+    const whereClause = filtro;
+    const usuarios = await Usuario.findAll({ 
+      where: whereClause,
+      order: [['fechaCreacion', 'DESC']]
+    });
     
     // Calcular kilos totales para cada usuario
-    const usuariosConKilos = await Promise.all(
-      usuarios.map(async (usuario) => {
-        try {
-          // Calcular kilos totales del usuario
-          const resultado = await EntregaResiduo.aggregate([
-            {
-              $match: {
-                usuario: usuario._id,
-                estado: 'completado' // Solo entregas completadas
-              }
-            },
-            {
-              $group: {
-                _id: null,
-                kilosTotal: { $sum: '$pesoKg' }
-              }
-            }
-          ]);
-          
-          const kilosTotal = resultado[0]?.kilosTotal || 0;
-          
-          // Convertir a objeto plano y agregar kilosTotal
-          const usuarioObj = usuario.toObject();
-          usuarioObj.kilosTotal = kilosTotal;
-          
-          console.log(`✅ [REPOSITORY] Usuario ${usuario.nombre} ${usuario.apellido}: ${kilosTotal} kg, ${usuarioObj.tokensAcumulados || 0} tokens`);
-          
-          return usuarioObj;
-        } catch (error) {
-          console.error(`❌ [REPOSITORY] Error calculando kilos para usuario ${usuario._id}:`, error.message);
-          // En caso de error, retornar usuario sin kilos
-          const usuarioObj = usuario.toObject();
-          usuarioObj.kilosTotal = 0;
-          return usuarioObj;
-        }
-      })
-    );
+    const usuariosConKilos = await Promise.all(usuarios.map(async (usuario) => {
+      const totalKilos = await EntregaResiduo.sum('pesoKg', {
+        where: { usuarioId: usuario.id }
+      });
+      
+      const usuarioObj = usuario.toJSON();
+      usuarioObj.kilosTotal = totalKilos || 0;
+      
+      console.log(`✅ [REPOSITORY] Usuario ${usuario.nombre} ${usuario.apellido}: ${usuarioObj.kilosTotal} kg, ${usuarioObj.tokensAcumulados || 0} tokens`);
+      
+      return usuarioObj;
+    }));
     
-    console.log(`✅ [REPOSITORY] Usuarios obtenidos con kilos totales: ${usuariosConKilos.length}`);
+    console.log(`✅ [REPOSITORY] Usuarios obtenidos: ${usuariosConKilos.length}`);
     return usuariosConKilos;
     
   } catch (error) {
@@ -119,75 +87,61 @@ const listarUsuarios = async (filtro = {}) => {
 };
 
 const buscarPorTelefono = async (telefono) => {
-  return await Usuario.findOne({ telefono });
+  return await Usuario.findOne({ where: { telefono } });
 };
 
 
 // NUEVO: actualizar tokens acumulados
 const incrementarTokens = async (usuarioId, tokens) => {
     console.log(`🔁 [REPO] Sumando ${tokens} tokens al usuario ${usuarioId}`);
-    return await Usuario.findByIdAndUpdate(
-      usuarioId,
-      { $inc: { tokensAcumulados: tokens } },
-      { new: true }
-    );
+    const usuario = await Usuario.findByPk(usuarioId);
+    if (!usuario) return null;
+    
+    const nuevosTokens = (usuario.tokensAcumulados || 0) + tokens;
+    await usuario.update({ tokensAcumulados: nuevosTokens });
+    return usuario;
   };
 
 const actualizarUsuario = async (id, datos) => {
   console.log('✏️ [REPOSITORY] Actualizando usuario', id, 'con:', datos);
-  return await Usuario.findByIdAndUpdate(id, datos, { new: true });
+  const usuario = await Usuario.findByPk(id);
+  if (!usuario) return null;
+  
+  await usuario.update(datos);
+  return usuario;
 };
 
 const eliminarUsuario = async (id) => {
   console.log('🗑️ [REPOSITORY] Eliminando usuario', id);
-  return await Usuario.findByIdAndDelete(id);
+  const usuario = await Usuario.findByPk(id);
+  if (!usuario) return null;
+  
+  await usuario.destroy();
+  return usuario;
 };
 
 // ✅ Buscar usuarios por criterios específicos
 const buscarUsuariosPorCriterios = async (query) => {
   console.log('🔍 [REPOSITORY] Buscando usuarios con query:', query);
   try {
-    // Obtener usuarios básicos
-    const usuarios = await Usuario.find(query).sort({ fechaCreacion: -1 });
+    // Obtener usuarios básicos con Sequelize
+    const usuarios = await Usuario.findAll({ 
+      where: query,
+      order: [['fechaCreacion', 'DESC']]
+    });
     
     // Calcular kilos totales para cada usuario
-    const usuariosConKilos = await Promise.all(
-      usuarios.map(async (usuario) => {
-        try {
-          // Calcular kilos totales del usuario
-          const resultado = await EntregaResiduo.aggregate([
-            {
-              $match: {
-                usuario: usuario._id,
-                estado: 'completado' // Solo entregas completadas
-              }
-            },
-            {
-              $group: {
-                _id: null,
-                kilosTotal: { $sum: '$pesoKg' }
-              }
-            }
-          ]);
-          
-          const kilosTotal = resultado[0]?.kilosTotal || 0;
-          
-          // Convertir a objeto plano y agregar kilosTotal
-          const usuarioObj = usuario.toObject();
-          usuarioObj.kilosTotal = kilosTotal;
-          
-          return usuarioObj;
-        } catch (error) {
-          console.error(`❌ [REPOSITORY] Error calculando kilos para usuario ${usuario._id}:`, error.message);
-          // En caso de error, retornar usuario sin kilos
-          const usuarioObj = usuario.toObject();
-          usuarioObj.kilosTotal = 0;
-          return usuarioObj;
-        }
-      })
-    );
+    const usuariosConKilos = await Promise.all(usuarios.map(async (usuario) => {
+      const totalKilos = await EntregaResiduo.sum('pesoKg', {
+        where: { usuarioId: usuario.id }
+      });
+      
+      const usuarioObj = usuario.toJSON();
+      usuarioObj.kilosTotal = totalKilos || 0;
+      return usuarioObj;
+    }));
     
-    console.log(`✅ [REPOSITORY] Usuarios encontrados con kilos totales: ${usuariosConKilos.length}`);
+    console.log(`✅ [REPOSITORY] Usuarios encontrados: ${usuariosConKilos.length}`);
     return usuariosConKilos;
     
   } catch (error) {

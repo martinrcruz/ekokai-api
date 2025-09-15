@@ -1,4 +1,4 @@
-const { Recompensa } = require('../models');
+const Recompensa = require('../models/recompensa.model');
 
 /**
  * Obtener todas las recompensas disponibles

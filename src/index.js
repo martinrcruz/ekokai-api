@@ -1,17 +1,19 @@
 require('dotenv').config();
-const { connectDB1 } = require('./config/database'); // conectamos de forma asíncrona
 const { testSequelizeConnection, syncSequelizeModels } = require('./config/sequelize');
 
 const startServer = async () => {
   try {
-    await connectDB1(); // esperamos conexión
-    
     // Conectar y sincronizar Sequelize
+    console.log('🔄 Conectando a PostgreSQL...');
     await testSequelizeConnection();
+    console.log('✅ Conexión a PostgreSQL establecida');
+    
+    console.log('🔄 Sincronizando modelos...');
     await syncSequelizeModels();
+    console.log('✅ Modelos sincronizados');
     
     // Importar todos los modelos ANTES de cargar app.js
-    console.log('📚 Importando modelos de Mongoose...');
+    console.log('📚 Importando modelos de Sequelize...');
     require('./models');
     console.log('✅ Modelos importados correctamente');
     
@@ -24,7 +26,7 @@ const startServer = async () => {
       console.log(`📱 QR URL: http://192.168.4.156:${PORT}/registro`);
     });
   } catch (err) {
-    console.error('❌ Error al conectar con MongoDB DB1:', err.message);
+    console.error('❌ Error al conectar con PostgreSQL:', err.message);
   }
 };
 

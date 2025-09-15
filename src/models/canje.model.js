@@ -1,45 +1,81 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const CanjeSchema = new mongoose.Schema({
-    cuponId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Cupon', 
-        required: true 
+const Canje = sequelize.define('Canje', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  cuponId: { 
+    type: DataTypes.UUID, 
+    allowNull: false,
+    references: {
+      model: 'cupones',
+      key: 'id'
+    }
+  },
+  usuarioId: { 
+    type: DataTypes.UUID, 
+    allowNull: false,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  comercioId: { 
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  tokensGastados: { 
+    type: DataTypes.INTEGER, 
+    allowNull: false 
+  },
+  fechaCanje: { 
+    type: DataTypes.DATE, 
+    defaultValue: DataTypes.NOW 
+  },
+  estado: { 
+    type: DataTypes.ENUM('pendiente', 'aprobado', 'rechazado', 'completado'), 
+    defaultValue: 'pendiente' 
+  },
+  observaciones: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  aprobadoPorId: { 
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  fechaAprobacion: {
+    type: DataTypes.DATE,
+    allowNull: true
+  }
+}, {
+  tableName: 'canjes',
+  timestamps: false,
+  indexes: [
+    {
+      fields: ['cuponId', 'fechaCanje']
     },
-    usuarioId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Usuario', 
-        required: true 
+    {
+      fields: ['usuarioId', 'fechaCanje']
     },
-    comercioId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Usuario' 
+    {
+      fields: ['comercioId', 'fechaCanje']
     },
-    tokensGastados: { 
-        type: Number, 
-        required: true 
-    },
-    fechaCanje: { 
-        type: Date, 
-        default: Date.now 
-    },
-    estado: { 
-        type: String, 
-        enum: ['pendiente', 'aprobado', 'rechazado', 'completado'], 
-        default: 'pendiente' 
-    },
-    observaciones: String,
-    aprobadoPor: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Usuario' 
-    },
-    fechaAprobacion: Date
+    {
+      fields: ['estado']
+    }
+  ]
 });
 
-// Índices para mejorar el rendimiento de las consultas
-CanjeSchema.index({ cuponId: 1, fechaCanje: -1 });
-CanjeSchema.index({ usuarioId: 1, fechaCanje: -1 });
-CanjeSchema.index({ comercioId: 1, fechaCanje: -1 });
-CanjeSchema.index({ estado: 1 });
-
-module.exports = mongoose.model('Canje', CanjeSchema);
+module.exports = Canje;

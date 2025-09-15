@@ -6,9 +6,10 @@ const crearCanje = async (data) => {
 };
 
 const listarCanjesPorUsuario = async (usuarioId) => {
-  return await Canje.find({ usuarioId: usuarioId })
-    .populate('cuponId')
-    .sort({ fechaCanje: -1 });
+  return await Canje.findAll({
+    where: { usuarioId: usuarioId },
+    order: [['fechaCanje', 'DESC']]
+  });
 };
 
 /**
@@ -24,7 +25,12 @@ const crearCanjeRecompensa = async (data) => {
 const listarCanjesRecompensaPorUsuario = async (usuarioId) => {
   return await CanjeRecompensa.findAll({
     where: { usuarioId },
-    include: ['recompensa'],
+    include: [
+      {
+        model: require('../models/recompensa.model'),
+        as: 'recompensa'
+      }
+    ],
     order: [['fecha', 'DESC']]
   });
 };
@@ -34,7 +40,16 @@ const listarCanjesRecompensaPorUsuario = async (usuarioId) => {
  */
 const buscarCanjeRecompensaPorId = async (id) => {
   return await CanjeRecompensa.findByPk(id, {
-    include: ['recompensa', 'usuario']
+    include: [
+      {
+        model: require('../models/recompensa.model'),
+        as: 'recompensa'
+      },
+      {
+        model: require('../models/usuario.model'),
+        as: 'usuario'
+      }
+    ]
   });
 };
 

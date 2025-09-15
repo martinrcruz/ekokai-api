@@ -5,7 +5,7 @@ const SECRET_KEY = process.env.JWT_SECRET || 'clave_secreta';
 const generarToken = (usuario) => {
   return jwt.sign(
     {
-      id: usuario._id,
+      id: usuario.id,
       email: usuario.email,
       rol: usuario.rol
     },

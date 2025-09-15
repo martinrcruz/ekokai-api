@@ -1,27 +1,96 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const EntregaResiduoSchema = new mongoose.Schema({
-  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
-  ecopunto: { type: mongoose.Schema.Types.ObjectId, ref: 'Ecopunto', required: true },
-  tipoResiduo: { type: mongoose.Schema.Types.ObjectId, ref: 'TipoResiduo', required: true },
-  pesoKg: { type: Number, required: true },
-  cuponesGenerados: { type: Number, required: true },
-  cuponGenerado: { type: mongoose.Schema.Types.ObjectId, ref: 'Cupon' },
-  descripcion: { type: String, default: '' },
-  fecha: { type: Date, default: Date.now },
-  // Campos adicionales para el historial
-  encargado: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' }, // Encargado que procesó la entrega
-  estado: { type: String, enum: ['completado', 'pendiente', 'rechazado'], default: 'completado' },
-  observaciones: { type: String, default: '' }
+const EntregaResiduo = sequelize.define('EntregaResiduo', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
+  usuarioId: { 
+    type: DataTypes.UUID, 
+    allowNull: false,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  ecopuntoId: { 
+    type: DataTypes.UUID, 
+    allowNull: false,
+    references: {
+      model: 'ecopuntos',
+      key: 'id'
+    }
+  },
+  tipoResiduoId: { 
+    type: DataTypes.UUID, 
+    allowNull: false,
+    references: {
+      model: 'tiporesiduos',
+      key: 'id'
+    }
+  },
+  pesoKg: { 
+    type: DataTypes.DECIMAL(10, 2), 
+    allowNull: false 
+  },
+  cuponesGenerados: { 
+    type: DataTypes.INTEGER, 
+    allowNull: false 
+  },
+  cuponGeneradoId: { 
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'cupones',
+      key: 'id'
+    }
+  },
+  descripcion: { 
+    type: DataTypes.TEXT, 
+    defaultValue: '' 
+  },
+  fecha: { 
+    type: DataTypes.DATE, 
+    defaultValue: DataTypes.NOW 
+  },
+  encargadoId: { 
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
+  },
+  estado: { 
+    type: DataTypes.ENUM('completado', 'pendiente', 'rechazado'), 
+    defaultValue: 'completado' 
+  },
+  observaciones: { 
+    type: DataTypes.TEXT, 
+    defaultValue: '' 
+  }
 }, {
-  timestamps: true
+  tableName: 'entregas',
+  timestamps: true,
+  indexes: [
+    {
+      fields: ['usuarioId']
+    },
+    {
+      fields: ['ecopuntoId']
+    },
+    {
+      fields: ['fecha']
+    },
+    {
+      fields: ['tipoResiduoId']
+    },
+    {
+      fields: ['estado']
+    }
+  ]
 });
 
-// Índices para mejorar el rendimiento
-EntregaResiduoSchema.index({ usuario: 1 });
-EntregaResiduoSchema.index({ ecopunto: 1 });
-EntregaResiduoSchema.index({ fecha: -1 });
-EntregaResiduoSchema.index({ tipoResiduo: 1 });
-EntregaResiduoSchema.index({ estado: 1 });
-
-module.exports = mongoose.model('EntregaResiduo', EntregaResiduoSchema, 'entregas');
+module.exports = EntregaResiduo;

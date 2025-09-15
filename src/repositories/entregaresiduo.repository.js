@@ -1,73 +1,126 @@
 const EntregaResiduo = require('../models/entregaresiduo.model');
+const Usuario = require('../models/usuario.model');
+const Ecopunto = require('../models/ecopunto.model');
+const TipoResiduo = require('../models/tiporesiduo.model');
+const { Op } = require('sequelize');
 
 module.exports = {
   async crearEntrega(data) {
-    const entrega = new EntregaResiduo(data);
-    return entrega.save();
+    return await EntregaResiduo.create(data);
   },
   async listarPorUsuario(usuarioId) {
-    return EntregaResiduo.find({ usuario: usuarioId }).populate('tipoResiduo').populate('ecopunto');
+    return await EntregaResiduo.findAll({
+      where: { usuarioId: usuarioId },
+      include: [
+        {
+          model: TipoResiduo,
+          as: 'tipoResiduo',
+          attributes: ['id', 'nombre', 'descripcion']
+        },
+        {
+          model: Ecopunto,
+          as: 'ecopunto',
+          attributes: ['id', 'nombre', 'direccion']
+        }
+      ],
+      order: [['fecha', 'DESC']]
+    });
   },
   async buscarPorUsuario(usuarioId) {
-    return EntregaResiduo.find({ usuario: usuarioId });
+    return await EntregaResiduo.findAll({
+      where: { usuarioId: usuarioId },
+      order: [['fecha', 'DESC']]
+    });
   },
   async listarTodasLasEntregas(filtros = {}) {
-    let query = {};
+    let whereClause = {};
     
-    if (filtros.usuarioId) query.usuario = filtros.usuarioId;
-    if (filtros.ecopuntoId) query.ecopunto = filtros.ecopuntoId;
-    if (filtros.tipoResiduoId) query.tipoResiduo = filtros.tipoResiduoId;
-    if (filtros.estado) query.estado = filtros.estado;
-    if (filtros.fechaDesde) query.fecha = { $gte: new Date(filtros.fechaDesde) };
-    if (filtros.fechaHasta) {
-      if (query.fecha) {
-        query.fecha.$lte = new Date(filtros.fechaHasta);
-      } else {
-        query.fecha = { $lte: new Date(filtros.fechaHasta) };
-      }
+    if (filtros.usuarioId) whereClause.usuarioId = filtros.usuarioId;
+    if (filtros.ecopuntoId) whereClause.ecopuntoId = filtros.ecopuntoId;
+    if (filtros.tipoResiduoId) whereClause.tipoResiduoId = filtros.tipoResiduoId;
+    if (filtros.estado) whereClause.estado = filtros.estado;
+    
+    if (filtros.fechaDesde || filtros.fechaHasta) {
+      whereClause.fecha = {};
+      if (filtros.fechaDesde) whereClause.fecha[Op.gte] = new Date(filtros.fechaDesde);
+      if (filtros.fechaHasta) whereClause.fecha[Op.lte] = new Date(filtros.fechaHasta);
     }
     
-    return EntregaResiduo.find(query)
-      .populate('usuario', 'nombre apellido email')
-      .populate('ecopunto', 'nombre direccion')
-      .populate('tipoResiduo', 'nombre descripcion')
-      .populate('encargado', 'nombre apellido')
-      .sort({ fecha: -1 });
+    return await EntregaResiduo.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: Usuario,
+          as: 'usuario',
+          attributes: ['id', 'nombre', 'apellido', 'email']
+        },
+        {
+          model: Ecopunto,
+          as: 'ecopunto',
+          attributes: ['id', 'nombre', 'direccion']
+        },
+        {
+          model: TipoResiduo,
+          as: 'tipoResiduo',
+          attributes: ['id', 'nombre', 'descripcion']
+        }
+      ],
+      order: [['fecha', 'DESC']]
+    });
   },
   async obtenerEstadisticas() {
-    const totalEntregas = await EntregaResiduo.countDocuments();
-    const totalPeso = await EntregaResiduo.aggregate([
-      { $group: { _id: null, total: { $sum: '$pesoKg' } } }
-    ]);
-    const totalCupones = await EntregaResiduo.aggregate([
-      { $group: { _id: null, total: { $sum: '$cuponesGenerados' } } }
-    ]);
+    const totalEntregas = await EntregaResiduo.count();
+    const totalPeso = await EntregaResiduo.sum('pesoKg') || 0;
+    const totalCupones = await EntregaResiduo.sum('cuponesGenerados') || 0;
     
     return {
       totalEntregas,
-      totalPeso: totalPeso[0]?.total || 0,
-      totalCupones: totalCupones[0]?.total || 0
+      totalPeso,
+      totalCupones
     };
   },
 
   // Métodos adicionales para admin
   async historialPorUsuario(usuarioId) {
-    return EntregaResiduo.find({ usuario: usuarioId })
-      .populate('tipoResiduo', 'nombre descripcion')
-      .populate('ecopunto', 'nombre direccion')
-      .populate('encargado', 'nombre apellido')
-      .sort({ fecha: -1 });
+    return await EntregaResiduo.findAll({
+      where: { usuarioId: usuarioId },
+      include: [
+        {
+          model: TipoResiduo,
+          as: 'tipoResiduo',
+          attributes: ['id', 'nombre', 'descripcion']
+        },
+        {
+          model: Ecopunto,
+          as: 'ecopunto',
+          attributes: ['id', 'nombre', 'direccion']
+        }
+      ],
+      order: [['fecha', 'DESC']]
+    });
   },
 
   async metricasPorEcopunto(ecopuntoId) {
-    const entregas = await EntregaResiduo.find({ ecopunto: ecopuntoId })
-      .populate('usuario', 'nombre apellido')
-      .populate('tipoResiduo', 'nombre')
-      .sort({ fecha: -1 });
+    const entregas = await EntregaResiduo.findAll({
+      where: { ecopuntoId: ecopuntoId },
+      include: [
+        {
+          model: Usuario,
+          as: 'usuario',
+          attributes: ['id', 'nombre', 'apellido']
+        },
+        {
+          model: TipoResiduo,
+          as: 'tipoResiduo',
+          attributes: ['id', 'nombre']
+        }
+      ],
+      order: [['fecha', 'DESC']]
+    });
 
     const totalKg = entregas.reduce((sum, entrega) => sum + (entrega.pesoKg || 0), 0);
     const totalCupones = entregas.reduce((sum, entrega) => sum + (entrega.cuponesGenerados || 0), 0);
-    const usuariosUnicos = new Set(entregas.map(e => e.usuario._id.toString())).size;
+    const usuariosUnicos = new Set(entregas.map(e => e.usuario?.id?.toString())).size;
 
     return {
       entregas,

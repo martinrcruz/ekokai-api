@@ -2,25 +2,36 @@ const TipoResiduo = require('../models/tiporesiduo.model');
 
 module.exports = {
   async crear(data) {
-    const tipo = new TipoResiduo(data);
-    return tipo.save();
+    return await TipoResiduo.create(data);
   },
   async listar() {
-    return TipoResiduo.find();
+    return await TipoResiduo.findAll();
   },
   async buscarPorNombre(nombre) {
-    return TipoResiduo.findOne({ nombre });
+    return await TipoResiduo.findOne({ where: { nombre } });
   },
   async buscarPorId(id) {
-    return TipoResiduo.findById(id);
+    return await TipoResiduo.findByPk(id);
   },
   async eliminarTipoResiduo(id) {
-    return TipoResiduo.findByIdAndDelete(id);
+    const tipo = await TipoResiduo.findByPk(id);
+    if (!tipo) return null;
+    
+    await tipo.destroy();
+    return tipo;
   },
   async eliminar(id) {
-    return TipoResiduo.findByIdAndDelete(id);
+    const tipo = await TipoResiduo.findByPk(id);
+    if (!tipo) return null;
+    
+    await tipo.destroy();
+    return tipo;
   },
   async actualizar(id, data) {
-    return TipoResiduo.findByIdAndUpdate(id, data, { new: true });
+    const tipo = await TipoResiduo.findByPk(id);
+    if (!tipo) return null;
+    
+    await tipo.update(data);
+    return tipo;
   }
 };

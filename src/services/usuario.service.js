@@ -141,6 +141,29 @@ const buscarVecinos = async (criterios) => {
   return vecinos;
 };
 
+// ✅ Obtener usuarios por rol específico
+const obtenerUsuariosPorRol = async (rol) => {
+  console.log(`🔍 [SERVICE] Obteniendo usuarios con rol: ${rol}`);
+  
+  const usuarios = await usuarioRepo.listarUsuarios({ rol });
+  console.log(`✅ [SERVICE] Obtenidos ${usuarios.length} usuarios con rol ${rol}`);
+  
+  return usuarios;
+};
+
+// ✅ Obtener usuarios que no son vecinos (encargados y administradores)
+const obtenerUsuariosNoVecinos = async () => {
+  console.log('🔍 [SERVICE] Obteniendo usuarios no vecinos');
+  
+  const { Op } = require('sequelize');
+  const usuarios = await usuarioRepo.listarUsuarios({ 
+    rol: { [Op.in]: ['encargado', 'administrador'] }
+  });
+  console.log(`✅ [SERVICE] Obtenidos ${usuarios.length} usuarios no vecinos`);
+  
+  return usuarios;
+};
+
 module.exports = {
   registrarVecino,
   obtenerTodos,
@@ -150,5 +173,7 @@ module.exports = {
   eliminarUsuario,
   crearUsuario,
   actualizarTokens,
-  buscarVecinos
+  buscarVecinos,
+  obtenerUsuariosPorRol,
+  obtenerUsuariosNoVecinos
 };

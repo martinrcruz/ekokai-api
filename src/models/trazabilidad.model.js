@@ -1,176 +1,161 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/sequelize');
 
-const TrazabilidadSchema = new mongoose.Schema({
+const Trazabilidad = sequelize.define('Trazabilidad', {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
+  },
   phoneNumber: {
-    type: String,
-    required: true,
-    index: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Usuario',
-    required: true
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: 'usuarios',
+      key: 'id'
+    }
   },
   step: {
-    type: String,
-    enum: [
+    type: DataTypes.ENUM(
       'first_image_validated',
       'second_image_validated', 
       'exchange_completed',
       'qr_generated',
       'coupon_created',
       'error_occurred'
-    ],
-    required: true
+    ),
+    allowNull: false
   },
   timestamp: {
-    type: Date,
-    default: Date.now,
-    required: true
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+    allowNull: false
   },
   qr_code: {
-    type: String,
-    index: true
+    type: DataTypes.STRING,
+    allowNull: true
   },
   canjeReciclajeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'CanjeReciclaje'
-  },
-  coupon_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cupon'
-  },
-  exchange_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'CanjeReciclaje'
-  },
-  image_path: String,
-  validation_result: {
-    success: Boolean,
-    confidence: Number,
-    qr_detected: Boolean,
-    context_valid: Boolean,
-    elements_found: mongoose.Schema.Types.Mixed,
-    issues: [String],
-    processing_time: Number
-  },
-  ubicacion: {
-    latitud: Number,
-    longitud: Number,
-    direccion: String,
-    tipo: {
-      type: String,
-      enum: ['stand', 'disposicion', 'unknown']
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'canjes',
+      key: 'id'
     }
   },
+  coupon_id: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'cupones',
+      key: 'id'
+    }
+  },
+  exchange_id: {
+    type: DataTypes.UUID,
+    allowNull: true,
+    references: {
+      model: 'canjes',
+      key: 'id'
+    }
+  },
+  image_path: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  validation_result: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  ubicacion: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
   metadata: {
-    conversationId: String,
-    platform: {
-      type: String,
-      default: 'whatsapp'
-    },
-    messageId: String,
-    deviceInfo: String,
-    appVersion: String,
-    processingDuration: Number,
-    imageSize: Number,
-    imageDimensions: {
-      width: Number,
-      height: Number
-    },
-    validationType: String,
-    attemptNumber: Number
+    type: DataTypes.JSONB,
+    allowNull: true
   },
   error_info: {
-    error_code: String,
-    error_message: String,
-    stack_trace: String
+    type: DataTypes.JSONB,
+    allowNull: true
   },
   activo: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
+}, {
+  tableName: 'trazabilidad',
+  timestamps: false,
+  indexes: [
+    {
+      fields: ['phoneNumber', 'timestamp']
+    },
+    {
+      fields: ['userId', 'timestamp']
+    },
+    {
+      fields: ['qr_code', 'timestamp']
+    },
+    {
+      fields: ['step', 'timestamp']
+    },
+    {
+      fields: ['canjeReciclajeId']
+    },
+    {
+      fields: ['timestamp']
+    }
+  ]
 });
 
-// Índices para optimizar consultas
-TrazabilidadSchema.index({ phoneNumber: 1, timestamp: -1 });
-TrazabilidadSchema.index({ userId: 1, timestamp: -1 });
-TrazabilidadSchema.index({ qr_code: 1, timestamp: -1 });
-TrazabilidadSchema.index({ step: 1, timestamp: -1 });
-TrazabilidadSchema.index({ canjeReciclajeId: 1 });
-TrazabilidadSchema.index({ timestamp: -1 });
-
 // Método estático para obtener trazabilidad de un usuario
-TrazabilidadSchema.statics.obtenerPorUsuario = async function(userId, limite = 50) {
-  return await this.find({ userId })
-    .sort({ timestamp: -1 })
-    .limit(limite)
-    .populate('coupon_id', 'nombre valor')
-    .populate('exchange_id', 'estado tokensGenerados')
-    .lean();
+Trazabilidad.obtenerPorUsuario = async function(userId, limite = 50) {
+  return await this.findAll({
+    where: { userId },
+    order: [['timestamp', 'DESC']],
+    limit: limite,
+    include: [
+      {
+        model: require('./cupon.model'),
+        as: 'coupon',
+        attributes: ['nombre', 'tokensRequeridos']
+      }
+    ]
+  });
 };
 
 // Método estático para obtener trazabilidad de un QR
-TrazabilidadSchema.statics.obtenerPorQR = async function(qrCode) {
-  return await this.find({ qr_code: qrCode })
-    .sort({ timestamp: -1 })
-    .populate('userId', 'nombre apellido telefono')
-    .populate('coupon_id', 'nombre valor')
-    .lean();
-};
-
-// Método estático para obtener estadísticas de trazabilidad
-TrazabilidadSchema.statics.obtenerEstadisticas = async function(fechaInicio, fechaFin) {
-  const filtros = {
-    timestamp: {
-      $gte: fechaInicio || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 días por defecto
-      $lte: fechaFin || new Date()
-    }
-  };
-
-  const pipeline = [
-    { $match: filtros },
-    {
-      $group: {
-        _id: {
-          step: '$step',
-          fecha: {
-            $dateToString: {
-              format: '%Y-%m-%d',
-              date: '$timestamp'
-            }
-          }
-        },
-        count: { $sum: 1 }
+Trazabilidad.obtenerPorQR = async function(qrCode) {
+  return await this.findAll({
+    where: { qr_code: qrCode },
+    order: [['timestamp', 'DESC']],
+    include: [
+      {
+        model: require('./usuario.model'),
+        as: 'user',
+        attributes: ['nombre', 'apellido', 'telefono']
+      },
+      {
+        model: require('./cupon.model'),
+        as: 'coupon',
+        attributes: ['nombre', 'tokensRequeridos']
       }
-    },
-    {
-      $group: {
-        _id: '$_id.step',
-        total: { $sum: '$count' },
-        porFecha: {
-          $push: {
-            fecha: '$_id.fecha',
-            count: '$count'
-          }
-        }
-      }
-    }
-  ];
-
-  return await this.aggregate(pipeline);
+    ]
+  });
 };
 
 // Método estático para registrar evento de trazabilidad
-TrazabilidadSchema.statics.registrarEvento = async function(datos) {
+Trazabilidad.registrarEvento = async function(datos) {
   try {
-    const evento = new this(datos);
-    return await evento.save();
+    return await this.create(datos);
   } catch (error) {
     console.error('Error registrando evento de trazabilidad:', error);
     throw error;
   }
 };
 
-const Trazabilidad = mongoose.model('Trazabilidad', TrazabilidadSchema);
 module.exports = Trazabilidad;
