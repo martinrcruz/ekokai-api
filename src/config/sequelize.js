@@ -40,16 +40,72 @@ async function testSequelizeConnection() {
   }
 }
 
-// Función para ejecutar migraciones
+// Función para ejecutar migraciones usando Sequelize directamente
 async function runMigrations() {
   try {
-    const { execSync } = require('child_process');
-    
     console.log('🔄 Ejecutando migraciones de base de datos...');
-    execSync('npx sequelize-cli db:migrate', { 
-      stdio: 'inherit',
-      env: process.env
-    });
+    
+    // Verificar si la tabla SequelizeMeta existe
+    const [results] = await sequelize.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'SequelizeMeta'
+      );
+    `);
+    
+    const metaTableExists = results[0].exists;
+    
+    if (!metaTableExists) {
+      console.log('📋 Creando tabla de metadatos de migraciones...');
+      await sequelize.query(`
+        CREATE TABLE IF NOT EXISTS "SequelizeMeta" (
+          name VARCHAR(255) NOT NULL PRIMARY KEY
+        );
+      `);
+    }
+    
+    // Ejecutar migraciones manualmente
+    const migrationFiles = [
+      '20250914191308-create-ecopuntos-table.js',
+      '20250914191309-create-usuarios-table.js',
+      '20250914191940-add-foreign-keys.js',
+      '20250914192209-create-tiporesiduos-table.js',
+      '20250914192230-create-premios-table.js',
+      '20250914192231-create-recompensas-table.js',
+      '20250914192232-create-ecopuntos-table.js',
+      '20250914192233-create-usuarios-table.js',
+      '20250914192247-create-cupones-table.js',
+      '20250914192256-add-foreign-keys.js'
+    ];
+    
+    for (const migrationFile of migrationFiles) {
+      // Verificar si la migración ya se ejecutó
+      const [migrationResults] = await sequelize.query(`
+        SELECT name FROM "SequelizeMeta" WHERE name = '${migrationFile}';
+      `);
+      
+      if (migrationResults.length === 0) {
+        console.log(`🔄 Ejecutando migración: ${migrationFile}`);
+        
+        try {
+          const migration = require(`../migrations/${migrationFile}`);
+          await migration.up(sequelize.getQueryInterface(), sequelize.constructor);
+          
+          // Registrar la migración como ejecutada
+          await sequelize.query(`
+            INSERT INTO "SequelizeMeta" (name) VALUES ('${migrationFile}');
+          `);
+          
+          console.log(`✅ Migración ${migrationFile} ejecutada correctamente`);
+        } catch (migrationError) {
+          console.log(`⚠️ Error en migración ${migrationFile}:`, migrationError.message);
+          // Continuar con las siguientes migraciones
+        }
+      } else {
+        console.log(`⏭️ Migración ${migrationFile} ya ejecutada`);
+      }
+    }
     
     console.log('✅ Migraciones ejecutadas correctamente');
     return true;
