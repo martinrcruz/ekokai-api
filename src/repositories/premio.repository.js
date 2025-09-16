@@ -20,15 +20,15 @@ const eliminarPremio = async (id) => {
 // Nuevos métodos para el catálogo
 const listarPremiosActivos = async () => await Premio.findAll({
   where: { activo: true },
-  order: [['orden', 'ASC'], ['nombre', 'ASC']]
+  order: [['nombre', 'ASC']]
 });
 const listarPremiosPorCategoria = async (categoria) => await Premio.findAll({
   where: { activo: true, categoria },
-  order: [['orden', 'ASC'], ['nombre', 'ASC']]
+  order: [['nombre', 'ASC']]
 });
 const listarPremiosDestacados = async () => await Premio.findAll({
   where: { activo: true, destacado: true },
-  order: [['orden', 'ASC'], ['nombre', 'ASC']]
+  order: [['nombre', 'ASC']]
 });
 const buscarPremios = async (searchTerm) => {
   const { Op } = require('sequelize');
@@ -41,7 +41,7 @@ const buscarPremios = async (searchTerm) => {
         { categoria: { [Op.iLike]: `%${searchTerm}%` } }
       ]
     },
-    order: [['orden', 'ASC'], ['nombre', 'ASC']]
+    order: [['nombre', 'ASC']]
   });
 };
 const obtenerPremioPorId = async (id) => await Premio.findByPk(id);

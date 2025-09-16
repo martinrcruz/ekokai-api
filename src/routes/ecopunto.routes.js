@@ -250,20 +250,19 @@ router.post('/', async (req, res) => {
   try {
     console.log('📥 [ROUTE] POST /api/ecopunto - Creando nuevo ecopunto:', req.body);
     
-    const { nombre, direccion, zona, horarioApertura, horarioCierre, capacidadMaxima, descripcion, activo } = req.body;
+    const { nombre, direccion, horarioApertura, horarioCierre, capacidadMaxima, descripcion, activo } = req.body;
     
     // Validar datos requeridos
-    if (!nombre || !direccion || !zona) {
+    if (!nombre || !direccion) {
       return res.status(400).json({
         success: false,
-        message: 'Faltan datos requeridos: nombre, direccion, zona'
+        message: 'Faltan datos requeridos: nombre, direccion'
       });
     }
     
     const datosEcopunto = {
       nombre,
       direccion,
-      zona,
       horarioApertura: horarioApertura || '08:00',
       horarioCierre: horarioCierre || '20:00',
       capacidadMaxima: capacidadMaxima || 1000,
@@ -303,20 +302,19 @@ router.put('/:id', async (req, res) => {
     console.log('📋 [ROUTE] Datos de actualización:', req.body);
     
     const { id } = req.params;
-    const { nombre, direccion, zona, horarioApertura, horarioCierre, capacidadMaxima, descripcion, activo, encargadoId } = req.body;
+    const { nombre, direccion, horarioApertura, horarioCierre, capacidadMaxima, descripcion, activo, encargadoId } = req.body;
     
     // Validar datos requeridos
-    if (!nombre || !direccion || !zona) {
+    if (!nombre || !direccion) {
       return res.status(400).json({
         success: false,
-        message: 'Faltan datos requeridos: nombre, direccion, zona'
+        message: 'Faltan datos requeridos: nombre, direccion'
       });
     }
     
     const datosActualizacion = {
       nombre,
       direccion,
-      zona,
       horarioApertura: horarioApertura || '08:00',
       horarioCierre: horarioCierre || '20:00',
       capacidadMaxima: capacidadMaxima || 1000,

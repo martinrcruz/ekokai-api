@@ -10,7 +10,6 @@ const Recompensa = sequelize.define('Recompensa', {
   codigo: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true,
     comment: 'Código único de la recompensa'
   },
   nombre: {

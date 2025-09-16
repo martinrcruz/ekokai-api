@@ -133,7 +133,6 @@ module.exports = {
     const ecopuntoData = {
       nombre: data.nombre,
       direccion: data.direccion,
-      zona: data.zona,
       descripcion: data.descripcion || '',
       horarioApertura: data.horarioApertura || '08:00',
       horarioCierre: data.horarioCierre || '20:00',

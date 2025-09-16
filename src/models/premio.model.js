@@ -22,14 +22,15 @@ const Premio = sequelize.define('Premio', {
     }
   },
   imagen: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT, // Cambiado a TEXT para soportar imágenes base64 largas
     allowNull: true
   },
   cuponesRequeridos: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 1, // Valor por defecto de 1 cupón
     validate: {
-      min: 0
+      min: 1 // Mínimo 1 cupón
     }
   },
   stock: {
@@ -55,10 +56,6 @@ const Premio = sequelize.define('Premio', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
-  orden: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  }
 }, {
   tableName: 'premios',
   timestamps: true,
@@ -72,9 +69,6 @@ const Premio = sequelize.define('Premio', {
     {
       fields: ['destacado']
     },
-    {
-      fields: ['orden']
-    }
   ]
 });
 

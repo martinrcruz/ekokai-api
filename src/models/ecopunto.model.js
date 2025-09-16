@@ -15,10 +15,6 @@ const Ecopunto = sequelize.define('Ecopunto', {
     type: DataTypes.STRING, 
     allowNull: false 
   },
-  zona: { 
-    type: DataTypes.STRING, 
-    allowNull: false 
-  },
   descripcion: { 
     type: DataTypes.TEXT, 
     defaultValue: '' 
@@ -30,10 +26,6 @@ const Ecopunto = sequelize.define('Ecopunto', {
   horarioCierre: { 
     type: DataTypes.STRING, 
     defaultValue: '20:00' 
-  },
-  capacidadMaxima: { 
-    type: DataTypes.INTEGER, 
-    defaultValue: 1000 
   },
   encargadoId: { 
     type: DataTypes.UUID,

@@ -89,7 +89,7 @@ const Trazabilidad = sequelize.define('Trazabilidad', {
   }
 }, {
   tableName: 'trazabilidad',
-  timestamps: false,
+  timestamps: true,
   indexes: [
     {
       fields: ['phoneNumber', 'timestamp']

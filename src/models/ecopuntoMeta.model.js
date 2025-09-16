@@ -30,29 +30,16 @@ const EcopuntoMeta = sequelize.define('EcopuntoMeta', {
   objetivoKg: { 
     type: DataTypes.DECIMAL(10, 2), 
     allowNull: false 
-  },
-  creadoEn: { 
-    type: DataTypes.DATE, 
-    defaultValue: DataTypes.NOW 
-  },
-  actualizadoEn: { 
-    type: DataTypes.DATE, 
-    defaultValue: DataTypes.NOW 
   }
 }, {
   tableName: 'ecopunto_metas',
-  timestamps: false,
+  timestamps: true,
   indexes: [
     {
       unique: true,
       fields: ['ecopuntoId', 'year', 'month']
     }
-  ],
-  hooks: {
-    beforeUpdate: (meta) => {
-      meta.actualizadoEn = new Date();
-    }
-  }
+  ]
 });
 
 module.exports = EcopuntoMeta;

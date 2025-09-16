@@ -78,7 +78,7 @@ const CanjeReciclaje = sequelize.define('CanjeReciclaje', {
   }
 }, {
   tableName: 'canjes_reciclaje',
-  timestamps: false,
+  timestamps: true,
   indexes: [
     {
       fields: ['usuarioId', 'fechaInicio']

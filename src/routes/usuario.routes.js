@@ -73,6 +73,8 @@ router.get('/buscar-telefono', async (req, res) => {
   try {
     const { telefono } = req.query;
     
+    console.log('🔍 [buscar-telefono] Buscando usuario con teléfono:', telefono);
+    
     if (!telefono) {
       return res.status(400).json({
         success: false,
@@ -81,7 +83,9 @@ router.get('/buscar-telefono', async (req, res) => {
     }
 
     const Usuario = require('../models/usuario.model');
-    const usuario = await Usuario.findOne({ telefono: telefono });
+    const usuario = await Usuario.findOne({ where: { telefono: telefono } });
+    
+    console.log('🔍 [buscar-telefono] Usuario encontrado:', usuario ? `${usuario.nombre} ${usuario.apellido}` : 'No encontrado');
 
     if (!usuario) {
       return res.status(404).json({
@@ -92,7 +96,7 @@ router.get('/buscar-telefono', async (req, res) => {
 
     // No devolver información sensible
     const usuarioLimpio = {
-      _id: usuario._id,
+      id: usuario.id,
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       telefono: usuario.telefono,
@@ -101,7 +105,7 @@ router.get('/buscar-telefono', async (req, res) => {
       rol: usuario.rol,
       activo: usuario.activo,
       createdAt: usuario.createdAt,
-      ultimaConexion: usuario.ultimaConexion
+      updatedAt: usuario.updatedAt
     };
 
     res.json({

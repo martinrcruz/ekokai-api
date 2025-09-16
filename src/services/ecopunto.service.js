@@ -1,17 +1,15 @@
 const ecopuntoRepo = require('../repositories/ecopunto.repository');
 const usuarioRepo = require('../repositories/usuario.repository');
 
-const crearEcopunto = async ({ nombre, direccion, zona, descripcion, horarioApertura, horarioCierre, capacidadMaxima, activo, encargadoId }) => {
+const crearEcopunto = async ({ nombre, direccion, descripcion, horarioApertura, horarioCierre, activo, encargadoId }) => {
     console.log('🟡 [SERVICE] → Iniciando creación de ecopunto...');
   
     const nuevo = {
       nombre,
       direccion,
-      zona,
       descripcion: descripcion || '',
       horarioApertura: horarioApertura || '08:00',
       horarioCierre: horarioCierre || '20:00',
-      capacidadMaxima: capacidadMaxima || 1000,
       activo: activo !== undefined ? activo : true,
       // solo asigna si viene el encargadoId
       ...(encargadoId && { encargado: encargadoId })

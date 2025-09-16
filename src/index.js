@@ -1,27 +1,12 @@
 require('dotenv').config();
-const { testSequelizeConnection, runMigrations, runSeeders, syncSequelizeModels } = require('./config/sequelize');
+const { sequelize } = require('./config/sequelize');
 
 const startServer = async () => {
   try {
     // Conectar a PostgreSQL
     console.log('🔄 Conectando a PostgreSQL...');
-    await testSequelizeConnection();
+    await sequelize.authenticate();
     console.log('✅ Conexión a PostgreSQL establecida');
-    
-    // Ejecutar migraciones
-    console.log('🔄 Ejecutando migraciones...');
-    const migrationsSuccess = await runMigrations();
-    
-    if (!migrationsSuccess) {
-      console.log('⚠️ Fallback a sincronización de modelos...');
-      await syncSequelizeModels();
-    }
-    console.log('✅ Base de datos configurada correctamente');
-    
-    // Ejecutar seeders
-    console.log('🌱 Ejecutando seeders...');
-    await runSeeders();
-    console.log('✅ Datos iniciales cargados correctamente');
     
     // Importar todos los modelos ANTES de cargar app.js
     console.log('📚 Importando modelos de Sequelize...');

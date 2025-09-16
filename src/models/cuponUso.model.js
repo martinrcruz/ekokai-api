@@ -41,7 +41,7 @@ const CuponUso = sequelize.define('CuponUso', {
   }
 }, {
   tableName: 'cupon_usos',
-  timestamps: false
+  timestamps: true
 });
 
 module.exports = CuponUso;

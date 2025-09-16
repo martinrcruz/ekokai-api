@@ -93,6 +93,8 @@ ekokai-backend/
 
 - `scripts/crearAdmin.js`: Crea un usuario administrador inicial.
 - `scripts/get-access-token.js`: Obtiene un access token para Dialogflow (útil para pruebas de integración).
+- `migrate-frontend-changes.js`: Migra cambios del frontend (elimina campos zona/capacidadMaxima de ecopuntos, actualiza premios).
+- `test-frontend-integration.js`: Prueba la integración con cambios del frontend.
 
 ## Modelos Principales
 

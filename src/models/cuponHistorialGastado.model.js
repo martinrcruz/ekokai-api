@@ -41,7 +41,7 @@ const CuponHistorialGastado = sequelize.define('CuponHistorialGastado', {
   }
 }, {
   tableName: 'cupon_historial_gastados',
-  timestamps: false,
+  timestamps: true,
   indexes: [
     {
       fields: ['cuponMonedaId', 'fecha']

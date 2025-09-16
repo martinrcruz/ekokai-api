@@ -61,7 +61,7 @@ const Canje = sequelize.define('Canje', {
   }
 }, {
   tableName: 'canjes',
-  timestamps: false,
+  timestamps: true,
   indexes: [
     {
       fields: ['cuponId', 'fechaCanje']

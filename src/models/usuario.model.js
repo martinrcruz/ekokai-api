@@ -65,7 +65,7 @@ const Usuario = sequelize.define('Usuario', {
     type: DataTypes.UUID,
     allowNull: true,
     references: {
-      model: 'Ecopuntos',
+      model: 'ecopuntos',
       key: 'id'
     }
   },

@@ -8,7 +8,7 @@ const CanjeRecompensa = sequelize.define('CanjeRecompensa', {
     autoIncrement: true
   },
   usuarioId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
       model: 'usuarios',
@@ -38,7 +38,6 @@ const CanjeRecompensa = sequelize.define('CanjeRecompensa', {
   codigoCanje: {
     type: DataTypes.STRING(20),
     allowNull: true,
-    unique: true,
     comment: 'Código único para presentar en el establecimiento'
   },
   estado: {
@@ -84,6 +83,7 @@ const CanjeRecompensa = sequelize.define('CanjeRecompensa', {
       fields: ['recompensaId']
     },
     {
+      unique: true,
       fields: ['codigoCanje']
     },
     {
