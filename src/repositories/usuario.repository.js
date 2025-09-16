@@ -7,12 +7,24 @@ const crearUsuario = async (datos) => {
   return await Usuario.create(datos);
 };
 
-const buscarUsuario = async ({ email, dni }) => {
-  console.log('🔎 [REPOSITORY] Buscando usuario con email o dni:', email, dni);
+const buscarUsuario = async ({ email, dni, telefono }) => {
+  console.log('🔎 [REPOSITORY] Buscando usuario con email, dni o telefono:', email, dni, telefono);
   const { Op } = require('sequelize');
+  
+  // Construir condiciones dinámicamente solo para valores definidos
+  const conditions = [];
+  if (email) conditions.push({ email });
+  if (dni) conditions.push({ dni });
+  if (telefono) conditions.push({ telefono });
+  
+  if (conditions.length === 0) {
+    console.log('❌ [REPOSITORY] No se proporcionaron criterios de búsqueda válidos');
+    return null;
+  }
+  
   return await Usuario.findOne({
     where: {
-      [Op.or]: [{ email }, { dni }]
+      [Op.or]: conditions
     }
   });
 };

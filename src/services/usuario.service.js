@@ -73,6 +73,7 @@ const crearUsuario = async (datos) => {
   // Verificar si ya existe
   console.log('🔍 [SERVICE] Verificando si el usuario ya existe...');
   const existente = await usuarioRepo.buscarUsuario({ 
+    email: datos.email,
     dni: datos.dni, 
     telefono: datos.telefono 
   });
@@ -85,9 +86,8 @@ const crearUsuario = async (datos) => {
   const datosUsuario = {
     ...datos,
     rol: 'vecino',
-    tokens: 0,
+    tokensAcumulados: 0,
     activo: true,
-    fechaRegistro: new Date(),
     requiereCambioPassword: false // No necesita password para registro por QR
   };
   
@@ -105,10 +105,10 @@ const actualizarTokens = async (id, tokensGanados) => {
     throw new Error('Usuario no encontrado');
   }
   
-  const nuevosTokens = (usuario.tokens || 0) + tokensGanados;
-  const usuarioActualizado = await usuarioRepo.actualizarUsuario(id, { tokens: nuevosTokens });
+  const nuevosTokens = (usuario.tokensAcumulados || 0) + tokensGanados;
+  const usuarioActualizado = await usuarioRepo.actualizarUsuario(id, { tokensAcumulados: nuevosTokens });
   
-  console.log(`✅ [SERVICE] Tokens actualizados: ${usuario.tokens} → ${nuevosTokens}`);
+  console.log(`✅ [SERVICE] Tokens actualizados: ${usuario.tokensAcumulados} → ${nuevosTokens}`);
   
   return usuarioActualizado;
 };

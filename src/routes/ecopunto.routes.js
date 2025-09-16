@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ecopuntoRepo = require('../repositories/ecopunto.repository');
+const usuarioService = require('../services/usuario.service');
 
 const ecopuntoCtrl = require('../controllers/ecopunto.controller');
 // importa tu middleware de autenticación
@@ -134,9 +135,9 @@ router.post('/registrar', async (req, res) => {
       });
     }
     
-    console.log('✅ [ROUTE] Validación exitosa, llamando a registrarUsuarioDesdeEcopunto...');
+    console.log('✅ [ROUTE] Validación exitosa, llamando a usuarioService.crearUsuario...');
     
-    const usuario = await registrarUsuarioDesdeEcopunto({
+    const usuario = await usuarioService.crearUsuario({
       nombre,
       apellido,
       dni,
@@ -144,22 +145,32 @@ router.post('/registrar', async (req, res) => {
       email
     });
     
-    console.log('✅ [ROUTE] Usuario registrado exitosamente:', usuario._id);
+    console.log('✅ [ROUTE] Usuario registrado exitosamente:', usuario.id);
     
     res.status(201).json({
       success: true,
       message: 'Usuario registrado exitosamente',
       data: {
-        id: usuario._id,
+        id: usuario.id,
         nombre: usuario.nombre,
         telefono: usuario.telefono,
-        tokens: usuario.tokens
+        tokens: usuario.tokensAcumulados
       }
     });
     
   } catch (error) {
     console.error('[ERROR] Error en registro desde ecopunto:', error);
     console.error('[ERROR] Stack trace:', error.stack);
+    
+    // Manejar errores específicos
+    if (error.message.includes('Usuario ya existe')) {
+      return res.status(409).json({
+        success: false,
+        message: 'Ya tienes una cuenta registrada con esos datos',
+        error: 'Usuario ya registrado'
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Error interno del servidor',
