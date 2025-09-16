@@ -53,7 +53,7 @@ function checkRoute(path, modulePath) {
 // Rutas
 // ======================
 app.use('/auth', checkRoute('/auth', './routes/auth.routes'));
-app.use('/usuarios', checkRoute('/usuarios', './routes/usuario.routes.test'));
+app.use('/usuarios', checkRoute('/usuarios', './routes/usuario.routes'));
 app.use('/ecopuntos', checkRoute('/ecopuntos', './routes/ecopunto.routes'));
 app.use('/entregas', checkRoute('/entregas', './routes/entregaresiduo.routes'));
 app.use('/tipos-residuo', checkRoute('/tipos-residuo', './routes/tiporesiduo.routes'));
