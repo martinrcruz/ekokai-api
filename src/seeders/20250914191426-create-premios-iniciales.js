@@ -15,8 +15,8 @@ module.exports = {
         activo: true,
         destacado: true,
         orden: 1,
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -31,8 +31,8 @@ module.exports = {
         activo: true,
         destacado: false,
         orden: 2,
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -47,8 +47,8 @@ module.exports = {
         activo: true,
         destacado: true,
         orden: 3,
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -63,8 +63,8 @@ module.exports = {
         activo: true,
         destacado: false,
         orden: 4,
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -79,8 +79,8 @@ module.exports = {
         activo: true,
         destacado: false,
         orden: 5,
-        createdDate: new Date(),
-        updatedDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       }

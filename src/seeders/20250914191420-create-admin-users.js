@@ -22,8 +22,6 @@ module.exports = {
         tokensAcumulados: 0,
         activo: true,
         requiereCambioPassword: false,
-        fechaCreacion: new Date(),
-        ultimaModificacion: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -41,8 +39,6 @@ module.exports = {
         tokensAcumulados: 0,
         activo: true,
         requiereCambioPassword: false,
-        fechaCreacion: new Date(),
-        ultimaModificacion: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       }

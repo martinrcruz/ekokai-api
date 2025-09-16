@@ -15,7 +15,7 @@ module.exports = {
         capacidadMaxima: 1000,
         encargadoId: '00000000-0000-0000-0000-000000000001',
         activo: true,
-        fechaCreacion: new Date(),
+        createdAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -30,7 +30,7 @@ module.exports = {
         capacidadMaxima: 800,
         encargadoId: '00000000-0000-0000-0000-000000000002',
         activo: true,
-        fechaCreacion: new Date(),
+        createdAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -45,7 +45,7 @@ module.exports = {
         capacidadMaxima: 1200,
         encargadoId: null,
         activo: true,
-        fechaCreacion: new Date(),
+        createdAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -60,7 +60,7 @@ module.exports = {
         capacidadMaxima: 600,
         encargadoId: null,
         activo: true,
-        fechaCreacion: new Date(),
+        createdAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       }

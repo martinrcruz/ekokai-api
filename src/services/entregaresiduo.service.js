@@ -27,7 +27,6 @@ const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, 
     descripcion: `Cupón generado por reciclaje de ${pesoKg}kg de ${tipo.nombre}`,
     cantidadDisponible: cuponesGenerados,
     activo: true,
-    fechaCreacion: new Date(),
     fechaVencimiento: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 año
     tipo: 'reciclaje',
     pesoGenerador: pesoKg,

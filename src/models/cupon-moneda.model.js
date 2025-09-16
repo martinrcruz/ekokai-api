@@ -27,10 +27,6 @@ const CuponMoneda = sequelize.define('CuponMoneda', {
   activo: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
-  },
-  fechaUltimaActualizacion: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
   }
 }, {
   tableName: 'cupon_monedas',

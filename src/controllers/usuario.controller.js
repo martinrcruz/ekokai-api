@@ -98,7 +98,6 @@ const registroVecinoWhatsApp = async (req, res) => {
       rol: 'vecino',
       tokensAcumulados: 0,
       activo: true,
-      fechaCreacion: new Date(),
       registroAutomatico: true,
       fuente: 'whatsapp_dni'
     };

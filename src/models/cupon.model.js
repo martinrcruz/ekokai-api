@@ -71,8 +71,6 @@ const Cupon = sequelize.define('Cupon', {
 }, {
   tableName: 'cupones',
   timestamps: true,
-  createdAt: 'fechaCreacion',
-  updatedAt: 'updatedAt',
   hooks: {
     beforeCreate: async (cupon) => {
       if (!cupon.codigo) {

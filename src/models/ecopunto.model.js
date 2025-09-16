@@ -49,9 +49,7 @@ const Ecopunto = sequelize.define('Ecopunto', {
   }
 }, {
   tableName: 'ecopuntos',
-  timestamps: true,
-  createdAt: 'fechaCreacion',
-  updatedAt: 'updatedAt'
+  timestamps: true
 });
 
 module.exports = Ecopunto;

@@ -138,7 +138,7 @@ async function runSeeders() {
       INSERT INTO usuarios (
         id, rol, nombre, apellido, email, password, telefono, pais, zona, 
         direccion, "tokensAcumulados", activo, "requiereCambioPassword", 
-        "fechaCreacion", "ultimaModificacion", "createdAt", "updatedAt"
+        "createdAt", "updatedAt"
       ) VALUES 
       (
         '00000000-0000-0000-0000-000000000001',

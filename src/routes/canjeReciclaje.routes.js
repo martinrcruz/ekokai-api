@@ -177,7 +177,7 @@ router.get('/reciclaje/:id', auth, async (req, res) => {
   try {
     const canje = await CanjeReciclaje.findById(req.params.id)
       .populate('usuarioId', 'nombre apellido telefono tokensAcumulados')
-      .populate('qrReciclajeId', 'codigo configuracion fechaCreacion')
+      .populate('qrReciclajeId', 'codigo configuracion createdAt')
       .populate('cuponGenerado', 'nombre valor fechaExpiracion descripcion');
 
     if (!canje) {

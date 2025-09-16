@@ -192,7 +192,7 @@ router.post('/generar-reciclaje', auth, async (req, res) => {
         codigo: codigo,
         imagen: `data:image/png;base64,${qrImageBase64}`,
         estado: qrReciclaje.estado,
-        fechaCreacion: qrReciclaje.fechaCreacion,
+        createdAt: qrReciclaje.createdAt,
         fechaExpiracion: qrReciclaje.fechaExpiracion,
         configuracion: qrReciclaje.configuracion
       },
@@ -293,7 +293,7 @@ router.post('/validar-reciclaje', async (req, res) => {
         id: qrReciclaje._id,
         codigo: qrReciclaje.codigo,
         configuracion: qrReciclaje.configuracion,
-        fechaCreacion: qrReciclaje.fechaCreacion,
+        createdAt: qrReciclaje.createdAt,
         fechaExpiracion: qrReciclaje.fechaExpiracion
       },
       usuario: {
@@ -361,9 +361,9 @@ router.get('/reciclaje', auth, async (req, res) => {
     if (usuarioCreador) filtros.usuarioCreador = usuarioCreador;
     
     if (fechaInicio || fechaFin) {
-      filtros.fechaCreacion = {};
-      if (fechaInicio) filtros.fechaCreacion.$gte = new Date(fechaInicio);
-      if (fechaFin) filtros.fechaCreacion.$lte = new Date(fechaFin);
+      filtros.createdAt = {};
+      if (fechaInicio) filtros.createdAt.$gte = new Date(fechaInicio);
+      if (fechaFin) filtros.createdAt.$lte = new Date(fechaFin);
     }
 
     const skip = (pagina - 1) * limite;
@@ -372,7 +372,7 @@ router.get('/reciclaje', auth, async (req, res) => {
       QRReciclaje.find(filtros)
         .populate('usuarioCreador', 'nombre apellido email')
         .populate('usuarioUso', 'nombre apellido telefono')
-        .sort({ fechaCreacion: -1 })
+        .sort({ createdAt: -1 })
         .limit(parseInt(limite))
         .skip(skip),
       QRReciclaje.countDocuments(filtros)
@@ -438,9 +438,9 @@ router.get('/estadisticas', auth, async (req, res) => {
     
     const filtros = {};
     if (fechaInicio || fechaFin) {
-      filtros.fechaCreacion = {};
-      if (fechaInicio) filtros.fechaCreacion.$gte = new Date(fechaInicio);
-      if (fechaFin) filtros.fechaCreacion.$lte = new Date(fechaFin);
+      filtros.createdAt = {};
+      if (fechaInicio) filtros.createdAt.$gte = new Date(fechaInicio);
+      if (fechaFin) filtros.createdAt.$lte = new Date(fechaFin);
     }
 
     const [estadisticasEstado, estadisticasUso] = await Promise.all([

@@ -100,7 +100,7 @@ router.get('/buscar-telefono', async (req, res) => {
       zona: usuario.zona,
       rol: usuario.rol,
       activo: usuario.activo,
-      fechaCreacion: usuario.fechaCreacion,
+      createdAt: usuario.createdAt,
       ultimaConexion: usuario.ultimaConexion
     };
 

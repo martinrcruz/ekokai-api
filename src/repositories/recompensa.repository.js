@@ -8,7 +8,7 @@ const obtenerDisponibles = async () => {
     where: {
       activo: true
     },
-    order: [['fechaCreacion', 'DESC']]
+    order: [['createdAt', 'DESC']]
   });
 };
 

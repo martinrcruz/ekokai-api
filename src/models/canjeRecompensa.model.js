@@ -72,24 +72,10 @@ const CanjeRecompensa = sequelize.define('CanjeRecompensa', {
     type: DataTypes.TEXT,
     allowNull: true,
     comment: 'Notas adicionales del canje'
-  },
-  fechaCreacion: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-    comment: 'Fecha de creación del registro'
-  },
-  fechaActualizacion: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-    comment: 'Fecha de última actualización'
   }
 }, {
   tableName: 'canjes_recompensa',
   timestamps: true,
-  createdAt: 'fechaCreacion',
-  updatedAt: 'fechaActualizacion',
   indexes: [
     {
       fields: ['usuarioId']

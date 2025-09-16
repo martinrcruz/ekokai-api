@@ -22,10 +22,6 @@ const QRReciclaje = sequelize.define('QRReciclaje', {
     defaultValue: 'activo',
     allowNull: false
   },
-  fechaCreacion: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW
-  },
   fechaExpiracion: {
     type: DataTypes.DATE,
     defaultValue: () => {
@@ -77,13 +73,13 @@ const QRReciclaje = sequelize.define('QRReciclaje', {
   }
 }, {
   tableName: 'qr_reciclajes',
-  timestamps: false,
+  timestamps: true,
   indexes: [
     {
       fields: ['codigo']
     },
     {
-      fields: ['estado', 'fechaCreacion']
+      fields: ['estado', 'createdAt']
     },
     {
       fields: ['usuarioUsoId', 'fechaUso']

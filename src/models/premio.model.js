@@ -62,8 +62,6 @@ const Premio = sequelize.define('Premio', {
 }, {
   tableName: 'premios',
   timestamps: true,
-  createdAt: 'createdDate',
-  updatedAt: 'updatedDate',
   indexes: [
     {
       fields: ['activo']

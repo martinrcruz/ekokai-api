@@ -60,7 +60,7 @@ const listarUsuarios = async (filtro = {}) => {
     const whereClause = filtro;
     const usuarios = await Usuario.findAll({ 
       where: whereClause,
-      order: [['fechaCreacion', 'DESC']]
+      order: [['createdAt', 'DESC']]
     });
     
     // Calcular kilos totales para cada usuario
@@ -127,7 +127,7 @@ const buscarUsuariosPorCriterios = async (query) => {
     // Obtener usuarios básicos con Sequelize
     const usuarios = await Usuario.findAll({ 
       where: query,
-      order: [['fechaCreacion', 'DESC']]
+      order: [['createdAt', 'DESC']]
     });
     
     // Calcular kilos totales para cada usuario

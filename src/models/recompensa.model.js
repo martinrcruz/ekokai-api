@@ -79,24 +79,10 @@ const Recompensa = sequelize.define('Recompensa', {
     type: DataTypes.TEXT,
     allowNull: true,
     comment: 'Términos y condiciones'
-  },
-  fechaCreacion: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-    comment: 'Fecha de creación del registro'
-  },
-  fechaActualizacion: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-    comment: 'Fecha de última actualización'
   }
 }, {
   tableName: 'recompensas',
   timestamps: true,
-  createdAt: 'fechaCreacion',
-  updatedAt: 'fechaActualizacion',
   indexes: [
     {
       unique: true,

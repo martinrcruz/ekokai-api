@@ -7,7 +7,7 @@ const crearCupon = async (data) => {
 
 const listarCupones = async () => {
   return await Cupon.findAll({
-    order: [['fechaCreacion', 'DESC']]
+    order: [['createdAt', 'DESC']]
   });
 };
 
@@ -34,7 +34,7 @@ const eliminarCupon = async (id) => {
 const listarCuponesActivos = async () => {
   return await Cupon.findAll({
     where: { activo: true },
-    order: [['fechaCreacion', 'DESC']]
+    order: [['createdAt', 'DESC']]
   });
 };
 
@@ -45,7 +45,7 @@ const buscarCuponesPorNombre = async (nombre) => {
       nombre: { [Op.iLike]: `%${nombre}%` },
       activo: true 
     },
-    order: [['fechaCreacion', 'DESC']]
+    order: [['createdAt', 'DESC']]
   });
 };
 
@@ -194,7 +194,7 @@ const obtenerCuponesDisponibles = async (usuarioId) => {
       activo: true,
       usado: false
     },
-    order: [['fechaCreacion', 'ASC']]
+    order: [['createdAt', 'ASC']]
   });
 };
 
@@ -222,7 +222,7 @@ const marcarComoUsado = async (cuponId) => {
 const buscarCuponesPorUsuario = async (usuarioId) => {
   return await Cupon.findAll({
     where: { usuarioId },
-    order: [['fechaCreacion', 'DESC']]
+    order: [['createdAt', 'DESC']]
   });
 };
 
