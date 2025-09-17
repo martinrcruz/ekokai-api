@@ -23,6 +23,7 @@ const CanjeRecompensa = require('./canjeRecompensa.model');
 const Trazabilidad = require('./trazabilidad.model');
 const CanjeReciclaje = require('./canjeReciclaje.model');
 const QRReciclaje = require('./qrReciclaje.model');
+const QRWhatsapp = require('./qrWhatsapp.model');
 
 // Definir asociaciones
 const defineAssociations = () => {
@@ -126,5 +127,6 @@ module.exports = {
   CanjeRecompensa,
   Trazabilidad,
   CanjeReciclaje,
-  QRReciclaje
+  QRReciclaje,
+  QRWhatsapp
 };

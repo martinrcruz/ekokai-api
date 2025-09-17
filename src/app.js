@@ -65,6 +65,7 @@ app.use('/canjes', checkRoute('/canjes-reciclaje', './routes/canjeReciclaje.rout
 app.use('/recompensas', checkRoute('/recompensas', './routes/recompensa.routes'));
 app.use('/premios', checkRoute('/premios', './routes/premio.routes'));
 app.use('/qr', checkRoute('/qr', './routes/qr.routes'));
+app.use('/qr-whatsapp', checkRoute('/qr-whatsapp', './routes/qrWhatsapp.routes'));
 app.use('/trazabilidad', checkRoute('/trazabilidad', './routes/trazabilidad.routes'));
 
 // Health check endpoint para Digital Ocean

@@ -1,0 +1,28 @@
+# Variables de entorno para PRODUCCIÓN - EKOKAI API
+# Copia este archivo como .env.production y configura los valores reales
+
+# Entorno
+NODE_ENV=production
+
+# Base de datos PostgreSQL de producción
+DB_HOST=tu-host-de-produccion.com
+DB_PORT=5432
+DB_NAME=ekokai_db_production
+DB_USERNAME=tu_usuario_db
+DB_PASSWORD=tu_password_db
+DB_SSL=true
+
+# Puerto del servidor
+PORT=8080
+
+# JWT Secret (debe ser único y seguro en producción)
+JWT_SECRET=tu_jwt_secret_super_seguro_aqui
+
+# Configuración adicional
+DB_POOL_MAX=10
+DB_POOL_MIN=2
+DB_POOL_ACQUIRE=30000
+DB_POOL_IDLE=10000
+
+# Para crear la tabla QR WhatsApp en producción, ejecuta:
+# NODE_ENV=production DB_HOST=tu-host DB_NAME=tu-db DB_USERNAME=tu-user DB_PASSWORD=tu-pass DB_SSL=true node scripts/create-qr-whatsapp-production-env.js

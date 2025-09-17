@@ -246,7 +246,13 @@ router.get('/status', (req, res) => {
 
 // POST /api/ecopunto
 // Crear un nuevo ecopunto
-router.post('/', async (req, res) => {
+router.post('/', 
+  logMW('POST / (pre-auth)'),
+  safeAuth,
+  logMW('POST / (post-auth)'),
+  safePermitirRolesFactory('administrador'),
+  logMW('POST / (post-roles)'),
+  async (req, res) => {
   try {
     console.log('📥 [ROUTE] POST /api/ecopunto - Creando nuevo ecopunto:', req.body);
     
@@ -292,11 +298,24 @@ router.post('/', async (req, res) => {
 
 // PATCH /api/ecopunto/:id/enrolar
 // Enrolar un encargado a un ecopunto
-router.patch('/:id/enrolar', enrolarEncargado);
+router.patch('/:id/enrolar', 
+  logMW('PATCH /:id/enrolar (pre-auth)'),
+  safeAuth,
+  logMW('PATCH /:id/enrolar (post-auth)'),
+  safePermitirRolesFactory('administrador'),
+  logMW('PATCH /:id/enrolar (post-roles)'),
+  enrolarEncargado
+);
 
 // PUT /api/ecopunto/:id
 // Editar un ecopunto existente
-router.put('/:id', async (req, res) => {
+router.put('/:id', 
+  logMW('PUT /:id (pre-auth)'),
+  safeAuth,
+  logMW('PUT /:id (post-auth)'),
+  safePermitirRolesFactory('administrador', 'encargado'),
+  logMW('PUT /:id (post-roles)'),
+  async (req, res) => {
   try {
     console.log('📝 [ROUTE] PUT /api/ecopunto/:id - Editando ecopunto:', req.params.id);
     console.log('📋 [ROUTE] Datos de actualización:', req.body);
@@ -356,42 +375,55 @@ router.put('/:id', async (req, res) => {
 
 // DELETE /api/ecopunto/:id
 // Eliminar un ecopunto
-router.delete('/:id', async (req, res) => {
-  try {
-    console.log('🗑️ [ROUTE] DELETE /api/ecopunto/:id - Eliminando ecopunto:', req.params.id);
-    
-    const { id } = req.params;
-    
-    const ecopuntoEliminado = await ecopuntoRepo.eliminarEcopunto(id);
-    
-    if (!ecopuntoEliminado) {
-      return res.status(404).json({
+router.delete('/:id', 
+  logMW('DELETE /:id (pre-auth)'),
+  safeAuth,
+  logMW('DELETE /:id (post-auth)'),
+  safePermitirRolesFactory('administrador'),
+  logMW('DELETE /:id (post-roles)'),
+  async (req, res) => {
+    try {
+      console.log('🗑️ [ROUTE] DELETE /api/ecopunto/:id - Eliminando ecopunto:', req.params.id);
+      
+      const { id } = req.params;
+      
+      const ecopuntoEliminado = await ecopuntoRepo.eliminarEcopunto(id);
+      
+      if (!ecopuntoEliminado) {
+        return res.status(404).json({
+          success: false,
+          message: 'Ecopunto no encontrado'
+        });
+      }
+      
+      console.log('✅ [ROUTE] Ecopunto eliminado exitosamente:', id);
+      
+      res.status(200).json({
+        success: true,
+        message: 'Ecopunto eliminado exitosamente',
+        data: ecopuntoEliminado
+      });
+      
+    } catch (err) {
+      console.error('❌ [ROUTE] Error al eliminar ecopunto:', err);
+      res.status(500).json({ 
         success: false,
-        message: 'Ecopunto no encontrado'
+        message: 'Error al eliminar ecopunto',
+        error: err.message 
       });
     }
-    
-    console.log('✅ [ROUTE] Ecopunto eliminado exitosamente:', id);
-    
-    res.status(200).json({
-      success: true,
-      message: 'Ecopunto eliminado exitosamente',
-      data: ecopuntoEliminado
-    });
-    
-  } catch (err) {
-    console.error('❌ [ROUTE] Error al eliminar ecopunto:', err);
-    res.status(500).json({ 
-      success: false,
-      message: 'Error al eliminar ecopunto',
-      error: err.message 
-    });
   }
-});
+);
 
 // GET /api/ecopunto
 // Listar todos los ecopuntos con detalles de encargado y vecinos
-router.get('/', async (req, res) => {
+router.get('/', 
+  logMW('GET / (pre-auth)'),
+  safeAuth,
+  logMW('GET / (post-auth)'),
+  safePermitirRolesFactory('administrador', 'encargado'),
+  logMW('GET / (post-roles)'),
+  async (req, res) => {
   try {
     console.log('📋 [ROUTE] GET /api/ecopunto - Listando ecopuntos con encargado y vecinos');
     const ecopuntos = await ecopuntoRepo.listarEcopuntosConDetalle();
