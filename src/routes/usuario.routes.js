@@ -21,53 +21,6 @@ router.get('/test-middleware', (req, res) => {
   res.json({ message: 'Ruta middleware funcionando', timestamp: new Date().toISOString() });
 });
 
-// Aplica JWT a todas las rutas
-router.use(authMiddleware);
-
-// ========================================
-// RUTAS ESPECÍFICAS (DEBEN IR PRIMERO)
-// ========================================
-
-// ✅ RUTA DE PRUEBA TEMPORAL
-router.get('/test-estado', (req, res) => {
-  console.log('🧪 [TEST] Ruta de prueba /test-estado accedida');
-  res.json({ message: 'Ruta de prueba funcionando', timestamp: new Date().toISOString() });
-});
-
-
-// ✅ RUTA DE PRUEBA TEMPORAL PARA HISTORIAL (SIN AUTENTICACIÓN)
-router.get('/test-historial/:usuarioId', async (req, res) => {
-  try {
-    console.log('🧪 [TEST] Ruta de prueba /test-historial accedida para usuario:', req.params.usuarioId);
-    const entregaService = require('../services/entregaresiduo.service');
-    const canjeService = require('../services/canje.service');
-    
-    const entregas = await entregaService.obtenerHistorialUsuario(req.params.usuarioId);
-    const canjes = await canjeService.obtenerHistorialCanjes(req.params.usuarioId);
-    
-    res.json({ 
-      message: 'Test de historial exitoso',
-      entregas, 
-      canjes,
-      timestamp: new Date().toISOString() 
-    });
-  } catch (error) {
-    console.error('❌ [TEST] Error en test-historial:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// ✅ RUTA DE PRUEBA PATCH TEMPORAL
-router.patch('/test-estado', (req, res) => {
-  console.log('🧪 [TEST] Ruta de prueba PATCH /test-estado accedida');
-  console.log('🧪 [TEST] Body recibido:', req.body);
-  res.json({ 
-    message: 'Ruta de prueba PATCH funcionando', 
-    body: req.body,
-    timestamp: new Date().toISOString() 
-  });
-});
-
 // GET /api/usuarios/buscar-telefono - Buscar usuario por número de teléfono (SIN AUTENTICACIÓN)
 router.get('/buscar-telefono', async (req, res) => {
   try {
@@ -126,6 +79,53 @@ router.get('/buscar-telefono', async (req, res) => {
 
 // ✅ REGISTRO DE VECINO DESDE WHATSAPP (SIN AUTENTICACIÓN) - DEBE IR ANTES DEL MIDDLEWARE
 router.post('/registro-vecino', usuarioCtrl.registroVecinoWhatsApp);
+
+// Aplica JWT a todas las rutas
+router.use(authMiddleware);
+
+// ========================================
+// RUTAS ESPECÍFICAS (DEBEN IR PRIMERO)
+// ========================================
+
+// ✅ RUTA DE PRUEBA TEMPORAL
+router.get('/test-estado', (req, res) => {
+  console.log('🧪 [TEST] Ruta de prueba /test-estado accedida');
+  res.json({ message: 'Ruta de prueba funcionando', timestamp: new Date().toISOString() });
+});
+
+
+// ✅ RUTA DE PRUEBA TEMPORAL PARA HISTORIAL (SIN AUTENTICACIÓN)
+router.get('/test-historial/:usuarioId', async (req, res) => {
+  try {
+    console.log('🧪 [TEST] Ruta de prueba /test-historial accedida para usuario:', req.params.usuarioId);
+    const entregaService = require('../services/entregaresiduo.service');
+    const canjeService = require('../services/canje.service');
+    
+    const entregas = await entregaService.obtenerHistorialUsuario(req.params.usuarioId);
+    const canjes = await canjeService.obtenerHistorialCanjes(req.params.usuarioId);
+    
+    res.json({ 
+      message: 'Test de historial exitoso',
+      entregas, 
+      canjes,
+      timestamp: new Date().toISOString() 
+    });
+  } catch (error) {
+    console.error('❌ [TEST] Error en test-historial:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ✅ RUTA DE PRUEBA PATCH TEMPORAL
+router.patch('/test-estado', (req, res) => {
+  console.log('🧪 [TEST] Ruta de prueba PATCH /test-estado accedida');
+  console.log('🧪 [TEST] Body recibido:', req.body);
+  res.json({ 
+    message: 'Ruta de prueba PATCH funcionando', 
+    body: req.body,
+    timestamp: new Date().toISOString() 
+  });
+});
 
 // ✅ BUSCAR VECINOS - DEBE IR ANTES DE CUALQUIER RUTA CON PARÁMETROS
 router.get('/buscar-vecinos', permitirRoles('administrador', 'encargado'), usuarioCtrl.buscarVecinos);
