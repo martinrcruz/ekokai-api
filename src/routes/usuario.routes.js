@@ -68,7 +68,7 @@ router.patch('/test-estado', (req, res) => {
   });
 });
 
-// GET /api/usuarios/buscar-telefono - Buscar usuario por número de teléfono
+// GET /api/usuarios/buscar-telefono - Buscar usuario por número de teléfono (SIN AUTENTICACIÓN)
 router.get('/buscar-telefono', async (req, res) => {
   try {
     const { telefono } = req.query;
@@ -124,14 +124,14 @@ router.get('/buscar-telefono', async (req, res) => {
   }
 });
 
+// ✅ REGISTRO DE VECINO DESDE WHATSAPP (SIN AUTENTICACIÓN) - DEBE IR ANTES DEL MIDDLEWARE
+router.post('/registro-vecino', usuarioCtrl.registroVecinoWhatsApp);
+
 // ✅ BUSCAR VECINOS - DEBE IR ANTES DE CUALQUIER RUTA CON PARÁMETROS
 router.get('/buscar-vecinos', permitirRoles('administrador', 'encargado'), usuarioCtrl.buscarVecinos);
 
 // ✅ REGISTRAR VECINO - DEBE IR ANTES DE CUALQUIER RUTA CON PARÁMETROS
 router.post('/registrar', permitirRoles('administrador','encargado'), usuarioCtrl.registrarVecino);
-
-// ✅ REGISTRO DE VECINO DESDE WHATSAPP (SIN AUTENTICACIÓN)
-router.post('/registro-vecino', usuarioCtrl.registroVecinoWhatsApp);
 
 // ✅ REGISTRAR ENCARGADO - DEBE IR ANTES DE CUALQUIER RUTA CON PARÁMETROS
 router.post('/registrar-encargado', permitirRoles('administrador'), usuarioCtrl.registrarConRol);
