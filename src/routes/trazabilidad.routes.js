@@ -99,7 +99,7 @@ router.get('/usuario/:userId', auth, async (req, res) => {
     if (step) filtros.step = step;
 
     const trazabilidad = await Trazabilidad.find(filtros)
-      .populate('coupon_id', 'nombre valor fechaExpiracion')
+      .populate('coupon_id', 'nombre tokensRequeridos fechaExpiracion')
       .populate('exchange_id', 'estado tokensGenerados')
       .sort({ timestamp: -1 })
       .limit(parseInt(limite));
@@ -151,7 +151,7 @@ router.get('/phone/:phoneNumber', async (req, res) => {
 
     const trazabilidad = await Trazabilidad.find(filtros)
       .populate('userId', 'nombre apellido email')
-      .populate('coupon_id', 'nombre valor fechaExpiracion')
+      .populate('coupon_id', 'nombre tokensRequeridos fechaExpiracion')
       .populate('exchange_id', 'estado tokensGenerados')
       .sort({ timestamp: -1 })
       .limit(parseInt(limite));
@@ -238,7 +238,7 @@ router.get('/canje/:canjeId', auth, async (req, res) => {
 
     const trazabilidad = await Trazabilidad.find({ canjeReciclajeId: canjeId })
       .populate('userId', 'nombre apellido telefono')
-      .populate('coupon_id', 'nombre valor')
+      .populate('coupon_id', 'nombre tokensRequeridos')
       .sort({ timestamp: 1 }); // Orden cronológico
 
     res.json({
@@ -374,6 +374,165 @@ router.get('/estadisticas', auth, async (req, res) => {
   }
 });
 
+// GET /api/trazabilidad/reciclaje/sesiones - Obtener sesiones de reciclaje con trazabilidad completa
+router.get('/reciclaje/sesiones', auth, async (req, res) => {
+  try {
+    const {
+      phoneNumber,
+      userId,
+      qrCode,
+      estado,
+      fechaInicio,
+      fechaFin,
+      limite = 50,
+      pagina = 1
+    } = req.query;
+
+    // Construir filtros para eventos de trazabilidad
+    const filtrosEventos = {};
+    
+    if (phoneNumber) filtrosEventos.phoneNumber = phoneNumber;
+    if (userId) filtrosEventos.userId = userId;
+    if (qrCode) filtrosEventos.qr_code = qrCode;
+    
+    if (fechaInicio || fechaFin) {
+      const { Op } = require('sequelize');
+      filtrosEventos.timestamp = {};
+      if (fechaInicio) filtrosEventos.timestamp[Op.gte] = new Date(fechaInicio);
+      if (fechaFin) filtrosEventos.timestamp[Op.lte] = new Date(fechaFin);
+    }
+
+    // Obtener eventos relacionados con reciclaje
+    const eventos = await Trazabilidad.findAll({
+      where: filtrosEventos,
+      include: [
+        {
+          model: require('../models/usuario.model'),
+          as: 'user',
+          attributes: ['nombre', 'apellido', 'telefono']
+        },
+        {
+          model: require('../models/cupon.model'),
+          as: 'coupon',
+          attributes: ['nombre', 'tokensRequeridos', 'fechaExpiracion']
+        }
+      ],
+      order: [['timestamp', 'ASC']] // Orden cronológico
+    });
+
+    // Procesar eventos para crear sesiones de reciclaje
+    const sesionesMap = new Map();
+    
+    eventos.forEach(evento => {
+      const sessionKey = evento.phoneNumber + '_' + (evento.qr_code || 'sin_qr');
+      
+      if (!sesionesMap.has(sessionKey)) {
+        sesionesMap.set(sessionKey, {
+          sessionId: sessionKey,
+          phoneNumber: evento.phoneNumber,
+          userId: evento.userId,
+          qrCode: evento.qr_code,
+          estado: determinarEstado(evento.step),
+          fechaInicio: evento.timestamp,
+          fechaCompletado: null,
+          intentos: [],
+          tokensGenerados: 0,
+          cuponGeneradoId: null,
+          ubicacion: evento.ubicacion,
+          metadata: evento.metadata,
+          eventos: []
+        });
+      }
+
+      const sesion = sesionesMap.get(sessionKey);
+      sesion.eventos.push(evento);
+
+      // Agregar intento si es una imagen
+      if (evento.step.includes('image') && evento.image_path) {
+        const numeroIntento = sesion.intentos.length + 1;
+        sesion.intentos.push({
+          numeroIntento,
+          timestamp: evento.timestamp,
+          image_path: evento.image_path,
+          validation_result: evento.validation_result,
+          error_info: evento.error_info
+        });
+      }
+
+      // Actualizar estado y fecha de completado
+      if (evento.step === 'exchange_completed') {
+        sesion.estado = 'completado';
+        sesion.fechaCompletado = evento.timestamp;
+        sesion.tokensGenerados = evento.metadata?.tokensGenerados || 0;
+        sesion.cuponGeneradoId = evento.coupon_id;
+      } else if (evento.step === 'error_occurred') {
+        sesion.estado = 'fallido';
+        sesion.fechaCompletado = evento.timestamp;
+      }
+    });
+
+    // Convertir a array y aplicar filtros adicionales
+    let sesiones = Array.from(sesionesMap.values());
+    
+    if (estado) {
+      sesiones = sesiones.filter(s => s.estado === estado);
+    }
+
+    // Ordenar por fecha más reciente
+    sesiones.sort((a, b) => new Date(b.fechaInicio).getTime() - new Date(a.fechaInicio).getTime());
+
+    // Paginación
+    const skip = (pagina - 1) * limite;
+    const sesionesPaginadas = sesiones.slice(skip, skip + parseInt(limite));
+
+    // Estadísticas
+    const estadisticas = {
+      totalSesiones: sesiones.length,
+      sesionesExitosas: sesiones.filter(s => s.estado === 'completado').length,
+      sesionesFallidas: sesiones.filter(s => s.estado === 'fallido').length,
+      sesionesIniciadas: sesiones.filter(s => s.estado === 'iniciado').length,
+      usuariosUnicos: new Set(sesiones.map(s => s.userId).filter(Boolean)).size,
+      telefonosUnicos: new Set(sesiones.map(s => s.phoneNumber)).size,
+      tasaExito: sesiones.length > 0 ? 
+        Math.round((sesiones.filter(s => s.estado === 'completado').length / sesiones.length) * 100) : 0
+    };
+
+    res.json({
+      success: true,
+      data: sesionesPaginadas,
+      estadisticas,
+      pagination: {
+        total: sesiones.length,
+        pagina: parseInt(pagina),
+        limite: parseInt(limite),
+        totalPaginas: Math.ceil(sesiones.length / limite)
+      }
+    });
+
+  } catch (error) {
+    console.error('Error obteniendo sesiones de reciclaje:', error);
+    res.status(500).json({
+      success: false,
+      mensaje: 'Error obteniendo sesiones de reciclaje',
+      error: error.message
+    });
+  }
+});
+
+// Función auxiliar para determinar estado
+function determinarEstado(step) {
+  switch (step) {
+    case 'first_image_validated':
+      return 'primera_imagen_validada';
+    case 'exchange_completed':
+      return 'completado';
+    case 'error_occurred':
+      return 'fallido';
+    default:
+      return 'iniciado';
+  }
+}
+
 // GET /api/trazabilidad/eventos - Listar todos los eventos con filtros
 router.get('/eventos', auth, async (req, res) => {
   try {
@@ -406,7 +565,7 @@ router.get('/eventos', auth, async (req, res) => {
     const [eventos, total] = await Promise.all([
       Trazabilidad.find(filtros)
         .populate('userId', 'nombre apellido telefono')
-        .populate('coupon_id', 'nombre valor')
+        .populate('coupon_id', 'nombre tokensRequeridos')
         .populate('exchange_id', 'estado tokensGenerados')
         .sort({ timestamp: -1 })
         .limit(parseInt(limite))

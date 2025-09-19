@@ -79,6 +79,10 @@ const defineAssociations = () => {
   Usuario.hasMany(Trazabilidad, { foreignKey: 'userId', as: 'trazabilidad' });
   Trazabilidad.belongsTo(Usuario, { foreignKey: 'userId', as: 'user' });
 
+  // Cupon - Trazabilidad (One-to-Many)
+  Cupon.hasMany(Trazabilidad, { foreignKey: 'coupon_id', as: 'trazabilidad' });
+  Trazabilidad.belongsTo(Cupon, { foreignKey: 'coupon_id', as: 'coupon' });
+
   // Usuario - CanjeReciclaje (One-to-Many)
   Usuario.hasMany(CanjeReciclaje, { foreignKey: 'usuarioId', as: 'canjesReciclaje' });
   CanjeReciclaje.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'usuario' });
