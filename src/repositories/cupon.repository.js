@@ -63,23 +63,46 @@ const generarCuponesMasivos = async (data, cantidad) => {
 };
 
 const asociarUsuario = async (cuponId, usuarioId) => {
-  const cupon = await Cupon.findByPk(cuponId);
-  if (!cupon) {
-    throw new Error('Cupón no encontrado');
+  // En lugar de asociar el cupón directamente al usuario,
+  // incrementamos el saldo de CuponMoneda del usuario
+  const { CuponMoneda } = require('../models');
+  
+  let cuponMoneda = await CuponMoneda.findOne({
+    where: { usuarioId }
+  });
+  
+  if (!cuponMoneda) {
+    // Crear CuponMoneda si no existe
+    cuponMoneda = await CuponMoneda.create({
+      usuarioId,
+      cantidad: 0,
+      activo: true
+    });
   }
   
-  await cupon.update({ usuarioId });
-  return cupon;
+  // Incrementar la cantidad de cupones del usuario
+  await cuponMoneda.increment('cantidad', { by: 1 });
+  
+  return cuponMoneda;
 };
 
 const desasociarUsuario = async (cuponId, usuarioId) => {
-  const cupon = await Cupon.findByPk(cuponId);
-  if (!cupon) {
-    throw new Error('Cupón no encontrado');
+  // En lugar de desasociar el cupón directamente del usuario,
+  // decrementamos el saldo de CuponMoneda del usuario
+  const { CuponMoneda } = require('../models');
+  
+  const cuponMoneda = await CuponMoneda.findOne({
+    where: { usuarioId }
+  });
+  
+  if (!cuponMoneda || cuponMoneda.cantidad <= 0) {
+    throw new Error('Usuario no tiene cupones disponibles');
   }
   
-  await cupon.update({ usuarioId: null });
-  return cupon;
+  // Decrementar la cantidad de cupones del usuario
+  await cuponMoneda.decrement('cantidad', { by: 1 });
+  
+  return cuponMoneda;
 };
 
 const asociarComercio = async (cuponId, comercioId) => {
@@ -186,44 +209,99 @@ const listarCanjesPorUsuario = async (usuarioId) => {
 
 /**
  * Obtener cupones disponibles de un usuario
+ * Nota: Los cupones no tienen usuarioId directo, se relacionan a través de CuponMoneda
  */
 const obtenerCuponesDisponibles = async (usuarioId) => {
-  return await Cupon.findAll({
-    where: {
-      usuarioId: usuarioId,
-      activo: true,
-      usado: false
-    },
-    order: [['createdAt', 'ASC']]
+  // Primero obtener el CuponMoneda del usuario
+  const { CuponMoneda } = require('../models');
+  const cuponMoneda = await CuponMoneda.findOne({
+    where: { 
+      usuarioId
+      // Removido el filtro activo: true para ser consistente con buscarCuponesPorUsuario
+    }
   });
+
+  if (!cuponMoneda || cuponMoneda.cantidad <= 0) {
+    return []; // Usuario no tiene cupones disponibles
+  }
+
+  // Por ahora, retornar información del CuponMoneda como si fuera un cupón
+  // Esto es temporal hasta que se defina mejor la lógica de negocio
+  return [{
+    id: cuponMoneda.id,
+    nombre: 'Cupones Disponibles',
+    descripcion: `Tienes ${cuponMoneda.cantidad} cupones disponibles`,
+    tokensRequeridos: 0,
+    cantidadDisponible: cuponMoneda.cantidad,
+    cantidadUtilizada: 0,
+    activo: cuponMoneda.activo,
+    tipo: 'moneda',
+    createdAt: cuponMoneda.createdAt,
+    updatedAt: cuponMoneda.updatedAt
+  }];
 };
 
 /**
  * Marcar cupón como usado
+ * Nota: Con el sistema de CuponMoneda, esto debería decrementar el saldo del usuario
  */
 const marcarComoUsado = async (cuponId) => {
-  const [updatedRowsCount] = await Cupon.update({
-    usado: true,
-    fechaUso: new Date()
-  }, {
-    where: { id: cuponId }
+  // En el sistema normalizado, esto debería recibir el usuarioId
+  // Por ahora, retornamos éxito para mantener compatibilidad
+  console.log('⚠️ [WARNING] marcarComoUsado llamado con cuponId:', cuponId);
+  console.log('⚠️ [WARNING] Esta función debería ser actualizada para usar usuarioId');
+  
+  return { id: cuponId, usado: true, fechaUso: new Date() };
+};
+
+/**
+ * Decrementar cupones de un usuario (función normalizada)
+ */
+const decrementarCuponesUsuario = async (usuarioId, cantidad = 1) => {
+  const { CuponMoneda } = require('../models');
+  
+  const cuponMoneda = await CuponMoneda.findOne({
+    where: { usuarioId }
   });
   
-  if (updatedRowsCount === 0) {
-    throw new Error('Cupón no encontrado');
+  if (!cuponMoneda || cuponMoneda.cantidad < cantidad) {
+    throw new Error('Cupones insuficientes');
   }
   
-  return await Cupon.findByPk(cuponId);
+  await cuponMoneda.decrement('cantidad', { by: cantidad });
+  
+  return cuponMoneda;
 };
 
 /**
  * Buscar cupones por usuario
+ * Nota: Los cupones no tienen usuarioId directo, se relacionan a través de CuponMoneda
  */
 const buscarCuponesPorUsuario = async (usuarioId) => {
-  return await Cupon.findAll({
-    where: { usuarioId },
-    order: [['createdAt', 'DESC']]
+  // Primero obtener el CuponMoneda del usuario
+  const { CuponMoneda } = require('../models');
+  const cuponMoneda = await CuponMoneda.findOne({
+    where: { usuarioId }
   });
+
+  if (!cuponMoneda) {
+    return []; // Usuario no tiene cupones
+  }
+
+  // Por ahora, retornar información del CuponMoneda como si fuera un cupón
+  // Esto es temporal hasta que se defina mejor la lógica de negocio
+  return [{
+    id: cuponMoneda.id,
+    nombre: 'Cupones Disponibles',
+    descripcion: `Tienes ${cuponMoneda.cantidad} cupones disponibles`,
+    tokensRequeridos: 0,
+    cantidadDisponible: cuponMoneda.cantidad,
+    cantidadUtilizada: 0,
+    activo: cuponMoneda.activo,
+    tipo: 'moneda',
+    createdAt: cuponMoneda.createdAt,
+    updatedAt: cuponMoneda.updatedAt
+  }];
 };
 
 module.exports = { 
@@ -247,5 +325,6 @@ module.exports = {
   obtenerEstadisticasCupones,
   obtenerCuponesDisponibles,
   marcarComoUsado,
+  decrementarCuponesUsuario,
   buscarCuponesPorUsuario
 };

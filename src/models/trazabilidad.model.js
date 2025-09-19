@@ -22,7 +22,8 @@ const Trazabilidad = sequelize.define('Trazabilidad', {
   step: {
     type: DataTypes.ENUM(
       'first_image_validated',
-      'second_image_validated', 
+      'second_image_validated',
+      'image_validated',
       'exchange_completed',
       'qr_generated',
       'coupon_created',

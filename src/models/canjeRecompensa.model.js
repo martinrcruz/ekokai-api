@@ -17,10 +17,10 @@ const CanjeRecompensa = sequelize.define('CanjeRecompensa', {
     comment: 'ID del usuario que realiza el canje'
   },
   recompensaId: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'recompensas',
+      model: 'premios',
       key: 'id'
     },
     comment: 'ID de la recompensa canjeada'
@@ -102,7 +102,7 @@ CanjeRecompensa.associate = (models) => {
     as: 'usuario'
   });
   
-  CanjeRecompensa.belongsTo(models.Recompensa, {
+  CanjeRecompensa.belongsTo(models.Premio, {
     foreignKey: 'recompensaId',
     as: 'recompensa'
   });

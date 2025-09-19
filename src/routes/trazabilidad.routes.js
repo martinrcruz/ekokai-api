@@ -33,7 +33,7 @@ router.post('/registro', async (req, res) => {
     }
 
     // Verificar que el usuario existe
-    const usuario = await Usuario.findById(userId);
+    const usuario = await Usuario.findByPk(userId);
     if (!usuario) {
       return res.status(404).json({
         success: false,
@@ -66,7 +66,7 @@ router.post('/registro', async (req, res) => {
     res.status(201).json({
       success: true,
       mensaje: 'Evento de trazabilidad registrado exitosamente',
-      id: trazabilidad._id,
+      id: trazabilidad.id,
       timestamp: trazabilidad.timestamp
     });
 

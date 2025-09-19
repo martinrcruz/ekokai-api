@@ -152,6 +152,35 @@ router.get('/', permitirRoles('administrador'), usuarioCtrl.listarUsuarios);
 // Historial de usuario específico
 router.get('/:usuarioId/historial', permitirRoles('administrador', 'encargado'), usuarioCtrl.historialInteracciones);
 
+// Cupones de usuario específico (DEBE ir ANTES de las rutas genéricas)
+router.get('/:usuarioId/cupones', async (req, res) => {
+  try {
+    const { usuarioId } = req.params;
+    
+    console.log('🎟️ [cupones-usuario] Obteniendo cupones para usuario:', usuarioId);
+    
+    const cuponRepo = require('../repositories/cupon.repository');
+    const cupones = await cuponRepo.buscarCuponesPorUsuario(usuarioId);
+    
+    console.log('🎟️ [cupones-usuario] Cupones encontrados:', cupones.length);
+    
+    res.json({
+      success: true,
+      cupones: cupones,
+      count: cupones.length,
+      mensaje: 'Cupones obtenidos exitosamente'
+    });
+    
+  } catch (error) {
+    console.error('❌ [cupones-usuario] Error obteniendo cupones:', error);
+    res.status(500).json({
+      success: false,
+      mensaje: 'Error obteniendo cupones del usuario',
+      error: error.message
+    });
+  }
+});
+
 // GET /api/usuarios/:id/estadisticas-reciclaje - Estadísticas de reciclaje de un usuario
 router.get('/:id/estadisticas-reciclaje', async (req, res) => {
   try {

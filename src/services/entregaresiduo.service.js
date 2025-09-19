@@ -21,23 +21,25 @@ const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, 
   const cuponesGenerados = calcularCupones(pesoKg);
   console.log(`🧮 Cupones generados: ${cuponesGenerados} (peso: ${pesoKg}kg)`);
 
-  // Generar cupón automáticamente
-  const cuponData = {
-    nombre: `Cupón Reciclaje - ${tipo.nombre}`,
-    descripcion: `Cupón generado por reciclaje de ${pesoKg}kg de ${tipo.nombre}`,
-    cantidadDisponible: cuponesGenerados,
-    activo: true,
-    fechaVencimiento: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 año
-    tipo: 'reciclaje',
-    pesoGenerador: pesoKg,
-    tipoResiduoGenerador: tipoResiduoId
-  };
-
-  const cupon = await cuponRepo.crearCupon(cuponData);
-  console.log('🎫 [SERVICE] Cupón generado:', cupon._id);
-
-  // Asociar cupón al usuario
-  await cuponRepo.asociarUsuario(cupon._id, usuarioId);
+  // Incrementar cupones del usuario directamente en CuponMoneda
+  const { CuponMoneda } = require('../models');
+  
+  let cuponMoneda = await CuponMoneda.findOne({
+    where: { usuarioId }
+  });
+  
+  if (!cuponMoneda) {
+    // Crear CuponMoneda si no existe
+    cuponMoneda = await CuponMoneda.create({
+      usuarioId,
+      cantidad: 0,
+      activo: true
+    });
+  }
+  
+  // Incrementar la cantidad de cupones del usuario
+  await cuponMoneda.increment('cantidad', { by: cuponesGenerados });
+  console.log(`🎫 [SERVICE] Cupones agregados al usuario: ${cuponesGenerados}`);
 
   const entrega = await entregaRepo.crearEntrega({
     usuario: usuarioId,
@@ -45,7 +47,7 @@ const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, 
     tipoResiduo: tipoResiduoId,
     pesoKg,
     cuponesGenerados: cuponesGenerados,
-    cuponGenerado: cupon._id,
+    cuponGenerado: null, // Ya no necesitamos un cupón específico
     descripcion,
     encargado: encargadoId, // ID del encargado que procesa la entrega
     estado: 'completado'
@@ -56,7 +58,7 @@ const registrarEntrega = async ({ usuarioId, ecopuntoId, tipoResiduoId, pesoKg, 
   // Incrementar tokens del usuario
   await usuarioRepo.incrementarTokens(usuarioId, cuponesGenerados);
 
-  return { entrega, cupon, cuponesGenerados };
+  return { entrega, cuponMoneda, cuponesGenerados };
 };
 
 const obtenerHistorialUsuario = async (usuarioId) => {

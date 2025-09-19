@@ -11,6 +11,14 @@ const { authMiddleware: auth } = require('../middleware/auth.middleware');
 // POST /api/canjes/reciclaje - Crear un nuevo canje de reciclaje
 router.post('/reciclaje', async (req, res) => {
   try {
+    console.log('🔍 [canje-reciclaje] Datos recibidos:', {
+      usuarioId: req.body.usuarioId,
+      qrCode: req.body.qrCode,
+      phoneNumber: req.body.phoneNumber,
+      imagenes: req.body.imagenes,
+      metadata: req.body.metadata
+    });
+
     const {
       usuarioId,
       qrCode,
@@ -21,6 +29,7 @@ router.post('/reciclaje', async (req, res) => {
 
     // Validar datos requeridos
     if (!usuarioId || !qrCode || !phoneNumber) {
+      console.log('❌ [canje-reciclaje] Faltan datos requeridos:', { usuarioId, qrCode, phoneNumber });
       return res.status(400).json({
         success: false,
         mensaje: 'Faltan datos requeridos: usuarioId, qrCode, phoneNumber'
@@ -28,7 +37,7 @@ router.post('/reciclaje', async (req, res) => {
     }
 
     // Verificar que el usuario existe
-    const usuario = await Usuario.findById(usuarioId);
+    const usuario = await Usuario.findByPk(usuarioId);
     if (!usuario) {
       return res.status(404).json({
         success: false,
@@ -37,15 +46,49 @@ router.post('/reciclaje', async (req, res) => {
     }
 
     // Verificar que el QR existe y está activo
-    const qrReciclaje = await QRReciclaje.findOne({ codigo: qrCode });
+    console.log('🔍 [canje-reciclaje] Buscando QR:', qrCode);
+    let qrReciclaje = await QRReciclaje.findOne({ where: { codigo: qrCode } });
+    
+    // Si es un QR temporal y no existe, crearlo
+    if (!qrReciclaje && qrCode.startsWith('TEMP-')) {
+      console.log('🔧 [canje-reciclaje] Creando QR temporal:', qrCode);
+      qrReciclaje = await QRReciclaje.create({
+        codigo: qrCode,
+        tipo: 'reciclaje',
+        estado: 'activo',
+        activo: true,
+        fechaExpiracion: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 horas
+        configuracion: {
+          valorTokens: 10,
+          tipo: 'temporal'
+        },
+        metadatos: {
+          esTemporal: true,
+          creadoPara: usuarioId,
+          telefono: phoneNumber
+        }
+      });
+    }
+    
     if (!qrReciclaje) {
+      console.log('❌ [canje-reciclaje] QR no encontrado:', qrCode);
       return res.status(404).json({
         success: false,
         mensaje: 'Código QR no encontrado'
       });
     }
 
+    console.log('🔍 [canje-reciclaje] QR encontrado:', {
+      id: qrReciclaje.id,
+      codigo: qrReciclaje.codigo,
+      estado: qrReciclaje.estado,
+      activo: qrReciclaje.activo,
+      fechaExpiracion: qrReciclaje.fechaExpiracion,
+      esTemporal: qrReciclaje.metadatos?.esTemporal || false
+    });
+
     if (!qrReciclaje.esValido()) {
+      console.log('❌ [canje-reciclaje] QR no es válido');
       return res.status(400).json({
         success: false,
         mensaje: 'El código QR no es válido o ya fue utilizado'
@@ -54,8 +97,10 @@ router.post('/reciclaje', async (req, res) => {
 
     // Verificar que no existe un canje activo para este QR
     const canjeExistente = await CanjeReciclaje.findOne({
-      qrCode: qrCode,
-      estado: { $in: ['iniciado', 'primera_imagen_validada'] }
+      where: {
+        qrCode: qrCode,
+        estado: ['iniciado', 'primera_imagen_validada']
+      }
     });
 
     if (canjeExistente) {
@@ -68,11 +113,11 @@ router.post('/reciclaje', async (req, res) => {
     // Marcar QR como usado
     await qrReciclaje.marcarComoUsado(usuarioId);
 
-    // Crear canje de reciclaje
-    const canjeReciclaje = new CanjeReciclaje({
+    // Crear canje de reciclaje usando Sequelize
+    const canjeReciclaje = await CanjeReciclaje.create({
       usuarioId,
       qrCode,
-      qrReciclajeId: qrReciclaje._id,
+      qrReciclajeId: qrReciclaje.id,
       phoneNumber,
       estado: 'completado',
       fechaCompletado: new Date(),
@@ -85,16 +130,16 @@ router.post('/reciclaje', async (req, res) => {
             confianza: 0.9
           }
         },
-        segunda: {
+        segunda: imagenes.segunda ? {
           ruta: imagenes.segunda,
           timestamp: new Date(),
           validacion: {
             exitosa: true,
             confianza: 0.9
           }
-        }
+        } : null
       },
-      tokensGenerados: qrReciclaje.configuracion.valorTokens || 10,
+      tokensGenerados: qrReciclaje.configuracion?.valorTokens || 10,
       metadata: {
         ...metadata,
         startTime: new Date(),
@@ -103,27 +148,46 @@ router.post('/reciclaje', async (req, res) => {
     });
 
     // Generar cupón automáticamente
-    const cupon = new Cupon({
+    const cuponCodigo = `RECYCLE-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`.toUpperCase();
+    const cupon = await Cupon.create({
       nombre: `Cupón de Reciclaje - ${qrCode}`,
       descripcion: 'Cupón generado por canje de basura reciclada',
       tokensRequeridos: 0, // El cupón ya está "pagado" con la acción de reciclaje
-      valor: canjeReciclaje.tokensGenerados,
+      codigo: cuponCodigo,
       fechaExpiracion: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 días
       activo: true,
       tipo: 'reciclaje',
       usuarioGenerado: usuarioId,
-      canjeReciclaje: canjeReciclaje._id
+      canjeReciclajeId: canjeReciclaje.id
     });
 
-    await cupon.save();
-
     // Asociar cupón al canje
-    canjeReciclaje.cuponGenerado = cupon._id;
-    await canjeReciclaje.save();
+    await canjeReciclaje.update({ cuponGeneradoId: cupon.id });
 
     // Actualizar tokens del usuario
-    usuario.tokensAcumulados += canjeReciclaje.tokensGenerados;
-    await usuario.save();
+    await usuario.update({ 
+      tokensAcumulados: (usuario.tokensAcumulados || 0) + canjeReciclaje.tokensGenerados 
+    });
+
+    // ACTUALIZAR CUPONMONEDA - Esto es lo que faltaba para sincronizar los sistemas
+    const { CuponMoneda } = require('../models');
+    let cuponMoneda = await CuponMoneda.findOne({
+      where: { usuarioId }
+    });
+    
+    if (!cuponMoneda) {
+      // Crear CuponMoneda si no existe
+      cuponMoneda = await CuponMoneda.create({
+        usuarioId,
+        cantidad: 0,
+        activo: true
+      });
+    }
+    
+    // Incrementar la cantidad de cupones del usuario en 1
+    await cuponMoneda.increment('cantidad', { by: 1 });
+    
+    console.log(`🎟️ [canje-reciclaje] CuponMoneda actualizado para usuario ${usuarioId}: ${cuponMoneda.cantidad + 1} cupones`);
 
     // Registrar trazabilidad
     await Trazabilidad.registrarEvento({
@@ -131,9 +195,9 @@ router.post('/reciclaje', async (req, res) => {
       userId: usuarioId,
       step: 'exchange_completed',
       qr_code: qrCode,
-      canjeReciclajeId: canjeReciclaje._id,
-      coupon_id: cupon._id,
-      exchange_id: canjeReciclaje._id,
+      canjeReciclajeId: canjeReciclaje.id,
+      coupon_id: cupon.id,
+      exchange_id: canjeReciclaje.id,
       metadata: {
         tokensGenerados: canjeReciclaje.tokensGenerados,
         ...metadata
@@ -144,21 +208,22 @@ router.post('/reciclaje', async (req, res) => {
       success: true,
       mensaje: 'Canje de reciclaje creado exitosamente',
       canje: {
-        id: canjeReciclaje._id,
+        id: canjeReciclaje.id,
         estado: canjeReciclaje.estado,
         fechaCompletado: canjeReciclaje.fechaCompletado,
         tokensGenerados: canjeReciclaje.tokensGenerados
       },
       cupon: {
-        id: cupon._id,
-        codigo: cupon._id.toString(),
+        id: cupon.id,
+        codigo: cupon.codigo,
         nombre: cupon.nombre,
-        valor: cupon.valor,
+        tokensRequeridos: cupon.tokensRequeridos,
         fechaExpiracion: cupon.fechaExpiracion,
         descripcion: cupon.descripcion
       },
       usuario: {
-        tokensAcumulados: usuario.tokensAcumulados
+        tokensAcumulados: usuario.tokensAcumulados,
+        cuponesDisponibles: cuponMoneda.cantidad + 1 // Incluir el nuevo saldo de cupones
       }
     });
 

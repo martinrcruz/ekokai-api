@@ -16,7 +16,21 @@ const listarCanjesPorUsuario = async (usuarioId) => {
  * Crear canje de recompensa
  */
 const crearCanjeRecompensa = async (data) => {
-  return await CanjeRecompensa.create(data);
+  console.log('🔍 [CANJE-REPO-DEBUG] Datos recibidos para crear canje:', data);
+  
+  try {
+    const resultado = await CanjeRecompensa.create(data);
+    console.log('🔍 [CANJE-REPO-DEBUG] Canje creado exitosamente:', resultado);
+    return resultado;
+  } catch (error) {
+    console.error('❌ [CANJE-REPO-DEBUG] Error al crear canje en repositorio:', error);
+    console.error('❌ [CANJE-REPO-DEBUG] Detalles del error:', {
+      name: error.name,
+      message: error.message,
+      errors: error.errors
+    });
+    throw error;
+  }
 };
 
 /**
